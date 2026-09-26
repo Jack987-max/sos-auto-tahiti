@@ -219,7 +219,7 @@
         <label for="prenom">Prénom</label>
         <input type="text" id="prenom" required>
         <label for="telephone">Téléphone</label>
-        <input type="tel" id="telephone" placeholder="+689 XX XX XX XX" required>
+        <input type="tel" id="telephone" placeholder="+689 XX XX XX XX" value="+689 " required>
         <label for="email">Email</label>
         <input type="email" id="email" required>
 
@@ -250,7 +250,8 @@
       <h2>Rendez-vous confirmé</h2>
       <p id="succes-texte"></p>
       <button type="button" class="btn-principal" style="max-width:280px; margin-left:auto; margin-right:auto;" onclick="window.location.reload()">Faire une nouvelle demande</button>
-      <div id="reseaux-succes" style="display:flex; gap:10px; justify-content:center; margin-top:18px;"></div>
+      <p id="reseaux-succes-label" style="display:none; text-align:center; font-size:12.5px; color:var(--fb-text-secondary); font-weight:700; margin:18px 0 8px;">Retrouvez-nous sur les réseaux</p>
+      <div id="reseaux-succes" style="display:flex; gap:10px; justify-content:center;"></div>
     </div>
 
     <!-- FORMULAIRE SPECIAL : vehicule hors liste, chiffrage manuel -->
@@ -296,7 +297,7 @@
         <label for="prenomSpecial">Prénom</label>
         <input type="text" id="prenomSpecial" required>
         <label for="telephoneSpecial">Téléphone</label>
-        <input type="tel" id="telephoneSpecial" placeholder="+689 XX XX XX XX" required>
+        <input type="tel" id="telephoneSpecial" placeholder="+689 XX XX XX XX" value="+689 " required>
         <label for="emailSpecial">Email</label>
         <input type="email" id="emailSpecial" required>
         <label for="commentaireSpecial">Commentaire (optionnel)</label>
@@ -383,6 +384,9 @@
       }
       if (e2.instagram) {
         zoneReseaux.innerHTML += `<a href="${e2.instagram}" target="_blank" class="btn-reseau instagram" aria-label="Instagram">📷</a>`;
+      }
+      if (e2.facebook || e2.instagram) {
+        document.getElementById('reseaux-succes-label').style.display = 'block';
       }
 
       document.getElementById('lien-vehicule-special').addEventListener('click', function(e) {
