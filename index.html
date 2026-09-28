@@ -4,7 +4,15 @@
   <base target="_top">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Prise de rendez-vous</title>
+  <title>SOS Auto Tahiti - Mécanique à domicile</title>
+  <meta name="description" content="Mécanique automobile à domicile à Tahiti : devis immédiat et prise de rendez-vous en ligne.">
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://jack987-max.github.io/sos-auto-tahiti/">
+  <meta property="og:title" content="SOS Auto Tahiti - Mécanique à domicile">
+  <meta property="og:description" content="Devis immédiat et rendez-vous en ligne. Le mécanicien vient chez vous.">
+  <meta property="og:image" content="https://jack987-max.github.io/sos-auto-tahiti/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -44,7 +52,9 @@
       width: 44px; height: 44px; border-radius: 50%; background: #fff;
       display: flex; align-items: center; justify-content: center;
       font-size: 22px; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      overflow: hidden;
     }
+    .topbar .logo img { width: 100%; height: 100%; object-fit: contain; display: block; }
     .topbar h1 { font-family: 'Quicksand', 'Nunito', sans-serif; font-size: 19px; font-weight: 700; margin: 0; line-height: 1.25; }
     .topbar .sous-titre { font-size: 12.5px; opacity: 0.95; margin: 3px 0 0; font-weight: 600; }
     .conteneur { max-width: 560px; margin: 0 auto; padding: 16px 14px; }
@@ -146,12 +156,19 @@
       font-size: 21px; box-shadow: 0 3px 8px rgba(0,0,0,0.15);
     }
     .btn-reseau.facebook { background: #1877F2; color: #fff; }
+    .recap-ligne { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; font-size: 14px; border-bottom: 1px solid #F1ECE2; }
+    .recap-ligne span:last-child { font-weight: 700; white-space: nowrap; }
+    .recap-total { display: flex; justify-content: space-between; margin-top: 10px; padding: 13px 14px;
+      background: var(--fb-blue-soft); border-radius: 13px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 17px; color: var(--fb-blue); }
+    .recap-note { font-size: 12px; color: var(--fb-text-secondary); margin: 8px 0 0; line-height: 1.45; }
+    .bandeau-paiement { display: flex; gap: 10px; align-items: flex-start; margin-top: 12px; padding: 12px 13px;
+      background: var(--accent-jaune-soft); border-radius: 13px; font-size: 13px; line-height: 1.45; font-weight: 600; }
     .btn-reseau.instagram { background: radial-gradient(circle at 30% 107%, #fdf497, #fd5949, #d6249f, #285AEB); color: #fff; }
   </style>
 </head>
 <body>
   <div class="topbar">
-    <div class="logo">🔧</div>
+    <div class="logo"><img src="logo.png" alt="SOS Auto Tahiti"></div>
     <div>
       <h1>SOS Auto Tahiti</h1>
       <p class="sous-titre">Mécanique à domicile · Devis immédiat</p>
@@ -239,6 +256,14 @@
           <input type="checkbox" id="cgv" required>
           <span>J'accepte que mes données soient utilisées pour traiter ma demande de devis et de rendez-vous.</span>
         </div>
+      </div>
+
+      <div class="carte" id="carte-recap" style="display:none">
+        <div class="carte-header"><div class="carte-icone">🧾</div><p class="carte-titre">Votre estimation</p></div>
+        <div id="recap-lignes"></div>
+        <div class="recap-total"><span>Total estimé</span><span id="recap-total"></span></div>
+        <p class="recap-note" id="recap-note"></p>
+        <div class="bandeau-paiement"><span>💳</span><span>Paiement par <strong>carte bancaire uniquement</strong>, à la fin de l'intervention. Pour des raisons de sécurité, nos techniciens n'acceptent pas les espèces.</span></div>
       </div>
 
       <button type="submit" class="btn-principal" id="btn-valider" disabled>Sélectionnez un créneau</button>
@@ -335,6 +360,7 @@
     // === A REMPLACER : colle ici l'URL de deploiement de ton Apps Script ===
     const APP_URL = 'https://script.google.com/macros/s/AKfycbwmpyrWUsOv0ABb9Wg_V2iS5m3vBNpytw7qnh58ebluL-3ft3NYxfDl8AifRXYETrb3/exec';
 
+    const TZ = 'Pacific/Tahiti';   // tous les horaires sont affiches a l'heure de Tahiti
     let DONNEES = null;
     let creneauSelectionne = null;
 
@@ -414,7 +440,7 @@
         div.innerHTML = `
           <input type="checkbox" value="${p.id}" data-nom="${p.nom}">
           <span class="nom">${p.nom}</span>
-          <span class="prix">${formatXPF(p.prixForfait)}</span>`;
+          <span class="prix" data-prix="${p.id}">${formatXPF(p.prixForfait)}</span>`;
         listePrestations.appendChild(div);
       });
 
@@ -434,7 +460,7 @@
         <p>${e.adresse || ''}</p>
         <p>Tél : ${e.telephone || ''} — Email : ${e.email || ''}</p>
         <p>N° TAHITI (RTE) : ${e.numeroTahiti || 'en cours d\'attribution'}</p>
-        <p>Directeur de la publication : ${e.nom || ''}. Hébergement de l'application : Google LLC (Google Apps Script), 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA.</p>
+        <p>Directeur de la publication : ${e.nom || ''}. Hébergement du site : GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA. Traitement des demandes : Google LLC (Google Apps Script), 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA.</p>
         <p>Les informations recueillies via ce formulaire sont utilisées exclusivement pour le traitement de votre demande de devis et de rendez-vous, et ne sont ni cédées ni utilisées à d'autres fins.</p>`;
 
       selCategorie.addEventListener('change', onCategorieChange);
@@ -530,9 +556,11 @@
       const carteCoord = document.getElementById('carte-coordonnees');
       const commune = DONNEES.communes.find(c => c.id === document.getElementById('commune').value);
 
+      majPrixListe();
       if (checkboxes.length === 0 || !categorieId || !commune || !immatriculation) {
         carteCreneaux.style.display = 'none';
         carteCoord.style.display = 'none';
+        document.getElementById('carte-recap').style.display = 'none';
         majBoutonValider();
         return;
       }
@@ -548,6 +576,7 @@
 
       carteCoord.style.display = 'block';
       carteCreneaux.style.display = 'block';
+      majRecap();
       chargerCreneaux(dureeTotaleMin);
     }
 
@@ -587,7 +616,7 @@
       const parJour = new Map();
       creneaux.forEach(c => {
         const d = new Date(c.debut);
-        const cle = d.toISOString().slice(0, 10);
+        const cle = d.toLocaleDateString('fr-CA', { timeZone: TZ }); // AAAA-MM-JJ, jour de Tahiti
         if (!parJour.has(cle)) parJour.set(cle, []);
         parJour.get(cle).push(c);
       });
@@ -598,9 +627,9 @@
         const btn = document.createElement('div');
         btn.className = 'jour-btn';
         btn.innerHTML = `
-          <div class="jour-nom">${d.toLocaleDateString('fr-FR', { weekday: 'short' })}</div>
-          <div class="jour-num">${d.getDate()}</div>
-          <div class="jour-mois">${d.toLocaleDateString('fr-FR', { month: 'short' })} ${d.getFullYear()}</div>`;
+          <div class="jour-nom">${d.toLocaleDateString('fr-FR', { weekday: 'short', timeZone: TZ })}</div>
+          <div class="jour-num">${d.toLocaleDateString('fr-FR', { day: 'numeric', timeZone: TZ })}</div>
+          <div class="jour-mois">${d.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric', timeZone: TZ })}</div>`;
         btn.onclick = function() {
           document.querySelectorAll('.jour-btn').forEach(b => b.classList.remove('selectionne'));
           btn.classList.add('selectionne');
@@ -621,17 +650,19 @@
       zone.style.display = 'block';
       creneauSelectionne = null;
       majBoutonValider();
+      majRecap();
 
       creneauxDuJour.forEach(c => {
         const debut = new Date(c.debut);
         const btn = document.createElement('div');
         btn.className = 'creneau-btn';
-        btn.textContent = debut.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        btn.textContent = debut.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', timeZone: TZ });
         btn.onclick = function() {
           document.querySelectorAll('#liste-heures .creneau-btn').forEach(b => b.classList.remove('selectionne'));
           btn.classList.add('selectionne');
           creneauSelectionne = c;
           majBoutonValider();
+          majRecap();
         };
         conteneur.appendChild(btn);
       });
@@ -649,7 +680,65 @@
     }
 
     function formatXPF(montant) {
-      return Math.round(montant).toLocaleString('fr-FR') + ' XPF';
+      return String(Math.round(montant)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' XPF';
+    }
+
+    /** Affiche dans la liste le prix de chaque prestation ajuste a la categorie de vehicule choisie. */
+    function majPrixListe() {
+      const vehicule = DONNEES.vehicules.find(v => v.id === document.getElementById('categorie').value);
+      const coef = vehicule ? vehicule.coefficientPrix : 1;
+      DONNEES.prestations.forEach(p => {
+        const el = document.querySelector('[data-prix="' + p.id + '"]');
+        if (el) el.textContent = formatXPF(Math.round(p.prixForfait * coef));
+      });
+    }
+
+    function estWeekendTahiti(iso) {
+      const j = new Date(iso).toLocaleDateString('en-US', { weekday: 'short', timeZone: TZ });
+      return j === 'Sat' || j === 'Sun';
+    }
+
+    /**
+     * Estimation affichee au client : MEME calcul que le serveur (calculerDevis dans Code.gs).
+     * Le montant du devis PDF reste celui calcule par le serveur.
+     */
+    function majRecap() {
+      const carte = document.getElementById('carte-recap');
+      const prestationIds = getPrestationsSelectionnees().map(c => c.value);
+      const prestations = DONNEES.prestations.filter(p => prestationIds.includes(p.id));
+      const vehicule = DONNEES.vehicules.find(v => v.id === document.getElementById('categorie').value);
+      const commune = DONNEES.communes.find(c => c.id === document.getElementById('commune').value);
+      if (!prestations.length || !vehicule || !commune) { carte.style.display = 'none'; return; }
+
+      const coef = vehicule.coefficientPrix;
+      const totalForfaits = Math.round(prestations.reduce((s, p) => s + p.prixForfait, 0) * coef);
+      const totalPieces = Math.round(prestations.reduce((s, p) => s + p.prixPieces, 0) * coef);
+      const frais = commune.fraisDeplacement;
+      const sousTotal = totalForfaits + totalPieces + frais;
+      const pctZone = (DONNEES.majorationZone != null) ? Number(DONNEES.majorationZone) : 0.20;
+      const pctWeekend = Number(DONNEES.majorationWeekend) || 0;
+      const majZone = commune.zoneDifficile ? Math.round(sousTotal * pctZone) : 0;
+      const weekend = creneauSelectionne ? estWeekendTahiti(creneauSelectionne.debut) : false;
+      const majWeekend = weekend ? Math.round(sousTotal * pctWeekend) : 0;
+      const total = sousTotal + majZone + majWeekend;
+
+      const lignes = prestations.map(p => ({ nom: p.nom, montant: Math.round(p.prixForfait * coef) }));
+      const ecart = totalForfaits - lignes.reduce((s, l) => s + l.montant, 0);
+      lignes[lignes.length - 1].montant += ecart;
+
+      const ligne = (lib, m, plus) => `<div class="recap-ligne"><span>${lib}</span><span>${plus ? '+ ' : ''}${formatXPF(m)}</span></div>`;
+      let html = lignes.map(l => ligne(l.nom, l.montant)).join('');
+      if (totalPieces > 0) html += ligne('Pièces et fournitures', totalPieces);
+      if (frais > 0) html += ligne('Déplacement (' + commune.nom + ')', frais);
+      if (majZone > 0) html += ligne('Majoration zone difficile d\'accès', majZone, true);
+      if (majWeekend > 0) html += ligne('Majoration week-end', majWeekend, true);
+
+      document.getElementById('recap-lignes').innerHTML = html;
+      document.getElementById('recap-total').textContent = formatXPF(total);
+      document.getElementById('recap-note').textContent = creneauSelectionne
+        ? 'Montant définitif confirmé dans le devis envoyé par email.'
+        : 'Choisissez un créneau : une majoration de ' + Math.round(pctWeekend * 100) + ' % s\'applique le week-end.';
+      carte.style.display = 'block';
     }
 
     document.getElementById('formulaire').addEventListener('submit', function(e) {
