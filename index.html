@@ -208,6 +208,7 @@
 
       <div class="carte">
         <div class="carte-header"><div class="carte-icone corail">🔩</div><p class="carte-titre">Interventions souhaitées</p></div>
+        <p style="font-size:12px; color:var(--fb-text-secondary); margin:-6px 0 6px; font-weight:600;">Prix pièces et main-d'œuvre compris</p>
         <div id="liste-prestations"></div>
       </div>
 
@@ -440,7 +441,7 @@
         div.innerHTML = `
           <input type="checkbox" value="${p.id}" data-nom="${p.nom}">
           <span class="nom">${p.nom}</span>
-          <span class="prix" data-prix="${p.id}">${formatXPF(p.prixForfait)}</span>`;
+          <span class="prix" data-prix="${p.id}">${formatXPF(p.prixForfait + p.prixPieces)}</span>`;
         listePrestations.appendChild(div);
       });
 
@@ -689,7 +690,7 @@
       const coef = vehicule ? vehicule.coefficientPrix : 1;
       DONNEES.prestations.forEach(p => {
         const el = document.querySelector('[data-prix="' + p.id + '"]');
-        if (el) el.textContent = formatXPF(Math.round(p.prixForfait * coef));
+        if (el) el.textContent = formatXPF(Math.round((p.prixForfait + p.prixPieces) * coef));
       });
     }
 
@@ -722,13 +723,13 @@
       const majWeekend = weekend ? Math.round(sousTotal * pctWeekend) : 0;
       const total = sousTotal + majZone + majWeekend;
 
-      const lignes = prestations.map(p => ({ nom: p.nom, montant: Math.round(p.prixForfait * coef) }));
-      const ecart = totalForfaits - lignes.reduce((s, l) => s + l.montant, 0);
+      // Chaque intervention tout compris (main-d'oeuvre + pieces), comme sur le devis PDF
+      const lignes = prestations.map(p => ({ nom: p.nom, montant: Math.round((p.prixForfait + p.prixPieces) * coef) }));
+      const ecart = (totalForfaits + totalPieces) - lignes.reduce((s, l) => s + l.montant, 0);
       lignes[lignes.length - 1].montant += ecart;
 
       const ligne = (lib, m, plus) => `<div class="recap-ligne"><span>${lib}</span><span>${plus ? '+ ' : ''}${formatXPF(m)}</span></div>`;
       let html = lignes.map(l => ligne(l.nom, l.montant)).join('');
-      if (totalPieces > 0) html += ligne('Pièces et fournitures', totalPieces);
       if (frais > 0) html += ligne('Déplacement (' + commune.nom + ')', frais);
       if (majZone > 0) html += ligne('Majoration zone difficile d\'accès', majZone, true);
       if (majWeekend > 0) html += ligne('Majoration week-end', majWeekend, true);
