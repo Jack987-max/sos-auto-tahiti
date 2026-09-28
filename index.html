@@ -716,11 +716,12 @@
       const totalPieces = Math.round(prestations.reduce((s, p) => s + p.prixPieces, 0) * coef);
       const frais = commune.fraisDeplacement;
       const sousTotal = totalForfaits + totalPieces + frais;
-      const pctZone = (DONNEES.majorationZone != null) ? Number(DONNEES.majorationZone) : 0.20;
-      const pctWeekend = Number(DONNEES.majorationWeekend) || 0;
-      const majZone = commune.zoneDifficile ? Math.round(sousTotal * pctZone) : 0;
+      // Forfaits fixes par deplacement (onglet Config), comme cote serveur
+      const forfaitZone = (DONNEES.majorationZoneXPF != null) ? Number(DONNEES.majorationZoneXPF) : 2000;
+      const forfaitWeekend = (DONNEES.majorationWeekendXPF != null) ? Number(DONNEES.majorationWeekendXPF) : 2500;
+      const majZone = commune.zoneDifficile ? Math.round(forfaitZone) : 0;
       const weekend = creneauSelectionne ? estWeekendTahiti(creneauSelectionne.debut) : false;
-      const majWeekend = weekend ? Math.round(sousTotal * pctWeekend) : 0;
+      const majWeekend = weekend ? Math.round(forfaitWeekend) : 0;
       const total = sousTotal + majZone + majWeekend;
 
       // Chaque intervention tout compris (main-d'oeuvre + pieces), comme sur le devis PDF
@@ -738,7 +739,7 @@
       document.getElementById('recap-total').textContent = formatXPF(total);
       document.getElementById('recap-note').textContent = creneauSelectionne
         ? 'Montant définitif confirmé dans le devis envoyé par email.'
-        : 'Choisissez un créneau : une majoration de ' + Math.round(pctWeekend * 100) + ' % s\'applique le week-end.';
+        : (forfaitWeekend > 0 ? 'Choisissez un créneau : majoration de ' + formatXPF(forfaitWeekend) + ' le week-end.' : 'Choisissez un créneau.');
       carte.style.display = 'block';
     }
 
