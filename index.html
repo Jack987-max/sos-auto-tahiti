@@ -171,7 +171,7 @@
     <div class="logo"><img src="logo.png" alt="SOS Auto Tahiti"></div>
     <div>
       <h1>SOS Auto Tahiti</h1>
-      <p class="sous-titre">Mécanique à domicile · Devis immédiat</p>
+      <p class="sous-titre">Mécanique à domicile<br>Devis et rendez-vous immédiats</p>
     </div>
   </div>
 
@@ -208,7 +208,7 @@
 
       <div class="carte">
         <div class="carte-header"><div class="carte-icone corail">🔩</div><p class="carte-titre">Interventions souhaitées</p></div>
-        <p style="font-size:12px; color:var(--fb-text-secondary); margin:-6px 0 6px; font-weight:600;">Prix pièces et main-d'œuvre compris</p>
+        <p style="font-size:15px; color:var(--accent-corail); margin:-4px 0 10px; font-weight:800;">Prix pièces et main-d'œuvre compris</p>
         <div id="liste-prestations"></div>
       </div>
 
@@ -673,7 +673,7 @@
       const btn = document.getElementById('btn-valider');
       if (creneauSelectionne) {
         btn.disabled = false;
-        btn.textContent = 'Confirmer le rendez-vous';
+        btn.textContent = 'Réserver';
       } else {
         btn.disabled = true;
         btn.textContent = 'Sélectionnez un créneau';
@@ -791,14 +791,14 @@
               'Devis ' + resultat.numeroDevis + ' envoyé par email. Montant : ' + formatXPF(resultat.totalTTC) + '.';
           } else {
             btn.disabled = false;
-            btn.textContent = 'Confirmer le rendez-vous';
+            btn.textContent = 'Réserver';
             msgErreur.textContent = resultat.error;
             msgErreur.style.display = 'block';
           }
         })
         .catch(function(err) {
           btn.disabled = false;
-          btn.textContent = 'Confirmer le rendez-vous';
+          btn.textContent = 'Réserver';
           msgErreur.textContent = 'Erreur reseau : ' + err.message;
           msgErreur.style.display = 'block';
         });
