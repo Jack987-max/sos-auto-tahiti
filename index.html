@@ -141,6 +141,10 @@
     .msg-succes p { color: var(--fb-text-secondary); font-size: 14.5px; line-height: 1.5; }
     .honeypot { position: absolute; left: -9999px; }
     .chargement { text-align: center; color: var(--fb-text-secondary); padding: 28px; font-size: 13.5px; font-weight: 600; }
+    .chargement::before { content: ''; display: block; width: 30px; height: 30px; margin: 0 auto 12px; border-radius: 50%;
+      border: 3px solid var(--fb-border); border-top-color: var(--fb-blue); animation: tourne .8s linear infinite; }
+    @keyframes tourne { to { transform: rotate(360deg); } }
+    .chargement.erreur::before { display: none; }
     .checkbox-cgv, .checkbox-facturation { display: flex; align-items: flex-start; margin-top: 16px; }
     .checkbox-cgv input, .checkbox-facturation input {
       width: 21px; height: 21px; margin-right: 9px; margin-top: 1px; flex-shrink: 0; accent-color: var(--fb-blue);
@@ -364,11 +368,33 @@
     const TZ = 'Pacific/Tahiti';   // tous les horaires sont affiches a l'heure de Tahiti
     let DONNEES = null;
     let creneauSelectionne = null;
+    let minuterieCreneaux = null, numeroRequete = 0;
+    const memoireCreneaux = {};
+
+    // --- Chargement rapide : on affiche tout de suite la derniere version connue (memoire du telephone),
+    // puis on recupere la version a jour en arriere-plan et on met les prix a jour si besoin.
+    const CLE_MEMOIRE = 'sos_auto_init_v1';
+    let dejaAffiche = false;
+    try {
+      const memo = JSON.parse(localStorage.getItem(CLE_MEMOIRE) || 'null');
+      if (memo && memo.donnees && (Date.now() - memo.date) < 7 * 24 * 3600 * 1000) {
+        initialiser(memo.donnees);
+        dejaAffiche = true;
+      }
+    } catch (e) { /* memoire indisponible : chargement normal */ }
 
     fetch(APP_URL + '?action=getInitialData')
       .then(r => r.json())
-      .then(initialiser)
-      .catch(erreurChargement);
+      .then(function(frais) {
+        try { localStorage.setItem(CLE_MEMOIRE, JSON.stringify({ date: Date.now(), donnees: frais })); } catch (e) {}
+        if (!dejaAffiche) { initialiser(frais); return; }
+        // Deja affiche depuis la memoire : on remplace les donnees (prix, majorations) sans reconstruire le formulaire
+        frais.modeles = frais.modeles || [];
+        DONNEES = frais;
+        majPrixListe();
+        if (document.getElementById('carte-recap').style.display !== 'none') majRecap();
+      })
+      .catch(function(err) { if (!dejaAffiche) erreurChargement(err); });
 
     function erreurChargement(err) {
       document.getElementById('chargement-initial').style.display = 'none';
@@ -581,7 +607,17 @@
       chargerCreneaux(dureeTotaleMin);
     }
 
+    // Creneaux : attente courte avant l'appel (evite plusieurs appels pendant que le client coche),
+    // on ignore les reponses perimees, et on garde en memoire 2 min les resultats deja obtenus.
+
     function chargerCreneaux(dureeTotaleMin) {
+      clearTimeout(minuterieCreneaux);
+      minuterieCreneaux = setTimeout(function() { lancerChargementCreneaux(dureeTotaleMin); }, 350);
+    }
+
+    function lancerChargementCreneaux(dureeTotaleMin) {
+      document.getElementById('chargement-creneaux').classList.remove('erreur');
+      document.getElementById('chargement-creneaux').textContent = 'Recherche des disponibilités...';
       document.getElementById('chargement-creneaux').style.display = 'block';
       document.getElementById('liste-jours').innerHTML = '';
       document.getElementById('zone-heures').style.display = 'none';
@@ -589,16 +625,25 @@
       creneauSelectionne = null;
       majBoutonValider();
 
+      const memo = memoireCreneaux[dureeTotaleMin];
+      if (memo && Date.now() - memo.date < 120000) { afficherJours(memo.creneaux); return; }
+
+      const monNumero = ++numeroRequete;
       fetch(APP_URL + '?action=getCreneaux&duree=' + dureeTotaleMin)
         .then(r => r.json())
         .then(function(resultat) {
+          if (monNumero !== numeroRequete) return; // une recherche plus recente est en cours
           if (resultat.success) {
+            memoireCreneaux[dureeTotaleMin] = { date: Date.now(), creneaux: resultat.creneaux };
             afficherJours(resultat.creneaux);
           } else {
+            document.getElementById('chargement-creneaux').classList.add('erreur');
             document.getElementById('chargement-creneaux').textContent = 'Erreur : ' + resultat.error;
           }
         })
         .catch(function(err) {
+          if (monNumero !== numeroRequete) return;
+          document.getElementById('chargement-creneaux').classList.add('erreur');
           document.getElementById('chargement-creneaux').textContent = 'Erreur : ' + err.message;
         });
     }
