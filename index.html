@@ -9,10 +9,10 @@
   <link rel="icon" type="image/png" href="logo.png">
   <link rel="apple-touch-icon" href="logo.png">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://jack987-max.github.io/sos-auto-tahiti/">
+  <meta property="og:url" content="https://sosautotahiti.com/">
   <meta property="og:title" content="SOS Auto Tahiti - Mécanique à domicile">
   <meta property="og:description" content="Devis immédiat et rendez-vous en ligne. Le mécanicien vient chez vous.">
-  <meta property="og:image" content="https://jack987-max.github.io/sos-auto-tahiti/logo.png">
+  <meta property="og:image" content="https://sosautotahiti.com/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -102,6 +102,8 @@
       -webkit-overflow-scrolling: touch; scrollbar-width: none;
     }
     .jours-scroll::-webkit-scrollbar { display: none; }
+    .aide-etape { font-size: 12.5px; color: var(--fb-text-secondary); margin: 10px 0 0; line-height: 1.5; }
+    #aide-vehicule.ok { display: none; }
     .jour-btn {
       flex: 0 0 auto; width: 78px; padding: 10px 4px; border: 1.5px solid var(--fb-border);
       border-radius: 16px; background: var(--fb-bg); cursor: pointer; text-align: center;
@@ -188,20 +190,21 @@
 
       <div class="carte">
         <div class="carte-header"><div class="carte-icone">🚗</div><p class="carte-titre">Votre véhicule</p></div>
-        <label for="categorie">Catégorie</label>
+        <label for="categorie">Catégorie *</label>
         <select id="categorie" required></select>
 
-        <label for="marque">Marque</label>
+        <label for="marque">Marque *</label>
         <select id="marque" disabled><option value="">— Choisir d'abord une catégorie —</option></select>
 
-        <label for="modele">Modèle</label>
+        <label for="modele">Modèle *</label>
         <select id="modele" disabled><option value="">— Choisir d'abord une marque —</option></select>
 
-        <label for="annee">Année (optionnel)</label>
-        <input type="text" id="annee" inputmode="numeric" placeholder="Ex : 2019">
+        <label for="annee">Année *</label>
+        <input type="text" id="annee" inputmode="numeric" maxlength="4" placeholder="Ex : 2019">
 
         <label for="immatriculation">Immatriculation *</label>
-        <input type="text" id="immatriculation" required>
+        <input type="text" id="immatriculation" placeholder="Ex : 123456 P" required>
+        <p id="aide-vehicule" class="aide-etape">Renseignez tous les champs pour passer à l'étape suivante.</p>
 
         <p style="font-size:12.5px; color:var(--fb-text-secondary); margin:14px 0 0; line-height:1.5;">
           Votre véhicule n'apparaît pas dans les catégories ci-dessus ?
@@ -210,13 +213,13 @@
         </p>
       </div>
 
-      <div class="carte">
+      <div class="carte" id="carte-interventions" style="display:none">
         <div class="carte-header"><div class="carte-icone corail">🔩</div><p class="carte-titre">Interventions souhaitées</p></div>
         <p style="font-size:15px; color:var(--accent-corail); margin:-4px 0 10px; font-weight:800;">Prix pièces et main-d'œuvre compris</p>
         <div id="liste-prestations"></div>
       </div>
 
-      <div class="carte">
+      <div class="carte" id="carte-lieu" style="display:none">
         <div class="carte-header"><div class="carte-icone jaune">📍</div><p class="carte-titre">Lieu d'intervention</p></div>
         <label for="commune">Commune</label>
         <select id="commune" required></select>
@@ -225,7 +228,8 @@
       </div>
 
       <div class="carte" id="carte-creneaux" style="display:none">
-        <div class="carte-header"><div class="carte-icone">🗓️</div><p class="carte-titre">Choisissez un créneau</p></div>
+        <div class="carte-header"><div class="carte-icone">🗓️</div><p class="carte-titre">Choisissez votre rendez-vous</p></div>
+        <p class="aide-etape" style="margin:-4px 0 10px">Faites glisser les jours vers la gauche pour voir les 3 prochaines semaines.</p>
         <div id="chargement-creneaux" class="chargement" style="display:none">Recherche des disponibilités...</div>
         <div id="liste-jours" class="jours-scroll"></div>
         <div id="zone-heures" style="display:none">
@@ -271,7 +275,7 @@
         <div class="bandeau-paiement"><span>💳</span><span>Paiement par <strong>carte bancaire uniquement</strong>, à la fin de l'intervention. Pour des raisons de sécurité, nos techniciens n'acceptent pas les espèces.</span></div>
       </div>
 
-      <button type="submit" class="btn-principal" id="btn-valider" disabled>Sélectionnez un créneau</button>
+      <button type="submit" class="btn-principal" id="btn-valider" disabled>Choisissez un créneau</button>
       <div id="msg-erreur" class="msg-erreur" style="display:none"></div>
     </form>
 
@@ -492,7 +496,9 @@
 
       selCategorie.addEventListener('change', onCategorieChange);
       document.getElementById('marque').addEventListener('change', onMarqueChange);
-      document.getElementById('immatriculation').addEventListener('input', recalculerCreneaux);
+      ['immatriculation', 'annee', 'adresse'].forEach(id => {
+        document.getElementById(id).addEventListener('input', recalculerCreneaux);
+      });
       document.querySelectorAll('#liste-prestations input, #categorie, #commune, #modele').forEach(el => {
         el.addEventListener('change', recalculerCreneaux);
       });
@@ -575,22 +581,54 @@
       return Array.from(document.querySelectorAll('#liste-prestations input:checked'));
     }
 
+    // Etapes successives : vehicule complet -> interventions -> lieu -> rendez-vous + coordonnees
+    function vehiculeComplet() {
+      const val = id => document.getElementById(id).value.trim();
+      const annee = parseInt(val('annee'), 10);
+      const anneeMax = new Date().getFullYear() + 1;
+      return !!(val('categorie') && val('marque') && val('modele')
+        && /^\d{4}$/.test(val('annee')) && annee >= 1950 && annee <= anneeMax
+        && val('immatriculation').length >= 4);
+    }
+
+    function afficher(id, visible) {
+      const el = document.getElementById(id);
+      const etait = el.style.display !== 'none';
+      el.style.display = visible ? 'block' : 'none';
+      return visible && !etait; // vrai si la carte vient d'apparaitre
+    }
+
+    function defilerVers(id) {
+      setTimeout(function() {
+        document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 80);
+    }
+
     function recalculerCreneaux() {
       const checkboxes = getPrestationsSelectionnees();
       const categorieId = document.getElementById('categorie').value;
-      const immatriculation = document.getElementById('immatriculation').value.trim();
-      const carteCreneaux = document.getElementById('carte-creneaux');
-      const carteCoord = document.getElementById('carte-coordonnees');
       const commune = DONNEES.communes.find(c => c.id === document.getElementById('commune').value);
+      const adresse = document.getElementById('adresse').value.trim();
 
       majPrixListe();
-      if (checkboxes.length === 0 || !categorieId || !commune || !immatriculation) {
-        carteCreneaux.style.display = 'none';
-        carteCoord.style.display = 'none';
+      const etape1 = vehiculeComplet();
+      const etape2 = etape1 && checkboxes.length > 0;
+      const etape3 = etape2 && !!commune && adresse.length >= 3;
+
+      document.getElementById('aide-vehicule').classList.toggle('ok', etape1);
+      if (afficher('carte-interventions', etape1)) defilerVers('carte-interventions');
+      afficher('carte-lieu', etape2);
+      const rdvApparait = afficher('carte-creneaux', etape3);
+      afficher('carte-coordonnees', etape3);
+
+      if (!etape3) {
         document.getElementById('carte-recap').style.display = 'none';
+        derniereDureeChargee = null;
+        creneauSelectionne = null;
         majBoutonValider();
         return;
       }
+      if (rdvApparait) defilerVers('carte-creneaux');
 
       const prestationIds = checkboxes.map(c => c.value);
       const prestations = DONNEES.prestations.filter(p => prestationIds.includes(p.id));
@@ -601,15 +639,18 @@
       const dureeApproMin = approNecessaire ? DONNEES.forfaitApproMin : 0;
       const dureeTotaleMin = Math.round(dureeInterventionMin + dureeApproMin + commune.dureeTrajetMinutes);
 
-      carteCoord.style.display = 'block';
-      carteCreneaux.style.display = 'block';
       majRecap();
-      chargerCreneaux(dureeTotaleMin);
+      // On ne recharge les creneaux que si la duree change (sinon le creneau choisi serait perdu)
+      if (dureeTotaleMin !== derniereDureeChargee) {
+        derniereDureeChargee = dureeTotaleMin;
+        chargerCreneaux(dureeTotaleMin);
+      }
     }
 
     // Creneaux : attente courte avant l'appel (evite plusieurs appels pendant que le client coche),
     // on ignore les reponses perimees, et on garde en memoire 2 min les resultats deja obtenus.
 
+    var derniereDureeChargee = null;
     function chargerCreneaux(dureeTotaleMin) {
       clearTimeout(minuterieCreneaux);
       minuterieCreneaux = setTimeout(function() { lancerChargementCreneaux(dureeTotaleMin); }, 350);
@@ -714,14 +755,15 @@
       });
     }
 
+    var TEXTE_BOUTON_OK = 'Confirmer le rendez-vous et recevoir mon devis';
     function majBoutonValider() {
       const btn = document.getElementById('btn-valider');
       if (creneauSelectionne) {
         btn.disabled = false;
-        btn.textContent = 'Réserver';
+        btn.textContent = TEXTE_BOUTON_OK;
       } else {
         btn.disabled = true;
-        btn.textContent = 'Sélectionnez un créneau';
+        btn.textContent = 'Choisissez un créneau';
       }
     }
 
@@ -836,14 +878,14 @@
               'Devis ' + resultat.numeroDevis + ' envoyé par email. Montant : ' + formatXPF(resultat.totalTTC) + '.';
           } else {
             btn.disabled = false;
-            btn.textContent = 'Réserver';
+            btn.textContent = TEXTE_BOUTON_OK;
             msgErreur.textContent = resultat.error;
             msgErreur.style.display = 'block';
           }
         })
         .catch(function(err) {
           btn.disabled = false;
-          btn.textContent = 'Réserver';
+          btn.textContent = TEXTE_BOUTON_OK;
           msgErreur.textContent = 'Erreur reseau : ' + err.message;
           msgErreur.style.display = 'block';
         });
