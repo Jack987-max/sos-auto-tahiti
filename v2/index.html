@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>SOS Auto Tahiti · Mécanique automobile à domicile</title>
+  <meta name="description" content="Mécanicien à domicile à Tahiti : devis immédiat, prix pièces et main-d'œuvre compris, rendez-vous en ligne. Paiement par carte bancaire après l'intervention.">
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sosautotahiti.com/">
+  <meta property="og:title" content="SOS Auto Tahiti · Le mécanicien vient chez vous">
+  <meta property="og:description" content="Devis immédiat et rendez-vous en ligne. Prix pièces et main-d'œuvre compris.">
+  <meta property="og:image" content="https://sosautotahiti.com/v2/banniere.jpg">
+  <meta name="theme-color" content="#003CCB">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bleu: #003CCB;
+      --bleu-fonce: #002C94;
+      --bleu-nuit: #001A5C;
+      --bleu-clair: #E6ECFA;
+      --corail: #FF6B4A;
+      --corail-clair: #FFE9E2;
+      --jaune-clair: #FFF3D6;
+      --fond: #F4F6FB;
+      --carte: #FFFFFF;
+      --texte: #0F172A;
+      --gris: #5B6475;
+      --bord: #E1E6F0;
+      --vert: #16A34A;
+      /* alias utilises par le formulaire */
+      --fb-blue: var(--bleu); --fb-blue-dark: var(--bleu-fonce); --fb-blue-soft: var(--bleu-clair);
+      --accent-corail: var(--corail); --accent-corail-soft: var(--corail-clair); --accent-jaune-soft: var(--jaune-clair);
+      --fb-bg: var(--fond); --fb-card: var(--carte); --fb-text: var(--texte); --fb-text-secondary: var(--gris);
+      --fb-border: var(--bord); --fb-green: var(--vert);
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+    body { margin: 0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: var(--fond); color: var(--texte); line-height: 1.5; }
+    a { color: var(--bleu); }
+    img { max-width: 100%; display: block; }
+    .large { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+    /* ---------- Barre du haut ---------- */
+    .barre { position: sticky; top: 0; z-index: 30; background: rgba(255,255,255,.94); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--bord); padding-top: env(safe-area-inset-top, 0px); }
+    .barre .large { display: flex; align-items: center; gap: 12px; height: 64px; }
+    .marque { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--texte); font-weight: 800; font-size: 17px; flex: 1; }
+    .marque img { width: 40px; height: 40px; border-radius: 50%; }
+    .barre nav { display: flex; gap: 22px; margin-right: 8px; }
+    .barre nav a { text-decoration: none; color: var(--gris); font-weight: 600; font-size: 14.5px; }
+    .barre nav a:hover { color: var(--bleu); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 18px; border-radius: 12px;
+      font-weight: 800; font-size: 15px; text-decoration: none; border: 2px solid transparent; cursor: pointer; font-family: inherit; white-space: nowrap; }
+    .btn-plein { background: var(--bleu); color: #fff; box-shadow: 0 6px 16px rgba(0,60,203,.28); }
+    .btn-plein:hover { background: var(--bleu-fonce); }
+    .btn-blanc { background: #fff; color: var(--bleu); }
+    .btn-contour { border-color: rgba(255,255,255,.7); color: #fff; }
+    .btn-petit { padding: 9px 14px; font-size: 14px; }
+    @media (max-width: 860px) { .barre nav { display: none; } }
+
+    /* ---------- Bandeau principal ---------- */
+    .hero { position: relative; color: #fff; background: var(--bleu-nuit); overflow: hidden; }
+    .hero-image { position: absolute; inset: 0; background: url('banniere.jpg') center right / cover no-repeat; }
+    .hero::after { content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, rgba(0,26,92,.94) 0%, rgba(0,44,148,.82) 38%, rgba(0,60,203,.25) 70%, rgba(0,60,203,0) 100%); }
+    .hero .large { position: relative; z-index: 2; padding-top: 72px; padding-bottom: 80px; }
+    .hero h1 { font-size: clamp(32px, 5vw, 54px); line-height: 1.06; margin: 0 0 16px; font-weight: 800; letter-spacing: -1px; max-width: 560px; }
+    .hero p.accroche { font-size: clamp(16px, 2vw, 19px); max-width: 500px; margin: 0 0 26px; opacity: .95; }
+    .hero .ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+    .hero .preuves { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 28px; font-size: 14px; font-weight: 700; opacity: .95; }
+    .hero .preuves span::before { content: '✓'; display: inline-block; margin-right: 6px; color: #9FB8FF; }
+    @media (max-width: 720px) {
+      .hero-image { position: relative; height: 210px; background-image: url('banniere-mobile.jpg'); background-position: 70% center; }
+      .hero::after { display: none; }
+      .hero .large { padding-top: 26px; padding-bottom: 34px; background: linear-gradient(180deg, var(--bleu-fonce), var(--bleu-nuit)); max-width: none; }
+      .hero .ctas .btn { flex: 1; }
+    }
+
+    /* ---------- Sections ---------- */
+    section.bloc { padding: 64px 0; }
+    section.bloc.blanc { background: #fff; }
+    .surtitre { color: var(--bleu); font-weight: 800; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; margin: 0 0 8px; }
+    h2.titre { font-size: clamp(25px, 3.4vw, 36px); line-height: 1.15; margin: 0 0 12px; font-weight: 800; letter-spacing: -.5px; }
+    p.intro { color: var(--gris); font-size: 16.5px; max-width: 620px; margin: 0 0 32px; }
+    @media (max-width: 720px) { section.bloc { padding: 44px 0; } }
+
+    .etapes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; counter-reset: e; }
+    .etape { background: var(--fond); border-radius: 18px; padding: 24px; position: relative; }
+    .etape::before { counter-increment: e; content: counter(e); display: flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px; border-radius: 12px; background: var(--bleu); color: #fff; font-weight: 800; font-size: 18px; margin-bottom: 14px; }
+    .etape h3 { margin: 0 0 6px; font-size: 17px; }
+    .etape p { margin: 0; color: var(--gris); font-size: 15px; }
+    @media (max-width: 820px) { .etapes { grid-template-columns: 1fr; } }
+
+    .grille-prest { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+    .prest { background: #fff; border: 1px solid var(--bord); border-radius: 14px; padding: 16px 16px 14px; display: flex; flex-direction: column; gap: 6px;
+      cursor: pointer; transition: border-color .15s, transform .15s; text-align: left; font-family: inherit; color: var(--texte); }
+    .prest:hover { border-color: var(--bleu); transform: translateY(-2px); }
+    .prest .n { font-weight: 700; font-size: 15px; }
+    .prest .p { color: var(--bleu); font-weight: 800; font-size: 15px; margin-top: auto; }
+    .prest .p small { color: var(--gris); font-weight: 600; font-size: 12px; }
+    .note { color: var(--gris); font-size: 13.5px; margin-top: 14px; }
+
+    .atouts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .atout { background: #fff; border-radius: 16px; padding: 20px; border: 1px solid var(--bord); }
+    .atout .ic { font-size: 26px; margin-bottom: 8px; }
+    .atout h3 { margin: 0 0 6px; font-size: 16px; }
+    .atout p { margin: 0; color: var(--gris); font-size: 14.5px; }
+    @media (max-width: 960px) { .atouts { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 520px) { .atouts { grid-template-columns: 1fr; } }
+
+    .zones { display: flex; flex-wrap: wrap; gap: 8px; }
+    .zones span { background: var(--bleu-clair); color: var(--bleu-fonce); font-weight: 700; padding: 8px 14px; border-radius: 99px; font-size: 14.5px; }
+
+    /* ---------- Zone formulaire ---------- */
+    #devis { background: linear-gradient(180deg, var(--bleu-clair) 0, var(--fond) 420px); }
+    .devis-grille { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 28px; align-items: start; }
+    .devis-cote { position: sticky; top: 84px; }
+    .devis-cote .carte-info { background: var(--bleu); color: #fff; border-radius: 18px; padding: 22px; }
+    .devis-cote .carte-info h3 { margin: 0 0 10px; font-size: 18px; }
+    .devis-cote ul { margin: 0; padding-left: 18px; font-size: 14.5px; }
+    .devis-cote li { margin-bottom: 6px; }
+    .devis-cote .contact { margin-top: 14px; background: #fff; border-radius: 18px; padding: 18px; border: 1px solid var(--bord); font-size: 14.5px; }
+    @media (max-width: 960px) { .devis-grille { grid-template-columns: 1fr; } .devis-cote { position: static; order: -1; } .devis-cote .carte-info { display: none; } }
+
+    /* ---------- FAQ ---------- */
+    .faq { max-width: 780px; }
+    .faq details { background: #fff; border: 1px solid var(--bord); border-radius: 14px; padding: 4px 18px; margin-bottom: 10px; }
+    .faq summary { cursor: pointer; font-weight: 700; padding: 14px 0; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+    .faq summary::after { content: '+'; color: var(--bleu); font-size: 22px; line-height: 1; }
+    .faq details[open] summary::after { content: '–'; }
+    .faq details p { margin: 0 0 16px; color: var(--gris); }
+
+    /* ---------- Pied de page ---------- */
+    footer { background: var(--bleu-nuit); color: #C9D5F5; padding: 40px 0 calc(28px + env(safe-area-inset-bottom, 0px)); font-size: 14.5px; }
+    footer .large { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 24px; }
+    footer h4 { color: #fff; margin: 0 0 10px; font-size: 15px; }
+    footer a { color: #fff; }
+    footer .bas { grid-column: 1 / -1; border-top: 1px solid rgba(255,255,255,.15); padding-top: 16px; font-size: 13px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    @media (max-width: 720px) { footer .large { grid-template-columns: 1fr; } }
+    .flottant { position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 25; display: none; }
+    @media (max-width: 960px) { .flottant.visible { display: inline-flex; } }
+
+    /* ---------- Formulaire (repris de la version precedente) ---------- */
+    .conteneur { max-width: 640px; margin: 0; padding: 0; }
+    .carte { background: var(--carte); border-radius: 18px; padding: 18px; margin-bottom: 14px; box-shadow: 0 2px 10px rgba(15,23,42,0.05); border: 1px solid var(--bord); }
+    .carte-header { display: flex; align-items: center; gap: 11px; margin-bottom: 14px; }
+    .carte-icone { width: 38px; height: 38px; border-radius: 13px; background: var(--bleu-clair); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .carte-icone.corail { background: var(--corail-clair); }
+    .carte-icone.jaune { background: var(--jaune-clair); }
+    .carte-titre { font-size: 16.5px; font-weight: 800; margin: 0; color: var(--texte); }
+    .etape-num { margin-left: auto; font-size: 12px; font-weight: 800; color: var(--bleu); background: var(--bleu-clair); padding: 4px 9px; border-radius: 99px; }
+    label { display: block; font-weight: 700; font-size: 13px; margin: 14px 0 6px; color: var(--texte); }
+    label:first-of-type { margin-top: 0; }
+    select, input, textarea { width: 100%; padding: 13px 14px; border: 1.5px solid var(--bord); border-radius: 13px; font-size: 16px; background: var(--fond); color: var(--texte); font-family: inherit; transition: border-color 0.15s, background 0.15s; }
+    select { appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235B6475' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat; background-position: right 14px center; background-size: 18px; padding-right: 40px; }
+    select:focus, input:focus, textarea:focus { outline: none; border-color: var(--bleu); background: #fff; }
+    textarea { resize: vertical; min-height: 64px; }
+    select:disabled, input:disabled { opacity: 0.45; }
+    .prestation-item { display: flex; align-items: center; padding: 13px 4px; border-bottom: 1px solid #EEF1F6; cursor: pointer; }
+    .prestation-item:last-child { border-bottom: none; }
+    .prestation-item input[type=checkbox] { width: 23px; height: 23px; margin-right: 13px; accent-color: var(--bleu); flex-shrink: 0; }
+    .prestation-item .nom { flex: 1; font-size: 14.5px; font-weight: 600; }
+    .prestation-item .prix { font-size: 13.5px; color: var(--bleu); font-weight: 800; white-space: nowrap; }
+    .creneaux { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 9px; margin-top: 4px; }
+    .jours-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 4px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .jours-scroll::-webkit-scrollbar { display: none; }
+    .aide-etape { font-size: 12.5px; color: var(--gris); margin: 10px 0 0; line-height: 1.5; }
+    #aide-vehicule.ok { display: none; }
+    .jour-btn { flex: 0 0 auto; width: 78px; padding: 10px 4px; border: 1.5px solid var(--bord); border-radius: 16px; background: var(--fond); cursor: pointer; text-align: center; transition: all 0.12s; }
+    .jour-btn .jour-nom { font-size: 11px; font-weight: 700; color: var(--gris); text-transform: uppercase; }
+    .jour-btn .jour-num { font-size: 19px; font-weight: 800; color: var(--texte); margin-top: 2px; }
+    .jour-btn .jour-mois { font-size: 10px; color: var(--gris); margin-top: 1px; font-weight: 600; }
+    .jour-btn.selectionne { background: var(--bleu); border-color: var(--bleu); }
+    .jour-btn.selectionne .jour-nom, .jour-btn.selectionne .jour-num, .jour-btn.selectionne .jour-mois { color: #fff; }
+    .heures-titre { font-size: 13px; font-weight: 700; color: var(--gris); margin: 12px 0 8px; }
+    .creneau-btn { padding: 13px 6px; border: 1.5px solid var(--bord); border-radius: 13px; background: var(--fond); font-size: 13.5px; cursor: pointer; text-align: center; font-weight: 700; color: var(--texte); transition: all 0.12s; }
+    .creneau-btn.selectionne { background: var(--bleu); color: #fff; border-color: var(--bleu); transform: scale(1.02); }
+    .btn-principal { width: 100%; padding: 16px; background: var(--bleu); color: #fff; border: none; border-radius: 16px; font-family: inherit; font-size: 16.5px; font-weight: 800; cursor: pointer; margin-top: 12px; box-shadow: 0 6px 16px rgba(0,60,203,0.28); transition: transform 0.1s, background 0.15s; }
+    .btn-principal:active { background: var(--bleu-fonce); transform: scale(0.98); }
+    .btn-principal:disabled { background: #C9CFDB; box-shadow: none; cursor: default; }
+    .msg-erreur { color: #B3261E; font-size: 13.5px; margin-top: 10px; background: #FDE8E7; border-radius: 12px; padding: 11px 12px; }
+    .msg-succes { text-align: center; padding: 40px 24px; background: #fff; border-radius: 18px; border: 1px solid var(--bord); }
+    .msg-succes .icone { width: 72px; height: 72px; border-radius: 50%; background: var(--vert); color: #fff; font-size: 38px; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; box-shadow: 0 4px 14px rgba(22,163,74,0.35); }
+    .msg-succes h2 { font-size: 21px; margin: 0 0 8px; font-weight: 800; }
+    .msg-succes p { color: var(--gris); font-size: 14.5px; line-height: 1.5; }
+    .honeypot { position: absolute; left: -9999px; }
+    .chargement { text-align: center; color: var(--gris); padding: 28px; font-size: 13.5px; font-weight: 600; background: #fff; border-radius: 18px; border: 1px solid var(--bord); }
+    .carte .chargement { border: none; }
+    .chargement::before { content: ''; display: block; width: 30px; height: 30px; margin: 0 auto 12px; border-radius: 50%; border: 3px solid var(--bord); border-top-color: var(--bleu); animation: tourne .8s linear infinite; }
+    @keyframes tourne { to { transform: rotate(360deg); } }
+    .chargement.erreur::before { display: none; }
+    .checkbox-cgv, .checkbox-facturation { display: flex; align-items: flex-start; margin-top: 16px; }
+    .checkbox-cgv input, .checkbox-facturation input { width: 21px; height: 21px; margin-right: 9px; margin-top: 1px; flex-shrink: 0; accent-color: var(--bleu); }
+    .checkbox-cgv span, .checkbox-facturation span { font-size: 13px; color: var(--gris); line-height: 1.4; }
+    #bloc-adresse-facturation { margin-top: 6px; }
+    .btn-reseau { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 16px; text-decoration: none; font-size: 21px; box-shadow: 0 3px 8px rgba(0,0,0,0.15); }
+    .btn-reseau.facebook { background: #1877F2; color: #fff; font-weight: 800; }
+    .btn-reseau.instagram { background: radial-gradient(circle at 30% 107%, #fdf497, #fd5949, #d6249f, #285AEB); color: #fff; }
+    .recap-ligne { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; font-size: 14px; border-bottom: 1px solid #EEF1F6; }
+    .recap-ligne span:last-child { font-weight: 700; white-space: nowrap; }
+    .recap-total { display: flex; justify-content: space-between; margin-top: 10px; padding: 13px 14px; background: var(--bleu-clair); border-radius: 13px; font-weight: 800; font-size: 17px; color: var(--bleu-fonce); }
+    .recap-note { font-size: 12px; color: var(--gris); margin: 8px 0 0; line-height: 1.45; }
+    .bandeau-paiement { display: flex; gap: 10px; align-items: flex-start; margin-top: 12px; padding: 12px 13px; background: var(--jaune-clair); border-radius: 13px; font-size: 13px; line-height: 1.45; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <header class="barre">
+    <div class="large">
+      <a class="marque" href="#haut"><img src="logo.png" alt="">SOS Auto Tahiti</a>
+      <nav>
+        <a href="#fonctionnement">Comment ça marche</a>
+        <a href="#prestations">Prestations</a>
+        <a href="#zone">Zone</a>
+        <a href="#faq">Questions</a>
+      </nav>
+      <a class="btn btn-plein btn-petit" href="#devis">Devis &amp; RDV</a>
+    </div>
+  </header>
+
+  <section class="hero" id="haut">
+    <div class="hero-image" role="img" aria-label="Mécanicien au travail sous le capot d'une voiture"></div>
+    <div class="large">
+      <h1>Votre mécanicien vient à vous.</h1>
+      <p class="accroche">Entretien et réparation automobile à domicile ou au travail, sur Tahiti. Devis immédiat, prix pièces et main-d'œuvre compris, rendez-vous en ligne en 2 minutes.</p>
+      <div class="ctas">
+        <a class="btn btn-blanc" href="#devis">Obtenir mon devis</a>
+        <a class="btn btn-contour" href="https://wa.me/68987046172" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+      <div class="preuves"><span>Pièces et main-d'œuvre compris</span><span>Paiement CB après l'intervention</span><span>Devis envoyé par email</span></div>
+    </div>
+  </section>
+
+  <section class="bloc blanc" id="fonctionnement">
+    <div class="large">
+      <p class="surtitre">Comment ça marche</p>
+      <h2 class="titre">Trois étapes, zéro garage.</h2>
+      <p class="intro">Plus besoin de perdre une demi-journée au garage : on se déplace là où se trouve votre voiture.</p>
+      <div class="etapes">
+        <div class="etape"><h3>Choisissez vos interventions</h3><p>Indiquez votre véhicule et ce qu'il faut faire : le prix s'affiche tout de suite, pièces et main-d'œuvre comprises.</p></div>
+        <div class="etape"><h3>Réservez votre créneau</h3><p>Choisissez l'adresse et l'horaire qui vous arrangent. Votre devis et la confirmation du rendez-vous arrivent par email.</p></div>
+        <div class="etape"><h3>On s'occupe du reste</h3><p>Le mécanicien intervient sur place. Vous réglez par carte bancaire à la fin, et recevez votre facture par email.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloc" id="prestations">
+    <div class="large">
+      <p class="surtitre">Prestations</p>
+      <h2 class="titre">Des prix clairs, tout compris.</h2>
+      <p class="intro">Prix de départ pour les plus petites catégories de véhicules. Le prix exact de votre véhicule s'affiche dans le formulaire.</p>
+      <div class="grille-prest" id="vitrine-prestations"><div class="chargement">Chargement des tarifs…</div></div>
+      <p class="note">Déplacement selon la commune. Votre véhicule n'est pas dans la liste ? Faites une demande manuelle depuis le formulaire.</p>
+    </div>
+  </section>
+
+  <section class="bloc blanc">
+    <div class="large">
+      <div class="atouts">
+        <div class="atout"><div class="ic">💰</div><h3>Prix fixés à l'avance</h3><p>Le montant du devis est celui que vous payez. Aucun travail supplémentaire sans votre accord.</p></div>
+        <div class="atout"><div class="ic">📍</div><h3>Chez vous ou au travail</h3><p>Le mécanicien vient avec son outillage, à l'adresse de votre choix.</p></div>
+        <div class="atout"><div class="ic">💳</div><h3>Carte bancaire uniquement</h3><p>Paiement à la fin de l'intervention. Nos techniciens ne transportent pas d'espèces.</p></div>
+        <div class="atout"><div class="ic">🧾</div><h3>Devis et facture par email</h3><p>Tout est écrit, numéroté et envoyé en PDF : vous gardez une trace de chaque intervention.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloc" id="zone">
+    <div class="large">
+      <p class="surtitre">Zone d'intervention</p>
+      <h2 class="titre">On se déplace sur ces communes.</h2>
+      <p class="intro">Vous êtes un peu plus loin ? Contactez-nous, on regarde ce qui est possible.</p>
+      <div class="zones" id="vitrine-zones"></div>
+    </div>
+  </section>
+
+  <section class="bloc" id="devis">
+    <div class="large">
+      <p class="surtitre">Devis et rendez-vous</p>
+      <h2 class="titre">Votre devis en 2 minutes.</h2>
+      <p class="intro">Renseignez votre véhicule, vos interventions et votre adresse, puis choisissez votre créneau.</p>
+      <div class="devis-grille">
+        <div>
+          <div class="conteneur">
+    <div id="chargement-initial" class="chargement">Chargement du formulaire...</div>
+    <div id="msg-erreur-init" class="msg-erreur" style="display:none"></div>
+
+    <form id="formulaire" style="display:none">
+      <input type="text" name="honeypot" class="honeypot" tabindex="-1" autocomplete="off">
+
+      <div class="carte">
+        <div class="carte-header"><div class="carte-icone">🚗</div><p class="carte-titre">Votre véhicule</p><span class="etape-num">1/4</span></div>
+        <label for="categorie">Catégorie *</label>
+        <select id="categorie" required></select>
+
+        <label for="marque">Marque *</label>
+        <select id="marque" disabled><option value="">— Choisir d'abord une catégorie —</option></select>
+
+        <label for="modele">Modèle *</label>
+        <select id="modele" disabled><option value="">— Choisir d'abord une marque —</option></select>
+
+        <label for="annee">Année *</label>
+        <input type="text" id="annee" inputmode="numeric" maxlength="4" placeholder="Ex : 2019">
+
+        <label for="immatriculation">Immatriculation *</label>
+        <input type="text" id="immatriculation" placeholder="Ex : 123456 P" required>
+        <p id="aide-vehicule" class="aide-etape">Renseignez tous les champs pour passer à l'étape suivante.</p>
+
+        <p style="font-size:12.5px; color:var(--fb-text-secondary); margin:14px 0 0; line-height:1.5;">
+          Votre véhicule n'apparaît pas dans les catégories ci-dessus ?
+          <a href="#" id="lien-vehicule-special" style="color:var(--fb-blue); font-weight:600;">Faites une demande manuelle</a>
+          ou écrivez-nous directement à <span id="email-contact" style="font-weight:600;"></span>.
+        </p>
+      </div>
+
+      <div class="carte" id="carte-interventions" style="display:none">
+        <div class="carte-header"><div class="carte-icone corail">🔩</div><p class="carte-titre">Interventions souhaitées</p><span class="etape-num">2/4</span></div>
+        <p style="font-size:15px; color:var(--accent-corail); margin:-4px 0 10px; font-weight:800;">Prix pièces et main-d'œuvre compris</p>
+        <div id="liste-prestations"></div>
+      </div>
+
+      <div class="carte" id="carte-lieu" style="display:none">
+        <div class="carte-header"><div class="carte-icone jaune">📍</div><p class="carte-titre">Lieu d'intervention</p><span class="etape-num">3/4</span></div>
+        <label for="commune">Commune</label>
+        <select id="commune" required></select>
+        <label for="adresse">Adresse précise</label>
+        <input type="text" id="adresse" placeholder="Rue, quartier, point de repère" required>
+      </div>
+
+      <div class="carte" id="carte-creneaux" style="display:none">
+        <div class="carte-header"><div class="carte-icone">🗓️</div><p class="carte-titre">Choisissez votre rendez-vous</p><span class="etape-num">4/4</span></div>
+        <p class="aide-etape" style="margin:-4px 0 10px">Faites glisser les jours vers la gauche pour voir les 3 prochaines semaines.</p>
+        <div id="chargement-creneaux" class="chargement" style="display:none">Recherche des disponibilités...</div>
+        <div id="liste-jours" class="jours-scroll"></div>
+        <div id="zone-heures" style="display:none">
+          <p class="heures-titre">Heure disponible</p>
+          <div id="liste-heures" class="creneaux"></div>
+        </div>
+      </div>
+
+      <div class="carte" id="carte-coordonnees" style="display:none">
+        <div class="carte-header"><div class="carte-icone corail">👤</div><p class="carte-titre">Vos coordonnées</p></div>
+        <label for="nom">Nom</label>
+        <input type="text" id="nom" required>
+        <label for="prenom">Prénom</label>
+        <input type="text" id="prenom" required>
+        <label for="telephone">Téléphone</label>
+        <input type="tel" id="telephone" placeholder="+689 XX XX XX XX" value="+689 " required>
+        <label for="email">Email</label>
+        <input type="email" id="email" required>
+
+        <div class="checkbox-facturation">
+          <input type="checkbox" id="facturationIdentique" checked>
+          <span>L'adresse de facturation est la même que l'adresse d'intervention</span>
+        </div>
+        <div id="bloc-adresse-facturation" style="display:none">
+          <label for="adresseFacturation">Adresse de facturation</label>
+          <input type="text" id="adresseFacturation">
+        </div>
+
+        <label for="commentaire">Commentaire (optionnel)</label>
+        <textarea id="commentaire"></textarea>
+
+        <div class="checkbox-cgv">
+          <input type="checkbox" id="cgv" required>
+          <span>J'accepte que mes données soient utilisées pour traiter ma demande de devis et de rendez-vous.</span>
+        </div>
+      </div>
+
+      <div class="carte" id="carte-recap" style="display:none">
+        <div class="carte-header"><div class="carte-icone">🧾</div><p class="carte-titre">Votre estimation</p></div>
+        <div id="recap-lignes"></div>
+        <div class="recap-total"><span>Total estimé</span><span id="recap-total"></span></div>
+        <p class="recap-note" id="recap-note"></p>
+        <div class="bandeau-paiement"><span>💳</span><span>Paiement par <strong>carte bancaire uniquement</strong>, à la fin de l'intervention. Pour des raisons de sécurité, nos techniciens n'acceptent pas les espèces.</span></div>
+      </div>
+
+      <button type="submit" class="btn-principal" id="btn-valider" disabled>Choisissez un créneau</button>
+      <div id="msg-erreur" class="msg-erreur" style="display:none"></div>
+    </form>
+
+    <div id="msg-succes" class="msg-succes" style="display:none">
+      <div class="icone">✓</div>
+      <h2>Rendez-vous confirmé</h2>
+      <p id="succes-texte"></p>
+      <button type="button" class="btn-principal" style="max-width:280px; margin-left:auto; margin-right:auto;" onclick="window.location.reload()">Faire une nouvelle demande</button>
+      <p id="reseaux-succes-label" style="display:none; text-align:center; font-size:12.5px; color:var(--fb-text-secondary); font-weight:700; margin:18px 0 8px;">Retrouvez-nous sur les réseaux</p>
+      <div id="reseaux-succes" style="display:flex; gap:10px; justify-content:center;"></div>
+    </div>
+
+    <!-- FORMULAIRE SPECIAL : vehicule hors liste, chiffrage manuel -->
+    <form id="formulaire-special" style="display:none">
+      <input type="text" name="honeypot2" class="honeypot" tabindex="-1" autocomplete="off">
+      <div class="carte">
+        <div class="carte-header"><div class="carte-icone">✉️</div><p class="carte-titre">Demande manuelle (véhicule hors liste)</p></div>
+        <p style="font-size:13px; color:var(--fb-text-secondary); margin:0 0 4px;">
+          Votre véhicule ne figure pas dans nos catégories. Décrivez-le ci-dessous : nous établirons votre devis manuellement et vous recontacterons.
+        </p>
+
+        <label for="vehiculeLibre">Marque et modèle</label>
+        <input type="text" id="vehiculeLibre" placeholder="Ex : Ferrari 458" required>
+
+        <label for="immatriculationSpecial">Immatriculation *</label>
+        <input type="text" id="immatriculationSpecial" required>
+      </div>
+
+      <div class="carte">
+        <div class="carte-header"><div class="carte-icone corail">🔩</div><p class="carte-titre">Interventions souhaitées</p></div>
+        <div id="liste-prestations-special"></div>
+      </div>
+
+      <div class="carte">
+        <div class="carte-header"><div class="carte-icone jaune">📍</div><p class="carte-titre">Lieu d'intervention</p></div>
+        <label for="communeSpecial">Commune</label>
+        <select id="communeSpecial" required></select>
+        <label for="adresseSpecial">Adresse précise</label>
+        <input type="text" id="adresseSpecial" placeholder="Rue, quartier, point de repère" required>
+      </div>
+
+      <div class="carte">
+        <div class="carte-header"><div class="carte-icone">🗓️</div><p class="carte-titre">Créneau souhaité</p></div>
+        <label for="creneauSouhaite">Date et heure souhaitées</label>
+        <input type="datetime-local" id="creneauSouhaite" required>
+        <p style="font-size:12px; color:var(--fb-text-secondary); margin:8px 0 0;">Ce créneau est une préférence, pas une réservation ferme — nous vous confirmerons par téléphone ou email.</p>
+      </div>
+
+      <div class="carte">
+        <div class="carte-header"><div class="carte-icone corail">👤</div><p class="carte-titre">Vos coordonnées</p></div>
+        <label for="nomSpecial">Nom</label>
+        <input type="text" id="nomSpecial" required>
+        <label for="prenomSpecial">Prénom</label>
+        <input type="text" id="prenomSpecial" required>
+        <label for="telephoneSpecial">Téléphone</label>
+        <input type="tel" id="telephoneSpecial" placeholder="+689 XX XX XX XX" value="+689 " required>
+        <label for="emailSpecial">Email</label>
+        <input type="email" id="emailSpecial" required>
+        <label for="commentaireSpecial">Commentaire (optionnel)</label>
+        <textarea id="commentaireSpecial"></textarea>
+
+        <div class="checkbox-cgv">
+          <input type="checkbox" id="cgvSpecial" required>
+          <span>J'accepte que mes données soient utilisées pour traiter ma demande.</span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-principal" id="btn-valider-special">Envoyer ma demande</button>
+      <div id="msg-erreur-special" class="msg-erreur" style="display:none"></div>
+      <p style="text-align:center; margin-top:12px;">
+        <a href="#" id="lien-retour-normal" style="color:var(--fb-blue); font-size:13px; font-weight:600;">← Revenir au formulaire standard</a>
+      </p>
+    </form>
+
+    <div id="msg-succes-special" class="msg-succes" style="display:none">
+      <div class="icone">✓</div>
+      <h2>Demande envoyée</h2>
+      <p id="succes-texte-special"></p>
+    </div>
+
+          </div>
+        </div>
+        <aside class="devis-cote">
+          <div class="carte-info">
+            <h3>Bon à savoir</h3>
+            <ul>
+              <li>Les prix comprennent les pièces et la main-d'œuvre.</li>
+              <li>Votre devis PDF part par email dès la réservation.</li>
+              <li>Paiement par carte bancaire, à la fin de l'intervention.</li>
+              <li>Si le mécanicien découvre autre chose sur place, rien n'est fait sans votre accord.</li>
+            </ul>
+          </div>
+          <div class="contact">
+            <strong>Une question avant de réserver ?</strong><br>
+            WhatsApp : <a href="https://wa.me/68987046172" target="_blank" rel="noopener">+689 87 04 61 72</a><br>
+            Email : <a href="mailto:sos.auto.tahiti@gmail.com">sos.auto.tahiti@gmail.com</a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloc blanc" id="faq">
+    <div class="large">
+      <p class="surtitre">Questions fréquentes</p>
+      <h2 class="titre">Vous vous demandez peut-être…</h2>
+      <div class="faq" style="margin-top:24px">
+        <details><summary>Le prix du devis est-il définitif ?</summary><p>Le devis est établi à partir des informations que vous donnez. Si le mécanicien constate sur place une panne ou une pièce supplémentaire, il vous l'explique et rien n'est fait sans votre accord.</p></details>
+        <details><summary>Les pièces sont-elles comprises ?</summary><p>Oui : les prix affichés comprennent les pièces et la main-d'œuvre. Le déplacement dépend de la commune et apparaît dans votre estimation.</p></details>
+        <details><summary>Comment se passe le paiement ?</summary><p>Par carte bancaire uniquement, à la fin de l'intervention. Pour des raisons de sécurité, nos techniciens n'acceptent pas les espèces. La facture vous est envoyée par email.</p></details>
+        <details><summary>Mon véhicule n'est pas dans la liste, que faire ?</summary><p>Utilisez le lien « Faites une demande manuelle » dans le formulaire : nous établissons votre devis à la main et vous recontactons rapidement.</p></details>
+        <details><summary>Où intervenez-vous ?</summary><p>À domicile ou sur votre lieu de travail, dans les communes listées plus haut. Il faut simplement un endroit où la voiture peut être garée en sécurité.</p></details>
+        <details><summary>Je dois annuler ou décaler mon rendez-vous ?</summary><p>Prévenez-nous dès que possible par WhatsApp au +689 87 04 61 72 ou par email : on vous propose un autre créneau.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="large">
+      <div>
+        <h4>SOS Auto Tahiti</h4>
+        Mécanique automobile à domicile.<br>
+        BP 380604, 98703 Punaauia, Tahiti
+      </div>
+      <div>
+        <h4>Contact</h4>
+        WhatsApp : <a href="https://wa.me/68987046172" target="_blank" rel="noopener">+689 87 04 61 72</a><br>
+        <a href="mailto:sos.auto.tahiti@gmail.com">sos.auto.tahiti@gmail.com</a>
+        <div id="pied-reseaux" style="display:flex; gap:10px; margin-top:12px;"></div>
+      </div>
+      <div>
+        <h4>Informations</h4>
+        <a href="mentions-legales.html">Mentions légales</a><br>
+        <a href="mentions-legales.html#donnees">Données personnelles</a><br>
+        <a href="mentions-legales.html#conditions">Conditions de service</a>
+      </div>
+      <div class="bas"><span>© <span id="annee-pied"></span> SOS Auto Tahiti</span><span>Māuruuru !</span></div>
+    </div>
+  </footer>
+
+  <a class="btn btn-plein flottant" id="btn-flottant" href="#devis">Devis &amp; RDV</a>
+
+  <script>
+
+    // ---------- Vitrine : tarifs, communes, reseaux (memes donnees que le formulaire) ----------
+    function echapper(t) { return String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    function remplirVitrine(d) {
+      const coefMin = Math.min.apply(null, d.vehicules.map(v => v.coefficientPrix).concat([1]));
+      const grille = document.getElementById('vitrine-prestations');
+      grille.innerHTML = d.prestations.map(p => `
+        <button type="button" class="prest" data-id="${echapper(p.id)}">
+          <span class="n">${echapper(p.nom)}</span>
+          <span class="p"><small>dès </small>${formatXPF(Math.round((p.prixForfait + p.prixPieces) * coefMin))}</span>
+        </button>`).join('');
+      grille.querySelectorAll('.prest').forEach(b => b.addEventListener('click', function() {
+        const case_ = document.querySelector('#liste-prestations input[value="' + b.dataset.id + '"]');
+        if (case_ && !case_.checked) { case_.checked = true; case_.dispatchEvent(new Event('change')); }
+        document.getElementById('formulaire').style.display !== 'none' && document.getElementById('devis').scrollIntoView();
+      }));
+      document.getElementById('vitrine-zones').innerHTML = d.communes.map(c => `<span>${echapper(c.nom)}</span>`).join('');
+      const e = d.entreprise || {};
+      let res = '';
+      if (e.facebook) res += `<a href="${echapper(e.facebook)}" target="_blank" rel="noopener" class="btn-reseau facebook" aria-label="Facebook">f</a>`;
+      if (e.instagram) res += `<a href="${echapper(e.instagram)}" target="_blank" rel="noopener" class="btn-reseau instagram" aria-label="Instagram">📷</a>`;
+      document.getElementById('pied-reseaux').innerHTML = res;
+    }
+    document.getElementById('annee-pied').textContent = new Date().getFullYear();
+
+    // Bouton flottant "Devis & RDV" sur mobile : visible hors du bandeau et hors du formulaire
+    (function() {
+      const btn = document.getElementById('btn-flottant');
+      const vus = {};
+      if (!('IntersectionObserver' in window)) return;
+      const obs = new IntersectionObserver(function(entrees) {
+        entrees.forEach(en => { vus[en.target.id] = en.isIntersecting; });
+        btn.classList.toggle('visible', !vus.haut && !vus.devis);
+      });
+      obs.observe(document.getElementById('haut'));
+      obs.observe(document.getElementById('devis'));
+    })();
+    // Adresse du serveur (Google Apps Script)
+    const APP_URL = 'https://script.google.com/macros/s/AKfycbwsIClAvm5xMrrp3f3IhmhDx3fPElaGno1qSso9LJNWzlxQ-rvX_WdjBwJqgLAEVw03zg/exec';
+
+    const TZ = 'Pacific/Tahiti';   // tous les horaires sont affiches a l'heure de Tahiti
+    let DONNEES = null;
+    let creneauSelectionne = null;
+    let minuterieCreneaux = null, numeroRequete = 0;
+    const memoireCreneaux = {};
+
+    // --- Chargement rapide : on affiche tout de suite la derniere version connue (memoire du telephone),
+    // puis on recupere la version a jour en arriere-plan et on met les prix a jour si besoin.
+    const CLE_MEMOIRE = 'sos_auto_init_v2';
+    let dejaAffiche = false;
+    try {
+      const memo = JSON.parse(localStorage.getItem(CLE_MEMOIRE) || 'null');
+      if (memo && memo.donnees && (Date.now() - memo.date) < 7 * 24 * 3600 * 1000) {
+        initialiser(memo.donnees);
+        dejaAffiche = true;
+      }
+    } catch (e) { /* memoire indisponible : chargement normal */ }
+
+    fetch(APP_URL + '?action=getInitialData')
+      .then(r => r.json())
+      .then(function(frais) {
+        try { localStorage.setItem(CLE_MEMOIRE, JSON.stringify({ date: Date.now(), donnees: frais })); } catch (e) {}
+        if (!dejaAffiche) { initialiser(frais); return; }
+        // Deja affiche depuis la memoire : on remplace les donnees (prix, majorations) sans reconstruire le formulaire
+        frais.modeles = frais.modeles || [];
+        DONNEES = frais;
+        majPrixListe();
+        remplirVitrine(frais);
+        if (document.getElementById('carte-recap').style.display !== 'none') majRecap();
+      })
+      .catch(function(err) { if (!dejaAffiche) erreurChargement(err); });
+
+    function erreurChargement(err) {
+      document.getElementById('chargement-initial').style.display = 'none';
+      const msg = document.getElementById('msg-erreur-init');
+      msg.style.display = 'block';
+      msg.textContent = 'Erreur de chargement : ' + err.message + '. Merci de recharger la page.';
+    }
+
+    function initialiser(donnees) {
+      DONNEES = donnees;
+      DONNEES.modeles = DONNEES.modeles || [];
+      document.getElementById('chargement-initial').style.display = 'none';
+      document.getElementById('formulaire').style.display = 'block';
+
+      const selCategorie = document.getElementById('categorie');
+      const optDefaut = document.createElement('option');
+      optDefaut.value = ''; optDefaut.textContent = '— Choisir —';
+      selCategorie.appendChild(optDefaut);
+      donnees.vehicules.forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v.id; opt.textContent = v.nom;
+        selCategorie.appendChild(opt);
+      });
+
+      const selCommune = document.getElementById('commune');
+      const selCommuneSpecial = document.getElementById('communeSpecial');
+      donnees.communes.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.id; opt.textContent = c.nom + (c.zoneDifficile ? ' (accès difficile)' : '');
+        selCommune.appendChild(opt);
+        selCommuneSpecial.appendChild(opt.cloneNode(true));
+      });
+
+      document.getElementById('email-contact').textContent = (donnees.entreprise && donnees.entreprise.email) || '';
+
+      const zoneReseaux = document.getElementById('reseaux-succes');
+      const e2 = donnees.entreprise || {};
+      if (e2.facebook) {
+        zoneReseaux.innerHTML += `<a href="${e2.facebook}" target="_blank" class="btn-reseau facebook" aria-label="Facebook">f</a>`;
+      }
+      if (e2.instagram) {
+        zoneReseaux.innerHTML += `<a href="${e2.instagram}" target="_blank" class="btn-reseau instagram" aria-label="Instagram">📷</a>`;
+      }
+      if (e2.facebook || e2.instagram) {
+        document.getElementById('reseaux-succes-label').style.display = 'block';
+      }
+
+      document.getElementById('lien-vehicule-special').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('formulaire').style.display = 'none';
+        document.getElementById('formulaire-special').style.display = 'block';
+        document.getElementById('devis').scrollIntoView();
+      });
+      document.getElementById('lien-retour-normal').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('formulaire-special').style.display = 'none';
+        document.getElementById('formulaire').style.display = 'block';
+        document.getElementById('devis').scrollIntoView();
+      });
+      const listePrestations = document.getElementById('liste-prestations');
+      donnees.prestations.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'prestation-item';
+        div.innerHTML = `
+          <input type="checkbox" value="${p.id}" data-nom="${p.nom}">
+          <span class="nom">${p.nom}</span>
+          <span class="prix" data-prix="${p.id}">${formatXPF(p.prixForfait + p.prixPieces)}</span>`;
+        listePrestations.appendChild(div);
+      });
+
+      const listePrestationsSpecial = document.getElementById('liste-prestations-special');
+      donnees.prestations.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'prestation-item';
+        div.innerHTML = `
+          <input type="checkbox" value="${p.id}" data-nom="${p.nom}">
+          <span class="nom">${p.nom}</span>`;
+        listePrestationsSpecial.appendChild(div);
+      });
+
+      remplirVitrine(donnees);
+
+      selCategorie.addEventListener('change', onCategorieChange);
+      document.getElementById('marque').addEventListener('change', onMarqueChange);
+      ['immatriculation', 'annee', 'adresse'].forEach(id => {
+        document.getElementById(id).addEventListener('input', recalculerCreneaux);
+      });
+      document.querySelectorAll('#liste-prestations input, #categorie, #commune, #modele').forEach(el => {
+        el.addEventListener('change', recalculerCreneaux);
+      });
+
+      document.getElementById('facturationIdentique').addEventListener('change', function() {
+        const bloc = document.getElementById('bloc-adresse-facturation');
+        const champ = document.getElementById('adresseFacturation');
+        if (this.checked) {
+          bloc.style.display = 'none';
+        } else {
+          bloc.style.display = 'block';
+          champ.value = document.getElementById('adresse').value;
+        }
+      });
+      document.getElementById('adresse').addEventListener('input', function() {
+        if (document.getElementById('facturationIdentique').checked) {
+          document.getElementById('adresseFacturation').value = this.value;
+        }
+      });
+    }
+
+    function onCategorieChange() {
+      const categorieId = document.getElementById('categorie').value;
+      const selMarque = document.getElementById('marque');
+      const selModele = document.getElementById('modele');
+      selMarque.innerHTML = '';
+      selModele.innerHTML = '<option value="">— Choisir d\'abord une marque —</option>';
+      selModele.disabled = true;
+
+      if (!categorieId) {
+        selMarque.innerHTML = '<option value="">— Choisir d\'abord une catégorie —</option>';
+        selMarque.disabled = true;
+        recalculerCreneaux();
+        return;
+      }
+
+      const marques = Array.from(new Set(
+        DONNEES.modeles.filter(m => String(m.categorieId) === String(categorieId)).map(m => m.marque)
+      )).sort();
+
+      selMarque.disabled = false;
+      const optVide = document.createElement('option');
+      optVide.value = ''; optVide.textContent = marques.length ? '— Choisir —' : '— Aucune marque enregistrée pour cette catégorie —';
+      selMarque.appendChild(optVide);
+      marques.forEach(marque => {
+        const opt = document.createElement('option');
+        opt.value = marque; opt.textContent = marque;
+        selMarque.appendChild(opt);
+      });
+      recalculerCreneaux();
+    }
+
+    function onMarqueChange() {
+      const categorieId = document.getElementById('categorie').value;
+      const marque = document.getElementById('marque').value;
+      const selModele = document.getElementById('modele');
+      selModele.innerHTML = '';
+
+      if (!marque) {
+        selModele.innerHTML = '<option value="">— Choisir d\'abord une marque —</option>';
+        selModele.disabled = true;
+        recalculerCreneaux();
+        return;
+      }
+
+      const modeles = DONNEES.modeles.filter(m => String(m.categorieId) === String(categorieId) && m.marque === marque);
+      selModele.disabled = false;
+      const optVide = document.createElement('option');
+      optVide.value = ''; optVide.textContent = '— Choisir —';
+      selModele.appendChild(optVide);
+      modeles.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m.modele; opt.textContent = m.modele;
+        selModele.appendChild(opt);
+      });
+      recalculerCreneaux();
+    }
+
+    function getPrestationsSelectionnees() {
+      return Array.from(document.querySelectorAll('#liste-prestations input:checked'));
+    }
+
+    // Etapes successives : vehicule complet -> interventions -> lieu -> rendez-vous + coordonnees
+    function vehiculeComplet() {
+      const val = id => document.getElementById(id).value.trim();
+      const annee = parseInt(val('annee'), 10);
+      const anneeMax = new Date().getFullYear() + 1;
+      return !!(val('categorie') && val('marque') && val('modele')
+        && /^\d{4}$/.test(val('annee')) && annee >= 1950 && annee <= anneeMax
+        && val('immatriculation').length >= 4);
+    }
+
+    function afficher(id, visible) {
+      const el = document.getElementById(id);
+      const etait = el.style.display !== 'none';
+      el.style.display = visible ? 'block' : 'none';
+      return visible && !etait; // vrai si la carte vient d'apparaitre
+    }
+
+    function defilerVers(id) {
+      setTimeout(function() {
+        document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 80);
+    }
+
+    function recalculerCreneaux() {
+      const checkboxes = getPrestationsSelectionnees();
+      const categorieId = document.getElementById('categorie').value;
+      const commune = DONNEES.communes.find(c => c.id === document.getElementById('commune').value);
+      const adresse = document.getElementById('adresse').value.trim();
+
+      majPrixListe();
+      const etape1 = vehiculeComplet();
+      const etape2 = etape1 && checkboxes.length > 0;
+      const etape3 = etape2 && !!commune && adresse.length >= 3;
+
+      document.getElementById('aide-vehicule').classList.toggle('ok', etape1);
+      if (afficher('carte-interventions', etape1)) defilerVers('carte-interventions');
+      afficher('carte-lieu', etape2);
+      const rdvApparait = afficher('carte-creneaux', etape3);
+      afficher('carte-coordonnees', etape3);
+
+      if (!etape3) {
+        document.getElementById('carte-recap').style.display = 'none';
+        derniereDureeChargee = null;
+        creneauSelectionne = null;
+        majBoutonValider();
+        return;
+      }
+      if (rdvApparait) defilerVers('carte-creneaux');
+
+      const prestationIds = checkboxes.map(c => c.value);
+      const prestations = DONNEES.prestations.filter(p => prestationIds.includes(p.id));
+      const vehicule = DONNEES.vehicules.find(v => v.id === categorieId);
+
+      const dureeInterventionMin = prestations.reduce((s, p) => s + p.dureeMinutes, 0) * vehicule.coefficientTemps;
+      const approNecessaire = prestations.some(p => !p.enStock);
+      const dureeApproMin = approNecessaire ? DONNEES.forfaitApproMin : 0;
+      const dureeTotaleMin = Math.round(dureeInterventionMin + dureeApproMin + commune.dureeTrajetMinutes);
+
+      majRecap();
+      // On ne recharge les creneaux que si la duree change (sinon le creneau choisi serait perdu)
+      if (dureeTotaleMin !== derniereDureeChargee) {
+        derniereDureeChargee = dureeTotaleMin;
+        chargerCreneaux(dureeTotaleMin);
+      }
+    }
+
+    // Creneaux : attente courte avant l'appel (evite plusieurs appels pendant que le client coche),
+    // on ignore les reponses perimees, et on garde en memoire 2 min les resultats deja obtenus.
+
+    var derniereDureeChargee = null;
+    function chargerCreneaux(dureeTotaleMin) {
+      clearTimeout(minuterieCreneaux);
+      minuterieCreneaux = setTimeout(function() { lancerChargementCreneaux(dureeTotaleMin); }, 350);
+    }
+
+    function lancerChargementCreneaux(dureeTotaleMin) {
+      document.getElementById('chargement-creneaux').classList.remove('erreur');
+      document.getElementById('chargement-creneaux').textContent = 'Recherche des disponibilités...';
+      document.getElementById('chargement-creneaux').style.display = 'block';
+      document.getElementById('liste-jours').innerHTML = '';
+      document.getElementById('zone-heures').style.display = 'none';
+      document.getElementById('liste-heures').innerHTML = '';
+      creneauSelectionne = null;
+      majBoutonValider();
+
+      const memo = memoireCreneaux[dureeTotaleMin];
+      if (memo && Date.now() - memo.date < 120000) { afficherJours(memo.creneaux); return; }
+
+      const monNumero = ++numeroRequete;
+      fetch(APP_URL + '?action=getCreneaux&duree=' + dureeTotaleMin)
+        .then(r => r.json())
+        .then(function(resultat) {
+          if (monNumero !== numeroRequete) return; // une recherche plus recente est en cours
+          if (resultat.success) {
+            memoireCreneaux[dureeTotaleMin] = { date: Date.now(), creneaux: resultat.creneaux };
+            afficherJours(resultat.creneaux);
+          } else {
+            document.getElementById('chargement-creneaux').classList.add('erreur');
+            document.getElementById('chargement-creneaux').textContent = 'Erreur : ' + resultat.error;
+          }
+        })
+        .catch(function(err) {
+          if (monNumero !== numeroRequete) return;
+          document.getElementById('chargement-creneaux').classList.add('erreur');
+          document.getElementById('chargement-creneaux').textContent = 'Erreur : ' + err.message;
+        });
+    }
+
+    function afficherJours(creneaux) {
+      document.getElementById('chargement-creneaux').style.display = 'none';
+      const conteneurJours = document.getElementById('liste-jours');
+      conteneurJours.innerHTML = '';
+
+      if (!creneaux.length) {
+        conteneurJours.innerHTML = '<div style="font-size:13px;color:#65676B">Aucun créneau disponible dans les prochains jours. Merci de nous appeler.</div>';
+        return;
+      }
+
+      // Regroupe les creneaux par jour
+      const parJour = new Map();
+      creneaux.forEach(c => {
+        const d = new Date(c.debut);
+        const cle = d.toLocaleDateString('fr-CA', { timeZone: TZ }); // AAAA-MM-JJ, jour de Tahiti
+        if (!parJour.has(cle)) parJour.set(cle, []);
+        parJour.get(cle).push(c);
+      });
+
+      let premierJourBtn = null;
+      Array.from(parJour.keys()).sort().forEach((cle, index) => {
+        const d = new Date(parJour.get(cle)[0].debut);
+        const btn = document.createElement('div');
+        btn.className = 'jour-btn';
+        btn.innerHTML = `
+          <div class="jour-nom">${d.toLocaleDateString('fr-FR', { weekday: 'short', timeZone: TZ })}</div>
+          <div class="jour-num">${d.toLocaleDateString('fr-FR', { day: 'numeric', timeZone: TZ })}</div>
+          <div class="jour-mois">${d.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric', timeZone: TZ })}</div>`;
+        btn.onclick = function() {
+          document.querySelectorAll('.jour-btn').forEach(b => b.classList.remove('selectionne'));
+          btn.classList.add('selectionne');
+          afficherHeures(parJour.get(cle));
+        };
+        conteneurJours.appendChild(btn);
+        if (index === 0) premierJourBtn = btn;
+      });
+
+      // Selectionne automatiquement le premier jour disponible
+      if (premierJourBtn) premierJourBtn.click();
+    }
+
+    function afficherHeures(creneauxDuJour) {
+      const zone = document.getElementById('zone-heures');
+      const conteneur = document.getElementById('liste-heures');
+      conteneur.innerHTML = '';
+      zone.style.display = 'block';
+      creneauSelectionne = null;
+      majBoutonValider();
+      majRecap();
+
+      creneauxDuJour.forEach(c => {
+        const debut = new Date(c.debut);
+        const btn = document.createElement('div');
+        btn.className = 'creneau-btn';
+        btn.textContent = debut.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', timeZone: TZ });
+        btn.onclick = function() {
+          document.querySelectorAll('#liste-heures .creneau-btn').forEach(b => b.classList.remove('selectionne'));
+          btn.classList.add('selectionne');
+          creneauSelectionne = c;
+          majBoutonValider();
+          majRecap();
+        };
+        conteneur.appendChild(btn);
+      });
+    }
+
+    var TEXTE_BOUTON_OK = 'Confirmer le rendez-vous et recevoir mon devis';
+    function majBoutonValider() {
+      const btn = document.getElementById('btn-valider');
+      if (creneauSelectionne) {
+        btn.disabled = false;
+        btn.textContent = TEXTE_BOUTON_OK;
+      } else {
+        btn.disabled = true;
+        btn.textContent = 'Choisissez un créneau';
+      }
+    }
+
+    function formatXPF(montant) {
+      return String(Math.round(montant)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' XPF';
+    }
+
+    /** Affiche dans la liste le prix de chaque prestation ajuste a la categorie de vehicule choisie. */
+    function majPrixListe() {
+      const vehicule = DONNEES.vehicules.find(v => v.id === document.getElementById('categorie').value);
+      const coef = vehicule ? vehicule.coefficientPrix : 1;
+      DONNEES.prestations.forEach(p => {
+        const el = document.querySelector('[data-prix="' + p.id + '"]');
+        if (el) el.textContent = formatXPF(Math.round((p.prixForfait + p.prixPieces) * coef));
+      });
+    }
+
+    function estWeekendTahiti(iso) {
+      const j = new Date(iso).toLocaleDateString('en-US', { weekday: 'short', timeZone: TZ });
+      return j === 'Sat' || j === 'Sun';
+    }
+
+    /**
+     * Estimation affichee au client : MEME calcul que le serveur (calculerDevis dans Code.gs).
+     * Le montant du devis PDF reste celui calcule par le serveur.
+     */
+    function majRecap() {
+      const carte = document.getElementById('carte-recap');
+      const prestationIds = getPrestationsSelectionnees().map(c => c.value);
+      const prestations = DONNEES.prestations.filter(p => prestationIds.includes(p.id));
+      const vehicule = DONNEES.vehicules.find(v => v.id === document.getElementById('categorie').value);
+      const commune = DONNEES.communes.find(c => c.id === document.getElementById('commune').value);
+      if (!prestations.length || !vehicule || !commune) { carte.style.display = 'none'; return; }
+
+      const coef = vehicule.coefficientPrix;
+      const totalForfaits = Math.round(prestations.reduce((s, p) => s + p.prixForfait, 0) * coef);
+      const totalPieces = Math.round(prestations.reduce((s, p) => s + p.prixPieces, 0) * coef);
+      const frais = commune.fraisDeplacement;
+      const sousTotal = totalForfaits + totalPieces + frais;
+      // Forfaits fixes par deplacement (onglet Config), comme cote serveur
+      const forfaitZone = (DONNEES.majorationZoneXPF != null) ? Number(DONNEES.majorationZoneXPF) : 2000;
+      const forfaitWeekend = (DONNEES.majorationWeekendXPF != null) ? Number(DONNEES.majorationWeekendXPF) : 2500;
+      const majZone = commune.zoneDifficile ? Math.round(forfaitZone) : 0;
+      const weekend = creneauSelectionne ? estWeekendTahiti(creneauSelectionne.debut) : false;
+      const majWeekend = weekend ? Math.round(forfaitWeekend) : 0;
+      const total = sousTotal + majZone + majWeekend;
+
+      // Chaque intervention tout compris (main-d'oeuvre + pieces), comme sur le devis PDF
+      const lignes = prestations.map(p => ({ nom: p.nom, montant: Math.round((p.prixForfait + p.prixPieces) * coef) }));
+      const ecart = (totalForfaits + totalPieces) - lignes.reduce((s, l) => s + l.montant, 0);
+      lignes[lignes.length - 1].montant += ecart;
+
+      const ligne = (lib, m, plus) => `<div class="recap-ligne"><span>${lib}</span><span>${plus ? '+ ' : ''}${formatXPF(m)}</span></div>`;
+      let html = lignes.map(l => ligne(l.nom, l.montant)).join('');
+      if (frais > 0) html += ligne('Déplacement (' + commune.nom + ')', frais);
+      if (majZone > 0) html += ligne('Majoration zone difficile d\'accès', majZone, true);
+      if (majWeekend > 0) html += ligne('Majoration week-end', majWeekend, true);
+
+      document.getElementById('recap-lignes').innerHTML = html;
+      document.getElementById('recap-total').textContent = formatXPF(total);
+      document.getElementById('recap-note').textContent = creneauSelectionne
+        ? 'Montant définitif confirmé dans le devis envoyé par email.'
+        : (forfaitWeekend > 0 ? 'Choisissez un créneau : majoration de ' + formatXPF(forfaitWeekend) + ' le week-end.' : 'Choisissez un créneau.');
+      carte.style.display = 'block';
+    }
+
+    document.getElementById('formulaire').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-valider');
+      const msgErreur = document.getElementById('msg-erreur');
+      msgErreur.style.display = 'none';
+
+      if (!creneauSelectionne) return;
+
+      const prestationsCoches = getPrestationsSelectionnees();
+      const facturationIdentique = document.getElementById('facturationIdentique').checked;
+      const formData = {
+        honeypot: document.querySelector('input[name=honeypot]').value,
+        prestationIds: prestationsCoches.map(c => c.value),
+        prestationsNoms: prestationsCoches.map(c => c.dataset.nom),
+        vehiculeId: document.getElementById('categorie').value,
+        marque: document.getElementById('marque').value,
+        modele: document.getElementById('modele').value,
+        communeId: document.getElementById('commune').value,
+        creneauDebut: creneauSelectionne.debut,
+        nom: document.getElementById('nom').value,
+        prenom: document.getElementById('prenom').value,
+        telephone: document.getElementById('telephone').value,
+        email: document.getElementById('email').value,
+        adresse: document.getElementById('adresse').value,
+        adresseFacturation: facturationIdentique
+          ? document.getElementById('adresse').value
+          : document.getElementById('adresseFacturation').value,
+        annee: document.getElementById('annee').value,
+        immatriculation: document.getElementById('immatriculation').value,
+        commentaire: document.getElementById('commentaire').value,
+      };
+
+      btn.disabled = true;
+      btn.textContent = 'Envoi en cours...';
+
+      fetch(APP_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'soumettreDemande', data: formData }),
+      })
+        .then(r => r.json())
+        .then(function(resultat) {
+          if (resultat.success) {
+            document.getElementById('formulaire').style.display = 'none';
+            document.getElementById('msg-succes').style.display = 'block';
+            document.getElementById('devis').scrollIntoView();
+            document.getElementById('succes-texte').textContent =
+              'Devis ' + resultat.numeroDevis + ' envoyé par email. Montant : ' + formatXPF(resultat.totalTTC) + '.';
+          } else {
+            btn.disabled = false;
+            btn.textContent = TEXTE_BOUTON_OK;
+            msgErreur.textContent = resultat.error;
+            msgErreur.style.display = 'block';
+          }
+        })
+        .catch(function(err) {
+          btn.disabled = false;
+          btn.textContent = TEXTE_BOUTON_OK;
+          msgErreur.textContent = 'Erreur reseau : ' + err.message;
+          msgErreur.style.display = 'block';
+        });
+    });
+
+    document.getElementById('formulaire-special').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-valider-special');
+      const msgErreur = document.getElementById('msg-erreur-special');
+      msgErreur.style.display = 'none';
+
+      const prestationsCoches = Array.from(document.querySelectorAll('#liste-prestations-special input:checked'));
+
+      const formData = {
+        honeypot: document.querySelector('input[name=honeypot2]').value,
+        vehiculeLibre: document.getElementById('vehiculeLibre').value,
+        immatriculation: document.getElementById('immatriculationSpecial').value,
+        prestationsNoms: prestationsCoches.map(c => c.dataset.nom),
+        commune: (function() {
+          const sel = document.getElementById('communeSpecial');
+          return sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].textContent : '';
+        })(),
+        adresse: document.getElementById('adresseSpecial').value,
+        creneauSouhaite: document.getElementById('creneauSouhaite').value,
+        nom: document.getElementById('nomSpecial').value,
+        prenom: document.getElementById('prenomSpecial').value,
+        telephone: document.getElementById('telephoneSpecial').value,
+        email: document.getElementById('emailSpecial').value,
+        commentaire: document.getElementById('commentaireSpecial').value,
+      };
+
+      btn.disabled = true;
+      btn.textContent = 'Envoi en cours...';
+
+      fetch(APP_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'soumettreDemandeSpeciale', data: formData }),
+      })
+        .then(r => r.json())
+        .then(function(resultat) {
+          if (resultat.success) {
+            document.getElementById('formulaire-special').style.display = 'none';
+            document.getElementById('msg-succes-special').style.display = 'block';
+            document.getElementById('devis').scrollIntoView();
+            document.getElementById('succes-texte-special').textContent =
+              'Votre demande ' + resultat.numeroDemande + ' a bien été envoyée. Nous revenons vers vous rapidement avec un devis.';
+          } else {
+            btn.disabled = false;
+            btn.textContent = 'Envoyer ma demande';
+            msgErreur.textContent = resultat.error;
+            msgErreur.style.display = 'block';
+          }
+        })
+        .catch(function(err) {
+          btn.disabled = false;
+          btn.textContent = 'Envoyer ma demande';
+          msgErreur.textContent = 'Erreur reseau : ' + err.message;
+          msgErreur.style.display = 'block';
+        });
+    });
+  </script>
+</body>
+</html>
