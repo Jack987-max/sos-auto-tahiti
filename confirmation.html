@@ -12,11 +12,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --fb-blue: #1877F2;
-      --fb-bg: #F7F4EE;
-      --fb-text: #241E1A;
-      --fb-text-secondary: #7C7267;
-      --fb-border: #E8E1D6;
+      --fb-blue: #003CCB;
+      --fb-bg: #F4F6FB;
+      --fb-text: #0F172A;
+      --fb-text-secondary: #5B6475;
+      --fb-border: #E1E6F0;
       --fb-green: #42B72A;
       --alerte: #E8590C;
     }
@@ -27,10 +27,10 @@
       padding-top: env(safe-area-inset-top, 0px);
     }
     .topbar {
-      background: linear-gradient(135deg, var(--fb-blue) 0%, #4A9AF5 100%);
+      background: linear-gradient(135deg, #002C94 0%, var(--fb-blue) 100%);
       color: #fff; padding: 18px 16px;
       display: flex; align-items: center; gap: 12px;
-      box-shadow: 0 3px 12px rgba(24,119,242,0.25);
+      box-shadow: 0 3px 12px rgba(0,60,203,0.25);
       border-radius: 0 0 22px 22px;
     }
     .topbar .logo {
@@ -85,7 +85,7 @@
 
   <script>
     // === URL de l'API Apps Script (identique a celle du formulaire) ===
-    const APP_URL = 'https://script.google.com/macros/s/AKfycbwmpyrWUsOv0ABb9Wg_V2iS5m3vBNpytw7qnh58ebluL-3ft3NYxfDl8AifRXYETrb3/exec';
+    const APP_URL = 'https://script.google.com/macros/s/AKfycbwsIClAvm5xMrrp3f3IhmhDx3fPElaGno1qSso9LJNWzlxQ-rvX_WdjBwJqgLAEVw03zg/exec';
 
     const params = new URLSearchParams(window.location.search);
     const token = params.get('token');
