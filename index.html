@@ -241,49 +241,6 @@
     </div>
   </section>
 
-  <section class="bloc blanc" id="fonctionnement">
-    <div class="large">
-      <p class="surtitre">Comment ça marche</p>
-      <h2 class="titre">Trois étapes, zéro garage.</h2>
-      <p class="intro">Plus besoin de perdre une demi-journée au garage : on se déplace là où se trouve votre voiture.</p>
-      <div class="etapes">
-        <div class="etape"><h3>Choisissez vos interventions</h3><p>Indiquez votre véhicule et ce qu'il faut faire : le prix s'affiche tout de suite, pièces et main-d'œuvre comprises.</p></div>
-        <div class="etape"><h3>Réservez votre créneau</h3><p>Choisissez l'adresse et l'horaire qui vous arrangent. Votre devis et la confirmation du rendez-vous arrivent par email.</p></div>
-        <div class="etape"><h3>On s'occupe du reste</h3><p>Le mécanicien intervient sur place. Vous réglez par carte bancaire à la fin, et recevez votre facture par email.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="bloc" id="prestations">
-    <div class="large">
-      <p class="surtitre">Prestations</p>
-      <h2 class="titre">Des prix clairs, tout compris.</h2>
-      <p class="intro">Prix de départ pour les plus petites catégories de véhicules. Le prix exact de votre véhicule s'affiche dans le formulaire.</p>
-      <div class="grille-prest" id="vitrine-prestations"><div class="chargement">Chargement des tarifs…</div></div>
-      <p class="note">Déplacement selon la commune. Votre véhicule n'est pas dans la liste ? Faites une demande manuelle depuis le formulaire.</p>
-    </div>
-  </section>
-
-  <section class="bloc blanc">
-    <div class="large">
-      <div class="atouts">
-        <div class="atout"><div class="ic">💰</div><h3>Prix fixés à l'avance</h3><p>Le montant du devis est celui que vous payez. Aucun travail supplémentaire sans votre accord.</p></div>
-        <div class="atout"><div class="ic">📍</div><h3>Chez vous ou au travail</h3><p>Le mécanicien vient avec son outillage, à l'adresse de votre choix.</p></div>
-        <div class="atout"><div class="ic">💳</div><h3>Carte bancaire uniquement</h3><p>Paiement à la fin de l'intervention. Nos techniciens ne transportent pas d'espèces.</p></div>
-        <div class="atout"><div class="ic">🧾</div><h3>Devis et facture par email</h3><p>Tout est écrit, numéroté et envoyé en PDF : vous gardez une trace de chaque intervention.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="bloc" id="zone">
-    <div class="large">
-      <p class="surtitre">Zone d'intervention</p>
-      <h2 class="titre">On se déplace sur ces communes.</h2>
-      <p class="intro">Vous êtes un peu plus loin ? Contactez-nous, on regarde ce qui est possible.</p>
-      <div class="zones" id="vitrine-zones"></div>
-    </div>
-  </section>
-
   <section class="bloc" id="devis">
     <div class="large">
       <p class="surtitre">Devis et rendez-vous</p>
@@ -314,7 +271,7 @@
 
         <label for="immat-chiffres">Immatriculation *</label>
         <div class="plaque">
-          <input type="text" id="immat-chiffres" inputmode="numeric" maxlength="7" placeholder="Chiffres, ex : 123456" autocomplete="off">
+          <input type="text" id="immat-chiffres" inputmode="numeric" maxlength="7" placeholder="Ex : 123456" autocomplete="off">
           <select id="immat-lettre" aria-label="Lettre de la plaque">
             <option value="P" selected>P</option>
             <option value="D">D</option>
@@ -495,6 +452,49 @@
           </div>
         </aside>
       </div>
+    </div>
+  </section>
+
+  <section class="bloc blanc" id="fonctionnement">
+    <div class="large">
+      <p class="surtitre">Comment ça marche</p>
+      <h2 class="titre">Trois étapes, zéro garage.</h2>
+      <p class="intro">Plus besoin de perdre une demi-journée au garage : on se déplace là où se trouve votre voiture.</p>
+      <div class="etapes">
+        <div class="etape"><h3>Choisissez vos interventions</h3><p>Indiquez votre véhicule et ce qu'il faut faire : le prix s'affiche tout de suite, pièces et main-d'œuvre comprises.</p></div>
+        <div class="etape"><h3>Réservez votre créneau</h3><p>Choisissez l'adresse et l'horaire qui vous arrangent. Votre devis et la confirmation du rendez-vous arrivent par email.</p></div>
+        <div class="etape"><h3>On s'occupe du reste</h3><p>Le mécanicien intervient sur place. Vous réglez par carte bancaire à la fin, et recevez votre facture par email.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloc" id="prestations">
+    <div class="large">
+      <p class="surtitre">Prestations</p>
+      <h2 class="titre">Des prix clairs, tout compris.</h2>
+      <p class="intro">Prix de départ pour les plus petites catégories de véhicules. Le prix exact de votre véhicule s'affiche dans le formulaire.</p>
+      <div class="grille-prest" id="vitrine-prestations"><div class="chargement">Chargement des tarifs…</div></div>
+      <p class="note">Déplacement selon la commune. Votre véhicule n'est pas dans la liste ? Faites une demande manuelle depuis le formulaire.</p>
+    </div>
+  </section>
+
+  <section class="bloc blanc">
+    <div class="large">
+      <div class="atouts">
+        <div class="atout"><div class="ic">💰</div><h3>Prix fixés à l'avance</h3><p>Le montant du devis est celui que vous payez. Aucun travail supplémentaire sans votre accord.</p></div>
+        <div class="atout"><div class="ic">📍</div><h3>Chez vous ou au travail</h3><p>Le mécanicien vient avec son outillage, à l'adresse de votre choix.</p></div>
+        <div class="atout"><div class="ic">💳</div><h3>Carte bancaire uniquement</h3><p>Paiement à la fin de l'intervention. Nos techniciens ne transportent pas d'espèces.</p></div>
+        <div class="atout"><div class="ic">🧾</div><h3>Devis et facture par email</h3><p>Tout est écrit, numéroté et envoyé en PDF : vous gardez une trace de chaque intervention.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloc" id="zone">
+    <div class="large">
+      <p class="surtitre">Zone d'intervention</p>
+      <h2 class="titre">On se déplace sur ces communes.</h2>
+      <p class="intro">Vous êtes un peu plus loin ? Contactez-nous, on regarde ce qui est possible.</p>
+      <div class="zones" id="vitrine-zones"></div>
     </div>
   </section>
 
