@@ -300,17 +300,17 @@
 
       <div class="carte">
         <div class="carte-header"><div class="carte-icone">🚗</div><p class="carte-titre">Votre véhicule</p><span class="etape-num">1/4</span></div>
-        <label for="categorie">Catégorie *</label>
-        <select id="categorie" required></select>
+        <!-- Categorie deduite automatiquement du modele choisi (plus de choix pour le client) -->
+        <select id="categorie" style="display:none" aria-hidden="true" tabindex="-1"></select>
 
         <label for="marque">Marque *</label>
-        <select id="marque" disabled><option value="">— Choisir d'abord une catégorie —</option></select>
+        <select id="marque"><option value="">— Choisir —</option></select>
 
         <label for="modele">Modèle *</label>
         <select id="modele" disabled><option value="">— Choisir d'abord une marque —</option></select>
 
         <label for="annee">Année *</label>
-        <input type="text" id="annee" inputmode="numeric" maxlength="4" placeholder="Ex : 2019">
+        <select id="annee"><option value="">— Choisir —</option></select>
 
         <label for="immat-chiffres">Immatriculation *</label>
         <div class="plaque">
@@ -327,7 +327,7 @@
         <p id="aide-vehicule" class="aide-etape">Renseignez tous les champs pour passer à l'étape suivante.</p>
 
         <p style="font-size:12.5px; color:var(--fb-text-secondary); margin:14px 0 0; line-height:1.5;">
-          Votre véhicule n'apparaît pas dans les catégories ci-dessus ?
+          Votre véhicule n'apparaît pas dans la liste ?
           <a href="#" id="lien-vehicule-special" style="color:var(--fb-blue); font-weight:600;">Faites une demande manuelle</a>
           ou écrivez-nous directement à <span id="email-contact" style="font-weight:600;"></span>.
         </p>
@@ -587,7 +587,7 @@
 
     // --- Chargement rapide : on affiche tout de suite la derniere version connue (memoire du telephone),
     // puis on recupere la version a jour en arriere-plan et on met les prix a jour si besoin.
-    const CLE_MEMOIRE = 'sos_auto_init_v3';
+    const CLE_MEMOIRE = 'sos_auto_init_v4';
     let dejaAffiche = false;
     try {
       const memo = JSON.parse(localStorage.getItem(CLE_MEMOIRE) || 'null');
@@ -605,8 +605,10 @@
         // Deja affiche depuis la memoire : on remplace les donnees (prix, majorations) sans reconstruire le formulaire
         frais.modeles = frais.modeles || [];
         const listesChangees = JSON.stringify(frais.prestations) !== JSON.stringify(DONNEES.prestations);
+        const DONNEES_AVANT = DONNEES;
         DONNEES = frais;
         if (listesChangees) { construireListesPrestations(frais); recalculerCreneaux(); }
+        if (JSON.stringify(frais.modeles) !== JSON.stringify((DONNEES_AVANT || {}).modeles)) remplirCategoriesEtMarques(frais);
         majPrixListe();
         remplirVitrine(frais);
         if (document.getElementById('carte-recap').style.display !== 'none') majRecap();
@@ -670,14 +672,13 @@
       document.getElementById('formulaire').style.display = 'block';
 
       const selCategorie = document.getElementById('categorie');
-      const optDefaut = document.createElement('option');
-      optDefaut.value = ''; optDefaut.textContent = '— Choisir —';
-      selCategorie.appendChild(optDefaut);
-      donnees.vehicules.forEach(v => {
+      remplirCategoriesEtMarques(donnees);
+      const selAnnee = document.getElementById('annee');
+      for (let a = new Date().getFullYear(); a >= 1970; a--) {
         const opt = document.createElement('option');
-        opt.value = v.id; opt.textContent = v.nom;
-        selCategorie.appendChild(opt);
-      });
+        opt.value = String(a); opt.textContent = String(a);
+        selAnnee.appendChild(opt);
+      }
 
       const selCommune = document.getElementById('commune');
       const selCommuneSpecial = document.getElementById('communeSpecial');
@@ -718,14 +719,13 @@
 
       remplirVitrine(donnees);
 
-      selCategorie.addEventListener('change', onCategorieChange);
       document.getElementById('marque').addEventListener('change', onMarqueChange);
-      ['annee', 'adresse'].forEach(id => {
-        document.getElementById(id).addEventListener('input', recalculerCreneaux);
-      });
+      document.getElementById('modele').addEventListener('change', onModeleChange);
+      document.getElementById('annee').addEventListener('change', recalculerCreneaux);
+      document.getElementById('adresse').addEventListener('input', recalculerCreneaux);
       ['immat-chiffres', 'immat-libre'].forEach(id => document.getElementById(id).addEventListener('input', majImmatriculation));
       document.getElementById('immat-lettre').addEventListener('change', majImmatriculation);
-      document.querySelectorAll('#categorie, #commune, #modele').forEach(el => {
+      document.querySelectorAll('#commune').forEach(el => {
         el.addEventListener('change', recalculerCreneaux);
       });
 
@@ -746,60 +746,46 @@
       });
     }
 
-    function onCategorieChange() {
-      const categorieId = document.getElementById('categorie').value;
+    /** Categories (cachees) + liste de TOUTES les marques. La selection en cours est conservee. */
+    function remplirCategoriesEtMarques(donnees) {
+      const selCategorie = document.getElementById('categorie');
+      const catAvant = selCategorie.value;
+      selCategorie.innerHTML = '<option value=""></option>' + donnees.vehicules.map(v => `<option value="${echapper(v.id)}">${echapper(v.nom)}</option>`).join('');
+      selCategorie.value = catAvant;
       const selMarque = document.getElementById('marque');
-      const selModele = document.getElementById('modele');
-      selMarque.innerHTML = '';
-      selModele.innerHTML = '<option value="">— Choisir d\'abord une marque —</option>';
-      selModele.disabled = true;
-
-      if (!categorieId) {
-        selMarque.innerHTML = '<option value="">— Choisir d\'abord une catégorie —</option>';
-        selMarque.disabled = true;
-        recalculerCreneaux();
-        return;
-      }
-
-      const marques = Array.from(new Set(
-        DONNEES.modeles.filter(m => String(m.categorieId) === String(categorieId)).map(m => m.marque)
-      )).sort();
-
-      selMarque.disabled = false;
-      const optVide = document.createElement('option');
-      optVide.value = ''; optVide.textContent = marques.length ? '— Choisir —' : '— Aucune marque enregistrée pour cette catégorie —';
-      selMarque.appendChild(optVide);
-      marques.forEach(marque => {
-        const opt = document.createElement('option');
-        opt.value = marque; opt.textContent = marque;
-        selMarque.appendChild(opt);
-      });
-      recalculerCreneaux();
+      const marqueAvant = selMarque.value;
+      const marques = Array.from(new Set((donnees.modeles || []).map(m => m.marque).filter(Boolean)))
+        .sort((a, b) => a.localeCompare(b, 'fr', { sensitivity: 'base' }));
+      selMarque.innerHTML = '<option value="">— Choisir —</option>' + marques.map(m => `<option value="${echapper(m)}">${echapper(m)}</option>`).join('');
+      if (marqueAvant && marques.indexOf(marqueAvant) !== -1) selMarque.value = marqueAvant;
     }
 
     function onMarqueChange() {
-      const categorieId = document.getElementById('categorie').value;
       const marque = document.getElementById('marque').value;
       const selModele = document.getElementById('modele');
-      selModele.innerHTML = '';
-
+      document.getElementById('categorie').value = '';
       if (!marque) {
         selModele.innerHTML = '<option value="">— Choisir d\'abord une marque —</option>';
         selModele.disabled = true;
+        majPrixListe();
         recalculerCreneaux();
         return;
       }
-
-      const modeles = DONNEES.modeles.filter(m => String(m.categorieId) === String(categorieId) && m.marque === marque);
+      const modeles = DONNEES.modeles.filter(m => m.marque === marque)
+        .sort((a, b) => String(a.modele).localeCompare(String(b.modele), 'fr', { numeric: true, sensitivity: 'base' }));
       selModele.disabled = false;
-      const optVide = document.createElement('option');
-      optVide.value = ''; optVide.textContent = '— Choisir —';
-      selModele.appendChild(optVide);
-      modeles.forEach(m => {
-        const opt = document.createElement('option');
-        opt.value = m.modele; opt.textContent = m.modele;
-        selModele.appendChild(opt);
-      });
+      selModele.innerHTML = '<option value="">— Choisir —</option>' + modeles.map(m =>
+        `<option value="${echapper(m.modele)}" data-cat="${echapper(m.categorieId)}">${echapper(m.modele)}</option>`).join('');
+      majPrixListe();
+      recalculerCreneaux();
+    }
+
+    /** Le modele choisi determine la categorie du vehicule (coefficients de prix et de temps). */
+    function onModeleChange() {
+      const sel = document.getElementById('modele');
+      const opt = sel.options[sel.selectedIndex];
+      document.getElementById('categorie').value = opt && opt.dataset.cat ? opt.dataset.cat : '';
+      majPrixListe();
       recalculerCreneaux();
     }
 
