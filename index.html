@@ -11,7 +11,7 @@
   <meta property="og:url" content="https://sosautotahiti.com/">
   <meta property="og:title" content="SOS Auto Tahiti · Le mécanicien vient chez vous">
   <meta property="og:description" content="Devis immédiat et rendez-vous en ligne. Prix pièces et main-d'œuvre compris.">
-  <meta property="og:image" content="https://sosautotahiti.com/banniere.jpg">
+  <meta property="og:image" content="https://sosautotahiti.com/https://sosautotahiti.com/banniere.jpg">
   <meta name="theme-color" content="#003CCB">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -186,6 +186,22 @@
     .apercus div { position: relative; }
     .apercus img { width: 84px; height: 84px; object-fit: cover; border-radius: 10px; border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.15); }
     .apercus button { position: absolute; top: -6px; right: -6px; width: 24px; height: 24px; border-radius: 50%; border: none; background: #B3261E; color: #fff; font-weight: 800; cursor: pointer; }
+    .cg-bloc { margin: 4px 0 6px; padding: 16px; border-radius: 16px; background: var(--bleu-clair, #E6ECFA); border: 1.5px solid #c9d5f5; }
+    .cg-bloc strong { display: block; font-size: 16px; }
+    .cg-bloc .cg-sous { font-size: 13.5px; margin: 4px 0 0; color: var(--texte, #0F172A); }
+    .cg-bloc .btn-photo { width: 100%; justify-content: center; font-size: 16px; padding: 14px 16px; }
+    .cg-mini { font-size: 12px; color: var(--gris); margin: 8px 0 0; line-height: 1.45; }
+    #cg-msg { font-size: 13.5px; margin: 10px 0 0; line-height: 1.45; }
+    #cg-msg.ok { color: #166534; font-weight: 700; }
+    #cg-msg.err { color: #B3261E; font-weight: 700; }
+    #cg-msg.info { color: var(--bleu); font-weight: 700; }
+    .ou-main { display: flex; align-items: center; gap: 10px; color: var(--gris); font-size: 12.5px; font-weight: 700; margin: 14px 0 0; }
+    .ou-main::before, .ou-main::after { content: ''; flex: 1; height: 1px; background: var(--bord); }
+    .lu-cg { border-color: #16A34A !important; background-color: #F0FDF4 !important; }
+    .manque-cg { border-color: #B3261E !important; background-color: #FEF2F2 !important; }
+    .cg-alerte { font-size: 12.5px; color: #B3261E; margin: 6px 0 0; font-weight: 600; }
+    #vin { text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+    #vin::placeholder { text-transform: none; letter-spacing: 0; font-weight: 500; }
     .plaque input { font-size: 18px; letter-spacing: 2px; font-weight: 700; }
     .plaque select { font-size: 18px; font-weight: 800; text-align: center; }
     .jour-btn { flex: 0 0 auto; width: 78px; padding: 10px 4px; border: 1.5px solid var(--bord); border-radius: 16px; background: var(--fond); cursor: pointer; text-align: center; transition: all 0.12s; }
@@ -271,6 +287,16 @@
         <!-- Categorie deduite automatiquement du modele choisi (plus de choix pour le client) -->
         <select id="categorie" style="display:none" aria-hidden="true" tabindex="-1"></select>
 
+        <div class="cg-bloc" id="cg-bloc">
+          <strong>📷 Remplissage express</strong>
+          <p class="cg-sous">Prenez votre carte grise en photo : on remplit le formulaire pour vous.</p>
+          <label class="btn-photo" for="cg-fichier" id="cg-bouton">Photographier ma carte grise</label>
+          <input type="file" id="cg-fichier" accept="image/*" style="display:none">
+          <p class="cg-mini">Carte bien à plat, sans reflet, entièrement dans le cadre. 🔒 La photo est lue puis effacée aussitôt : nous ne gardons ni la photo, ni vos nom, date de naissance et adresse.</p>
+          <p id="cg-msg"></p>
+        </div>
+        <div class="ou-main">ou remplissez à la main</div>
+
         <label for="marque">Marque *</label>
         <select id="marque"><option value="">— Choisir —</option></select>
 
@@ -303,6 +329,10 @@
         </div>
         <input type="text" id="immat-libre" placeholder="Plaque complète (autre format)" style="display:none; margin-top:8px;">
         <input type="hidden" id="immatriculation">
+
+        <label for="vin">N° de série (VIN) <span style="font-weight:500; color:var(--gris);">— case 4 de la carte grise<span id="vin-facultatif">, facultatif</span></span></label>
+        <input type="text" id="vin" maxlength="17" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="17 caractères, ex : VF1R9800065575253">
+        <p id="vin-alerte" class="cg-alerte" style="display:none"></p>
         <p id="aide-vehicule" class="aide-etape">Renseignez tous les champs pour passer à l'étape suivante.</p>
 
         <p style="font-size:12.5px; color:var(--fb-text-secondary); margin:14px 0 0; line-height:1.5;">
@@ -763,6 +793,16 @@
       document.getElementById('adresse').addEventListener('input', recalculerCreneaux);
       ['immat-chiffres', 'immat-libre'].forEach(id => document.getElementById(id).addEventListener('input', majImmatriculation));
       document.getElementById('immat-lettre').addEventListener('change', majImmatriculation);
+      document.getElementById('cg-fichier').addEventListener('change', lireCarteGrise);
+      document.getElementById('vin').addEventListener('input', function() {
+        const pos = this.selectionStart;
+        this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 17);
+        try { this.setSelectionRange(pos, pos); } catch (e) {}
+        this.classList.remove('lu-cg', 'manque-cg');
+        majAlerteVin(); recalculerCreneaux();
+      });
+      ['marque', 'modele', 'carburant', 'boite', 'annee', 'immat-chiffres', 'immat-lettre'].forEach(id =>
+        document.getElementById(id).addEventListener('change', function() { this.classList.remove('manque-cg'); }));
       document.querySelectorAll('#commune').forEach(el => {
         el.addEventListener('change', recalculerCreneaux);
       });
@@ -876,7 +916,7 @@
         ? 'Pour apporter la bonne batterie du premier coup, prenez une photo de votre batterie actuelle (l\'étiquette bien lisible). Obligatoire pour continuer.'
         : 'Une photo nous aide à préparer l\'intervention (' + noms.join(', ') + '). Obligatoire pour continuer.';
     }
-    function compresserPhoto(fichier) {
+    function compresserPhoto(fichier, tailleMax, qualite) {
       return new Promise(function(ok, ko) {
         const lecteur = new FileReader();
         lecteur.onerror = () => ko(new Error('lecture impossible'));
@@ -884,11 +924,11 @@
           const img = new Image();
           img.onerror = () => ko(new Error('format non reconnu'));
           img.onload = function() {
-            const max = 1600, r = Math.min(1, max / Math.max(img.width, img.height));
+            const max = typeof tailleMax === 'number' ? tailleMax : 1600, r = Math.min(1, max / Math.max(img.width, img.height));
             const cv = document.createElement('canvas');
             cv.width = Math.round(img.width * r); cv.height = Math.round(img.height * r);
             cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
-            ok(cv.toDataURL('image/jpeg', 0.78));
+            ok(cv.toDataURL('image/jpeg', typeof qualite === 'number' ? qualite : 0.78));
           };
           img.src = lecteur.result;
         };
@@ -901,7 +941,7 @@
       const msg = document.getElementById('photo-msg');
       if (!fichiers.length) return;
       msg.textContent = 'Préparation de la photo…';
-      Promise.all(fichiers.map(compresserPhoto)).then(function(liste) {
+      Promise.all(fichiers.map(f => compresserPhoto(f))).then(function(liste) {
         liste.forEach(d => photosClient.push({ type: 'batterie', data: d }));
         dessinerPhotos(); msg.textContent = 'Photo ajoutée ✓'; recalculerCreneaux();
       }).catch(e => { msg.textContent = 'Impossible d\'utiliser cette photo (' + e.message + '). Essayez une autre.'; });
@@ -916,6 +956,96 @@
       return Array.from(document.querySelectorAll('#liste-prestations input:checked'));
     }
 
+    // ---------- Carte grise : lecture automatique ----------
+    let cgUtilisee = false;   // une fois la carte grise lue, les mentions obligatoires doivent etre valides
+    let cgInfos = { cylindree: '', puissance: '' };
+    function vinValide(v) { return /^[A-HJ-NPR-Z0-9]{17}$/.test(v) && /\d{4}$/.test(v); }
+    function majAlerteVin() {
+      const v = document.getElementById('vin').value;
+      const alerte = document.getElementById('vin-alerte');
+      let texte = '';
+      if (v && !vinValide(v)) texte = v.length < 17 ? 'Le VIN compte 17 caractères (' + v.length + ' saisis).' : /[IOQ]/.test(v) ? 'Un VIN ne contient jamais les lettres I, O ou Q (ce sont des 1 et des 0).' : 'Ce VIN ne semble pas valide : vérifiez-le sur la carte grise.';
+      else if (!v && cgUtilisee) texte = 'Le VIN n\'a pas pu être lu : recopiez-le (case 4 de la carte grise).';
+      alerte.textContent = texte; alerte.style.display = texte ? 'block' : 'none';
+      document.getElementById('vin-facultatif').style.display = cgUtilisee ? 'none' : '';
+    }
+    function marquerCg(id, ok) {
+      const el = document.getElementById(id);
+      el.classList.remove('lu-cg', 'manque-cg');
+      el.classList.add(ok ? 'lu-cg' : 'manque-cg');
+    }
+    function lireCarteGrise() {
+      const fichier = this.files && this.files[0];
+      this.value = '';
+      if (!fichier) return;
+      const msg = document.getElementById('cg-msg');
+      const bouton = document.getElementById('cg-bouton');
+      msg.className = 'info'; msg.textContent = 'Lecture de la carte grise… (quelques secondes)';
+      bouton.style.opacity = '.6'; bouton.style.pointerEvents = 'none';
+      compresserPhoto(fichier, 2000, 0.85)
+        .then(image => fetch(APP_URL, { method: 'POST', body: JSON.stringify({ action: 'lireCarteGrise', data: { image: image } }) }))
+        .then(r => r.json())
+        .then(function(r) {
+          if (!r.success) throw new Error(r.error || 'lecture impossible');
+          appliquerCarteGrise(r);
+        })
+        .catch(function(e) {
+          msg.className = 'err';
+          msg.textContent = 'Lecture impossible (' + e.message + '). Reprenez la photo ou remplissez à la main.';
+        })
+        .finally(function() { bouton.style.opacity = ''; bouton.style.pointerEvents = ''; });
+    }
+    function appliquerCarteGrise(r) {
+      cgUtilisee = true;
+      cgInfos = { cylindree: r.cylindree || '', puissance: r.puissance || '' };
+      const msg = document.getElementById('cg-msg');
+      const selMarque = document.getElementById('marque');
+      // Marque
+      const opt = r.marque ? Array.from(selMarque.options).find(o => o.value && o.value.toUpperCase() === String(r.marque).toUpperCase()) : null;
+      if (opt) {
+        if (selMarque.value !== opt.value) { selMarque.value = opt.value; onMarqueChange(); }
+        marquerCg('marque', true);
+      } else marquerCg('marque', false);
+      // Carburant
+      if (r.carburant) document.getElementById('carburant').value = r.carburant;
+      marquerCg('carburant', !!document.getElementById('carburant').value);
+      // Annee
+      const selAnnee = document.getElementById('annee');
+      if (r.annee && Array.from(selAnnee.options).some(o => o.value === String(r.annee))) selAnnee.value = String(r.annee);
+      marquerCg('annee', !!selAnnee.value && selAnnee.value === String(r.annee || ''));
+      // Immatriculation
+      if (r.immat) {
+        const lettres = ['P', 'D', 'E'];
+        if (lettres.indexOf(r.immat.lettre) !== -1) {
+          document.getElementById('immat-lettre').value = r.immat.lettre;
+          document.getElementById('immat-chiffres').value = r.immat.chiffres;
+        } else {
+          document.getElementById('immat-lettre').value = 'AUTRE';
+          document.getElementById('immat-libre').value = r.immat.chiffres + ' ' + r.immat.lettre;
+        }
+        majImmatriculation();
+      }
+      marquerCg('immat-chiffres', !!r.immat);
+      // VIN
+      document.getElementById('vin').value = r.vin || '';
+      marquerCg('vin', !!r.vin);
+      majAlerteVin();
+      // Message
+      const lus = [r.marque && opt ? 'marque' : '', r.annee ? 'année' : '', r.carburant ? 'carburant' : '', r.immat ? 'immatriculation' : '', r.vin ? 'VIN' : ''].filter(Boolean);
+      const manquants = (r.manquants || []).map(m => ({ immatriculation: 'immatriculation', vin: 'VIN', marque: 'marque', annee: 'année', carburant: 'carburant' })[m] || m);
+      const alertes = (r.alertes || []).join(' ');
+      if (!manquants.length) {
+        msg.className = 'ok';
+        msg.textContent = '✓ Carte grise lue (' + lus.join(', ') + '). Vérifiez, puis choisissez le modèle, la version et la boîte.' + (alertes ? ' ⚠ ' + alertes : '');
+      } else {
+        msg.className = 'err';
+        msg.textContent = (lus.length ? '✓ Lu : ' + lus.join(', ') + '. ' : '') + 'À compléter (en rouge) : ' + manquants.join(', ') + '. Reprenez la photo ou corrigez à la main.' + (alertes ? ' ' + alertes : '');
+      }
+      recalculerCreneaux();
+      const suivant = !document.getElementById('modele').disabled ? 'modele' : 'marque';
+      setTimeout(() => { const el = document.getElementById(suivant); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 150);
+    }
+
     // Etapes successives : vehicule complet -> interventions -> lieu -> rendez-vous + coordonnees
     function vehiculeComplet() {
       const val = id => document.getElementById(id).value.trim();
@@ -923,7 +1053,8 @@
       const anneeMax = new Date().getFullYear() + 1;
       return !!(val('categorie') && val('marque') && val('modele') && val('carburant') && val('boite')
         && /^\d{4}$/.test(val('annee')) && annee >= 1950 && annee <= anneeMax
-        && val('immatriculation').length >= 4);
+        && val('immatriculation').length >= 4
+        && (val('vin') ? vinValide(val('vin')) : !cgUtilisee));
     }
 
     function afficher(id, visible) {
@@ -1218,6 +1349,9 @@
         boite: document.getElementById('boite').value,
         photos: photosClient,
         immatriculation: document.getElementById('immatriculation').value,
+        vin: document.getElementById('vin').value,
+        cylindree: cgInfos.cylindree,
+        puissance: cgInfos.puissance,
         commentaire: document.getElementById('commentaire').value,
       };
 
