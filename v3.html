@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>SOS Auto Tahiti · Mécanique automobile à domicile</title>
+  <meta name="description" content="Mécanicien à domicile à Tahiti : choisissez votre intervention, voyez le prix tout compris, réservez un créneau libre en 2 minutes. Paiement par carte après l'intervention.">
+  <!-- PAGE DE TEST : a retirer quand v3 remplacera index.html -->
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sosautotahiti.com/">
+  <meta property="og:title" content="SOS Auto Tahiti · Le mécanicien vient chez vous">
+  <meta property="og:description" content="Prix tout compris affiché tout de suite, créneau en direct. Paiement par carte après l'intervention.">
+  <meta property="og:image" content="https://sosautotahiti.com/banniere.jpg">
+  <meta name="theme-color" content="#003CCB">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bleu: #003CCB; --bleu-fonce: #001A5C; --bleu-clair: #E6ECFA; --fond: #F4F6FB; --bord: #E1E6F0;
+      --texte: #0F172A; --gris: #4B5565; --rouge: #B3261E; --vert: #16A34A; --vert-fonce: #15803D;
+      --orange-fond: #FFF7E6; --orange-bord: #F5D9A6; --orange-texte: #7A4A00;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; background: var(--fond); color: var(--texte); font-family: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 15px; line-height: 1.45; }
+    a { color: var(--bleu); }
+    button { font-family: inherit; color: inherit; }
+    input, select, textarea { font-family: inherit; font-size: 16px; color: var(--texte); }
+    .cache { display: none !important; }
+    .petit { font-size: 12.5px; color: var(--gris); }
+
+    /* ---------- En-tete du site ---------- */
+    .site-tete { background: #fff; border-bottom: 1px solid var(--bord); position: sticky; top: 0; z-index: 30; }
+    .site-tete .int { max-width: 1200px; margin: 0 auto; padding: 10px 20px; display: flex; align-items: center; gap: 12px; }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--texte); font-weight: 800; font-size: 16px; }
+    .logo img { width: 36px; height: 36px; border-radius: 10px; object-fit: cover; }
+    .site-tete nav { margin-left: auto; display: none; gap: 26px; align-items: center; }
+    .site-tete nav a { color: var(--texte); text-decoration: none; font-weight: 600; font-size: 14px; }
+    .site-tete nav a:hover { color: var(--bleu); }
+    .btn-wa { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 12px; border-radius: 11px; background: #E9F8EF; color: var(--vert-fonce); font-weight: 800; font-size: 13.5px; text-decoration: none; }
+    .btn-plein { display: inline-flex; align-items: center; justify-content: center; background: var(--bleu); color: #fff !important; text-decoration: none; font-weight: 800; border: 0; border-radius: 12px; padding: 11px 18px; cursor: pointer; }
+
+    /* ---------- Hero (ordinateur) ---------- */
+    .hero { position: relative; }
+    .hero-texte { display: none; }
+    .hero .int { max-width: 1200px; margin: 0 auto; }
+
+    /* ---------- Parcours (carte de reservation) ---------- */
+    .app { background: var(--fond); min-height: calc(100vh - 57px); padding-bottom: 110px; position: relative; }
+    .app-tete { display: flex; align-items: center; gap: 10px; padding: 12px 20px; background: #fff; border-bottom: 1px solid var(--bord); }
+    .retour { width: 40px; height: 40px; flex: 0 0 40px; border-radius: 12px; background: var(--fond); border: 0; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .app-tete .num-etape { flex: 1; font-weight: 800; font-size: 15px; }
+    .puce-resume { font-size: 12.5px; font-weight: 700; color: var(--bleu); background: var(--bleu-clair); padding: 5px 10px; border-radius: 99px; max-width: 55%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .progres { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; padding: 0 20px; background: #fff; padding-bottom: 10px; }
+    .progres span { height: 4px; border-radius: 4px; background: var(--bord); }
+    .progres span.fait { background: var(--bleu); }
+    .ecran { padding: 18px 20px 8px; }
+    .ecran h1 { margin: 0; font-size: 25px; line-height: 1.18; letter-spacing: -0.4px; font-weight: 800; }
+    .ecran h2 { margin: 0; font-size: 15px; font-weight: 800; }
+    .sous-titre { margin: 6px 0 16px; color: var(--gris); font-size: 14px; }
+    .lab { display: block; font-size: 12.5px; font-weight: 800; color: var(--gris); margin: 16px 0 7px; }
+
+    /* Tuiles des prestations */
+    .tuiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .tuile { position: relative; text-align: left; background: #fff; border: 2px solid var(--bord); border-radius: 16px; padding: 14px 12px 12px; cursor: pointer; min-height: 118px; display: flex; flex-direction: column; gap: 6px; -webkit-tap-highlight-color: transparent; }
+    .tuile .ico { width: 40px; height: 40px; border-radius: 12px; background: var(--bleu-clair); color: var(--bleu); display: flex; align-items: center; justify-content: center; }
+    .tuile b { font-size: 15.5px; line-height: 1.2; }
+    .tuile .px { font-size: 12.5px; color: var(--gris); font-weight: 600; line-height: 1.3; }
+    .tuile.sel { border-color: var(--bleu); background: #F7F9FF; }
+    .tuile.sel .ico { background: var(--bleu); color: #fff; }
+    .tuile .coche { position: absolute; top: 10px; right: 10px; width: 22px; height: 22px; border-radius: 50%; background: var(--bleu); color: #fff; display: none; align-items: center; justify-content: center; }
+    .tuile.sel .coche { display: flex; }
+    .tuile.ouvert { border-color: var(--bleu); }
+    .chargement { grid-column: 1 / -1; padding: 30px 10px; text-align: center; color: var(--gris); font-size: 14px; }
+    .panneau { grid-column: 1 / -1; background: #fff; border: 2px solid var(--bleu); border-radius: 16px; padding: 6px 14px; }
+    .panneau .tit { font-size: 12.5px; font-weight: 800; color: var(--gris); padding: 8px 0 2px; }
+    .ligne-presta { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--bord); cursor: pointer; }
+    .ligne-presta:first-of-type { border-top: 0; }
+    .ligne-presta .cb { width: 24px; height: 24px; flex: 0 0 24px; border-radius: 7px; border: 2px solid #C9D3EA; display: flex; align-items: center; justify-content: center; color: #fff; }
+    .ligne-presta.sel .cb { background: var(--bleu); border-color: var(--bleu); }
+    .ligne-presta .n { flex: 1; font-weight: 700; font-size: 14.5px; }
+    .ligne-presta .p { font-weight: 800; font-size: 14px; white-space: nowrap; }
+    .lien-autre { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; background: #fff; border: 1px solid var(--bord); border-radius: 14px; padding: 14px 16px; text-decoration: none; color: var(--texte); font-weight: 700; font-size: 14px; cursor: pointer; width: 100%; text-align: left; }
+    .lien-autre span { color: var(--bleu); }
+    .confiance { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 14px; font-size: 12.5px; font-weight: 700; color: var(--gris); }
+    .confiance span::before { content: '✓ '; color: var(--vert); }
+
+    /* Boutons-puces */
+    .puces { display: flex; flex-wrap: wrap; gap: 7px; }
+    .puce { display: inline-flex; align-items: center; justify-content: center; min-height: 42px; padding: 0 14px; border-radius: 12px; background: #fff; border: 1.5px solid var(--bord); font-weight: 700; font-size: 14px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    .puce.sel { background: var(--bleu); border-color: var(--bleu); color: #fff; }
+    .puce.discret { color: var(--bleu); border-style: dashed; }
+    .champ { width: 100%; height: 50px; border-radius: 12px; border: 1.5px solid var(--bord); background: #fff; padding: 0 14px; }
+    .champ:focus, .sel-natif:focus { outline: none; border-color: var(--bleu); box-shadow: 0 0 0 3px rgba(0, 60, 203, .12); }
+    textarea.champ { height: 84px; padding: 12px 14px; resize: vertical; }
+    .sel-natif { width: 100%; height: 50px; border-radius: 12px; border: 1.5px solid var(--bord); background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%234B5565' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center; padding: 0 40px 0 14px; -webkit-appearance: none; appearance: none; margin-top: 8px; }
+    .champ.erreur { border-color: var(--rouge); }
+    .deux { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .annee { display: flex; align-items: center; gap: 8px; }
+    .annee button { width: 50px; height: 50px; flex: 0 0 50px; border-radius: 12px; border: 1.5px solid var(--bord); background: #fff; font-size: 22px; font-weight: 700; cursor: pointer; }
+    .annee input { text-align: center; font-weight: 800; font-size: 18px; }
+
+    /* Carte grise / photos */
+    .cg { display: flex; align-items: center; gap: 14px; width: 100%; background: var(--bleu); color: #fff; border: 0; border-radius: 16px; padding: 14px 16px; cursor: pointer; text-align: left; }
+    .cg .ico { width: 46px; height: 46px; flex: 0 0 46px; border-radius: 13px; background: rgba(255, 255, 255, .16); display: flex; align-items: center; justify-content: center; }
+    .cg b { display: block; font-size: 15.5px; }
+    .cg small { font-size: 12.5px; opacity: .9; }
+    .cg.occupe { opacity: .65; pointer-events: none; }
+    .msg { margin-top: 10px; border-radius: 12px; padding: 10px 12px; font-size: 13px; line-height: 1.45; }
+    .msg.info { background: var(--bleu-clair); color: var(--bleu-fonce); }
+    .msg.ok { background: #E9F8EF; color: #14532D; }
+    .msg.err { background: #FDECEA; color: var(--rouge); }
+    .msg.attention { background: var(--orange-fond); border: 1px solid var(--orange-bord); color: var(--orange-texte); }
+    .depot { display: block; background: #fff; border: 2px dashed var(--bleu); border-radius: 16px; padding: 20px 16px; text-align: center; cursor: pointer; }
+    .depot .ico { width: 54px; height: 54px; margin: 0 auto 10px; border-radius: 15px; background: var(--bleu-clair); color: var(--bleu); display: flex; align-items: center; justify-content: center; }
+    .depot b { font-size: 15.5px; }
+    .depot .oblig { font-size: 12.5px; color: var(--rouge); font-weight: 700; margin-top: 3px; }
+    .depot.fait { border-style: solid; border-color: var(--vert); }
+    .depot.fait .oblig { color: var(--vert-fonce); }
+    .depot input { display: none; }
+    .apercus { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .apercus div { position: relative; width: 74px; height: 74px; }
+    .apercus img { width: 74px; height: 74px; object-fit: cover; border-radius: 10px; border: 1px solid var(--bord); }
+    .apercus button { position: absolute; top: -7px; right: -7px; width: 24px; height: 24px; border-radius: 50%; border: 0; background: var(--texte); color: #fff; font-size: 15px; line-height: 1; cursor: pointer; }
+    .conseils { margin-top: 14px; background: #fff; border: 1px solid var(--bord); border-radius: 14px; padding: 14px 16px; font-size: 13px; }
+    .conseils div { display: flex; gap: 8px; margin-top: 8px; }
+    .conseils div::before { content: '✓'; color: var(--vert); font-weight: 800; }
+
+    /* Filtre */
+    .bloc { background: #fff; border: 1px solid var(--bord); border-radius: 16px; padding: 14px 16px; margin-top: 12px; }
+    .liste-non div, .liste-oui div { display: flex; gap: 8px; padding: 5px 0; font-size: 14px; font-weight: 600; }
+    .liste-non div::before { content: '✕'; color: var(--rouge); font-weight: 800; }
+    .liste-oui div::before { content: '✓'; color: var(--vert); font-weight: 800; }
+
+    /* Creneaux */
+    .jours { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 8px; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
+    .jour { flex: 0 0 66px; scroll-snap-align: start; background: #fff; border: 1.5px solid var(--bord); border-radius: 14px; padding: 8px 4px; text-align: center; cursor: pointer; }
+    .jour .js { font-size: 12px; color: var(--gris); font-weight: 700; text-transform: capitalize; }
+    .jour .jn { font-size: 20px; font-weight: 800; line-height: 1.2; }
+    .jour .jm { font-size: 11px; color: var(--gris); font-weight: 600; }
+    .jour .we { font-size: 10px; color: var(--orange-texte); font-weight: 800; margin-top: 2px; }
+    .jour.sel { background: var(--bleu); border-color: var(--bleu); color: #fff; }
+    .jour.sel .js, .jour.sel .jm, .jour.sel .we { color: rgba(255, 255, 255, .9); }
+    .heures { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; }
+    .heures .puce { padding: 0; }
+    .periode { font-size: 12.5px; font-weight: 800; color: var(--gris); margin: 12px 0 6px; }
+
+    /* Coordonnees */
+    .recap { background: #fff; border: 1px solid var(--bord); border-radius: 16px; padding: 14px 16px; }
+    .recap-haut { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; font-size: 13.5px; }
+    .recap-haut button { background: none; border: 0; color: var(--bleu); font-weight: 800; font-size: 13px; cursor: pointer; padding: 0; }
+    .recap-lignes { margin-top: 10px; border-top: 1px solid var(--bord); padding-top: 8px; font-size: 13px; }
+    .recap-lignes div { display: flex; justify-content: space-between; gap: 10px; padding: 3px 0; }
+    .recap-lignes .tot { font-weight: 800; font-size: 15px; border-top: 1px solid var(--bord); margin-top: 6px; padding-top: 8px; }
+    .champ-groupe { margin-top: 12px; }
+    .champ-groupe label { display: block; font-size: 12.5px; font-weight: 800; color: var(--gris); margin-bottom: 5px; }
+    .pot-de-miel { position: absolute; left: -5000px; width: 1px; height: 1px; overflow: hidden; }
+
+    /* Barre de prix */
+    .barre { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; background: #fff; border-top: 1px solid var(--bord); padding: 12px 20px calc(14px + env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 12px; box-shadow: 0 -8px 24px rgba(15, 23, 42, .06); }
+    .barre .info { flex: 1; min-width: 0; }
+    .barre .lib { font-size: 12px; color: var(--gris); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .barre .prix { font-size: 19px; font-weight: 800; white-space: nowrap; }
+    .barre .prix small { font-size: 11.5px; font-weight: 800; color: var(--gris); }
+    .barre .prix small.indic { color: var(--orange-texte); }
+    .barre button { flex: 0 0 auto; background: var(--bleu); color: #fff; border: 0; font-weight: 800; font-size: 15.5px; padding: 15px 20px; border-radius: 14px; cursor: pointer; max-width: 62%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .barre button:disabled { background: #C9D3EA; cursor: default; }
+    .erreur-envoi { margin: 12px 0 0; }
+
+    /* Confirmation */
+    .ok-tete { background: var(--bleu); color: #fff; padding: 40px 24px 28px; text-align: center; }
+    .ok-tete .rond { width: 66px; height: 66px; margin: 0 auto 14px; border-radius: 50%; background: #fff; color: var(--vert); display: flex; align-items: center; justify-content: center; }
+    .ok-tete h1 { margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -.5px; }
+    .ok-tete p { margin: 8px 0 0; font-size: 15.5px; opacity: .95; }
+    .ok-corps { padding: 18px 20px 30px; display: flex; flex-direction: column; gap: 12px; }
+    .deux-btn { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .btn-contour { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 50px; border-radius: 13px; background: #fff; border: 1.5px solid var(--bleu); color: var(--bleu); font-weight: 800; font-size: 14px; text-decoration: none; cursor: pointer; padding: 0 10px; text-align: center; }
+    .btn-vert { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 50px; border-radius: 13px; background: #E9F8EF; color: var(--vert-fonce); font-weight: 800; font-size: 14px; text-decoration: none; }
+    .etapes-suite { display: flex; flex-direction: column; gap: 14px; }
+    .etapes-suite div { display: flex; gap: 12px; font-size: 13.5px; line-height: 1.45; }
+    .etapes-suite i { font-style: normal; width: 28px; height: 28px; flex: 0 0 28px; border-radius: 50%; background: var(--bleu-clair); color: var(--bleu); font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+
+    /* ---------- Sections de presentation ---------- */
+    .section { padding: 48px 20px; }
+    .section.blanc { background: #fff; }
+    .section .int { max-width: 1100px; margin: 0 auto; }
+    .surtitre { font-size: 12.5px; font-weight: 800; color: var(--bleu); text-transform: uppercase; letter-spacing: .6px; }
+    .section h2 { font-size: 27px; line-height: 1.2; letter-spacing: -.4px; margin: 6px 0 10px; }
+    .section .intro { color: var(--gris); max-width: 640px; margin: 0 0 22px; }
+    .grille-3 { display: grid; gap: 14px; }
+    .carte-info { background: var(--fond); border-radius: 16px; padding: 18px; }
+    .section.blanc .carte-info { background: var(--fond); }
+    .section:not(.blanc) .carte-info { background: #fff; border: 1px solid var(--bord); }
+    .carte-info .n { width: 32px; height: 32px; border-radius: 50%; background: var(--bleu); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+    .carte-info h3 { margin: 0 0 4px; font-size: 16px; }
+    .carte-info p { margin: 0; color: var(--gris); font-size: 14px; }
+    .tarifs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .tarif { background: #fff; border: 1px solid var(--bord); border-radius: 14px; padding: 14px; cursor: pointer; text-align: left; }
+    .tarif b { display: block; font-size: 14.5px; }
+    .tarif span { font-size: 13px; color: var(--gris); font-weight: 600; }
+    .faq details { background: var(--fond); border-radius: 14px; padding: 0 16px; margin-bottom: 8px; }
+    .faq summary { cursor: pointer; font-weight: 800; padding: 14px 0; list-style: none; display: flex; justify-content: space-between; gap: 10px; }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after { content: '+'; color: var(--bleu); font-size: 20px; line-height: 1; }
+    .faq details[open] summary::after { content: '−'; }
+    .faq details p { margin: 0 0 14px; color: var(--gris); font-size: 14px; }
+    .chiffres { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 18px; }
+    .chiffres div { background: var(--fond); border-radius: 14px; padding: 14px; }
+    .chiffres b { display: block; font-size: 19px; color: var(--bleu); }
+    .chiffres span { font-size: 12.5px; color: var(--gris); }
+    footer { background: var(--bleu-fonce); color: rgba(255, 255, 255, .85); padding: 30px 20px calc(120px + env(safe-area-inset-bottom)); font-size: 13.5px; }
+    footer .int { max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; }
+    footer a { color: #fff; }
+
+    /* Sur telephone, une fois le parcours commence : plein ecran, sans la presentation */
+    @media (max-width: 979px) {
+      body.parcours .site-tete, body.parcours .apres-parcours { display: none; }
+      body.parcours .app { min-height: 100vh; }
+    }
+
+    /* ---------- Ordinateur ---------- */
+    @media (min-width: 980px) {
+      .site-tete nav { display: flex; }
+      .btn-wa { margin-left: 0; }
+      .hero { background: var(--bleu-fonce) url('banniere.jpg') right center / cover no-repeat; }
+      .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0, 26, 92, .95) 0%, rgba(0, 40, 140, .82) 40%, rgba(0, 60, 203, .28) 72%, rgba(0, 60, 203, .06) 100%); }
+      .hero .int { position: relative; display: grid; grid-template-columns: 1fr 460px; gap: 48px; padding: 56px 32px 64px; align-items: start; }
+      .hero-texte { display: block; color: #fff; padding-top: 30px; }
+      .hero-texte .surtitre { color: #9DB8FF; }
+      .hero-texte h1 { font-size: 50px; line-height: 1.05; letter-spacing: -1.2px; margin: 10px 0 16px; }
+      .hero-texte p { font-size: 18px; opacity: .92; max-width: 520px; margin: 0 0 24px; }
+      .hero-texte ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; font-size: 15.5px; }
+      .hero-texte li::before { content: '✓  '; color: #7CE3A4; font-weight: 800; }
+      .app { min-height: 0; border-radius: 22px; overflow: hidden; overflow: clip; box-shadow: 0 24px 60px rgba(0, 10, 40, .35); padding-bottom: 0; }
+      .barre { position: sticky; border-radius: 0 0 22px 22px; padding-bottom: 16px; }
+      .app .ecran { min-height: 520px; }
+      .app .ecran.sans-min { min-height: 0; }
+      .section { padding: 72px 32px; }
+      .section h2 { font-size: 36px; }
+      .grille-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+      .tarifs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .deux-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+      footer { padding-bottom: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-tete">
+    <div class="int">
+      <a class="logo" href="#haut"><img src="logo.png" alt="">SOS Auto Tahiti</a>
+      <nav>
+        <a href="#fonctionnement">Comment ça marche</a>
+        <a href="#tarifs">Tarifs</a>
+        <a href="#nous">Qui sommes-nous</a>
+        <a href="#faq">FAQ</a>
+        <a class="btn-plein" href="#haut">Réserver</a>
+      </nav>
+      <a class="btn-wa" href="https://wa.me/68987046172" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 21l2.1-5.6A8.4 8.4 0 1 1 21 11.5z"/></svg>WhatsApp</a>
+    </div>
+  </header>
+
+  <section class="hero" id="haut">
+    <div class="int">
+      <div class="hero-texte">
+        <div class="surtitre">Mécanique automobile à domicile</div>
+        <h1>Votre mécanicien vient à vous.</h1>
+        <p>Vidange, freins, batterie, suspension, recherche de panne : choisissez, voyez le prix, réservez. On vient chez vous ou au travail, partout à Tahiti.</p>
+        <ul>
+          <li><b>Prix affiché tout compris</b> : pièces, main-d'œuvre, déplacement.</li>
+          <li><b>Rien à payer avant</b> : carte bancaire après l'intervention.</li>
+          <li><b>Créneau en direct</b> : vous voyez les vraies disponibilités.</li>
+        </ul>
+      </div>
+
+      <!-- ================= PARCOURS DE RESERVATION ================= -->
+      <div class="app" id="app">
+        <div id="app-tete" class="cache">
+          <div class="app-tete">
+            <button type="button" class="retour" id="btn-retour" aria-label="Retour">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <div class="num-etape" id="num-etape">Étape 2 sur 4</div>
+            <span class="puce-resume" id="puce-resume"></span>
+          </div>
+          <div class="progres" id="progres"><span></span><span></span><span></span><span></span></div>
+        </div>
+
+        <!-- 1. Le besoin -->
+        <div class="ecran" id="e-besoin">
+          <h1>De quoi votre voiture a besoin&nbsp;?</h1>
+          <p class="sous-titre">Le mécanicien vient chez vous. Prix tout compris affiché tout de suite.</p>
+          <div class="tuiles" id="tuiles"><div class="chargement">Chargement des tarifs…</div></div>
+          <div id="msg-init" class="msg err cache"></div>
+          <button type="button" class="lien-autre" data-aller="filtre">Autre chose&nbsp;? Voir ce que nous faisons (et ne faisons pas) <span>→</span></button>
+          <div class="confiance"><span>Paiement CB après</span><span>Pièces fournies</span><span>Tout Tahiti</span></div>
+        </div>
+
+        <!-- Bis. Le filtre : recherche de panne / hors offre -->
+        <div class="ecran cache" id="e-filtre">
+          <h1 id="filtre-titre">Autre chose&nbsp;?</h1>
+          <p class="sous-titre" id="filtre-sous">Un souci sans savoir d'où il vient ? Touchez ce qui ressemble : le mécanicien arrive avec le bon matériel.</p>
+          <div class="puces" id="symptomes"></div>
+          <div class="msg attention" id="filtre-forfait" style="margin-top:12px"></div>
+          <div class="bloc">
+            <h2>Ce que nous faisons</h2>
+            <div class="liste-oui" id="liste-oui" style="margin-top:6px"></div>
+          </div>
+          <div class="bloc">
+            <h2>Ce que nous ne faisons pas</h2>
+            <p class="petit" style="margin:4px 0 6px">Pour ces travaux, un garage équipé sera plus adapté.</p>
+            <div class="liste-non">
+              <div>Carrosserie, peinture</div><div>Embrayage</div><div>Boîte de vitesses</div>
+              <div>Courroie de distribution</div><div>Moteur (ouverture)</div><div>Hors de Tahiti (Nui et Iti)</div>
+            </div>
+          </div>
+          <p class="petit" style="margin-top:12px">Votre voiture n'est pas dans notre liste ? <b>Continuez quand même</b> : vous choisissez votre créneau, on confirme le prix sous 24&nbsp;h.</p>
+        </div>
+
+        <!-- 2. Le vehicule -->
+        <div class="ecran cache" id="e-vehicule">
+          <h1>Quelle voiture&nbsp;?</h1>
+          <p class="sous-titre">Le prix s'ajuste à votre modèle.</p>
+          <label class="cg" id="cg-bouton">
+            <span class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span>
+            <span><b>Photographier ma carte grise</b><small>On remplit tout pour vous en quelques secondes</small></span>
+            <input type="file" accept="image/*" id="cg-fichier" class="cache">
+          </label>
+          <div id="cg-msg" class="msg cache"></div>
+          <p class="petit" style="margin:8px 0 0">🔒 La photo est lue puis effacée aussitôt : nous ne gardons ni la photo, ni vos nom et adresse.</p>
+
+          <span class="lab">Marque</span>
+          <div class="puces" id="marques"></div>
+          <select class="sel-natif cache" id="marque-liste" aria-label="Autre marque"></select>
+
+          <div id="bloc-modele" class="cache">
+            <span class="lab">Modèle</span>
+            <div class="puces" id="modeles"></div>
+            <select class="sel-natif cache" id="modele-liste" aria-label="Autre modèle"></select>
+          </div>
+          <div id="msg-modele" class="msg attention cache"></div>
+
+          <div class="deux">
+            <div>
+              <span class="lab">Année</span>
+              <div class="annee">
+                <button type="button" id="annee-moins" aria-label="Année précédente">−</button>
+                <input class="champ" id="annee" inputmode="numeric" maxlength="4" placeholder="AAAA" autocomplete="off">
+                <button type="button" id="annee-plus" aria-label="Année suivante">+</button>
+              </div>
+            </div>
+            <div></div>
+          </div>
+          <span class="lab">Carburant</span>
+          <div class="puces" data-groupe="carb"></div>
+
+          <div id="bloc-moteur" class="cache">
+            <span class="lab">Motorisation <span style="font-weight:600">(facultatif)</span></span>
+            <div class="puces" id="versions"></div>
+            <input class="champ cache" id="version-libre" placeholder="Ex. 1.6 HDi 90, 2.4 D-4D…" autocomplete="off" style="margin-top:8px">
+            <span class="lab">Boîte de vitesses</span>
+            <div class="puces" data-groupe="boite"></div>
+            <p class="petit" style="margin:8px 0 0">Demandé pour cette prestation : le mécanicien apporte le bon filtre et la bonne huile.</p>
+          </div>
+          <button type="button" class="lien-autre" data-aller="hors">Ma voiture n'est pas dans la liste <span>→</span></button>
+        </div>
+
+        <!-- Bis. Vehicule hors liste -->
+        <div class="ecran cache" id="e-hors">
+          <h1>Votre voiture n'est pas dans la liste&nbsp;? Pas de souci.</h1>
+          <p class="sous-titre">Même parcours : vous choisissez votre créneau, on confirme le prix exact sous 24&nbsp;h.</p>
+          <label class="depot" id="hl-depot">
+            <div class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></div>
+            <b id="hl-depot-titre">Photo de la carte grise</b>
+            <div class="oblig" id="hl-depot-etat">Obligatoire pour les véhicules hors liste</div>
+            <div class="petit" style="margin-top:4px">Elle nous donne le modèle exact et la bonne référence de pièces. Transmise uniquement à notre atelier.</div>
+            <input type="file" accept="image/*" id="hl-fichier">
+          </label>
+          <div id="hl-msg" class="msg cache"></div>
+          <div class="deux" style="margin-top:4px">
+            <div><span class="lab">Marque et modèle</span><input class="champ" id="hl-texte" placeholder="Ex. Chevrolet Captiva" autocomplete="off"></div>
+            <div><span class="lab">Année</span><input class="champ" id="hl-annee" inputmode="numeric" maxlength="4" placeholder="AAAA" autocomplete="off"></div>
+          </div>
+          <span class="lab">Elle ressemble plutôt à…</span>
+          <div class="puces" id="hl-cats"></div>
+          <span class="lab">Carburant</span>
+          <div class="puces" data-groupe="carb"></div>
+          <div class="msg attention" style="margin-top:14px"><b>Prix indicatif</b> calculé sur la catégorie choisie. Votre créneau est bloqué ; si le prix exact change, on vous prévient avant le RDV et vous restez libre d'annuler.</div>
+        </div>
+
+        <!-- Bis. Photo (batterie) -->
+        <div class="ecran cache" id="e-photo">
+          <h1 id="photo-titre">Une photo de votre batterie</h1>
+          <p class="sous-titre" id="photo-sous">Le mécanicien arrive directement avec la bonne batterie : pas d'aller-retour chez le marchand de pièces, intervention plus rapide.</p>
+          <label class="depot" id="photo-depot">
+            <div class="ico"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></div>
+            <b id="photo-depot-titre">Prendre la photo</b>
+            <div class="oblig" id="photo-depot-etat">Obligatoire pour une batterie</div>
+            <input type="file" accept="image/*" multiple id="photo-fichier">
+          </label>
+          <div id="photo-msg" class="msg cache"></div>
+          <div class="apercus" id="photo-apercus"></div>
+          <div class="conseils" id="photo-conseils">
+            <b>Pour une photo utile</b>
+            <div>Capot ouvert, la batterie entière dans le cadre</div>
+            <div>L'étiquette lisible (Ah, A, référence)</div>
+            <div>On voit les bornes + et −</div>
+          </div>
+          <p class="petit" style="margin:12px 0 0">Jusqu'à 4 photos. Elles sont envoyées au mécanicien avec l'ordre de travail.</p>
+        </div>
+
+        <!-- 3. Ou et quand -->
+        <div class="ecran cache" id="e-creneau">
+          <h1>Où et quand&nbsp;?</h1>
+          <span class="lab">Commune</span>
+          <select class="sel-natif" id="commune" style="margin-top:0"><option value="">Choisir votre commune</option></select>
+          <div id="commune-info" class="msg ok cache"></div>
+          <span class="lab">Jour</span>
+          <div id="jours-etat" class="petit">Choisissez d'abord votre commune.</div>
+          <div class="jours" id="jours"></div>
+          <div id="heures-zone" class="cache">
+            <span class="lab" style="margin-top:8px">Arrivée du mécanicien</span>
+            <div id="heures"></div>
+          </div>
+          <p class="petit" style="margin-top:14px">Seuls les créneaux libres sont proposés. Les jours complets n'apparaissent pas.</p>
+        </div>
+
+        <!-- 4. Coordonnees -->
+        <div class="ecran cache" id="e-coord">
+          <h1>Dernière étape</h1>
+          <p class="sous-titre">Où le mécanicien vous trouve ?</p>
+          <div class="recap" id="recap"></div>
+          <div class="deux">
+            <div class="champ-groupe"><label for="prenom">Prénom</label><input class="champ" id="prenom" autocomplete="given-name"></div>
+            <div class="champ-groupe"><label for="nom">Nom</label><input class="champ" id="nom" autocomplete="family-name"></div>
+          </div>
+          <div class="champ-groupe"><label for="telephone">Téléphone (WhatsApp de préférence)</label><input class="champ" id="telephone" type="tel" inputmode="tel" autocomplete="tel" placeholder="87 12 34 56"></div>
+          <div class="champ-groupe"><label for="email">Email (pour recevoir le devis)</label><input class="champ" id="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off"></div>
+          <div class="champ-groupe"><label for="adresse">Adresse précise</label><input class="champ" id="adresse" autocomplete="street-address" placeholder="Rue, PK, servitude, repère…"></div>
+          <div class="champ-groupe"><label for="immat">Immatriculation</label><input class="champ" id="immat" autocapitalize="characters" autocomplete="off" placeholder="Ex. 123456 P"></div>
+          <div class="champ-groupe">
+            <button type="button" class="puce discret" id="btn-commentaire">+ Ajouter une précision (facultatif)</button>
+            <textarea class="champ cache" id="commentaire" placeholder="Code portail, voiture au sous-sol, bruit entendu…" style="margin-top:8px"></textarea>
+          </div>
+          <div class="pot-de-miel" aria-hidden="true"><input id="honeypot" tabindex="-1" autocomplete="off"></div>
+          <div id="msg-envoi" class="msg err erreur-envoi cache"></div>
+          <p class="petit" style="margin:14px 0 0">Rien à payer maintenant : carte bancaire après l'intervention. En réservant, vous acceptez nos <a href="mentions-legales.html#conditions" target="_blank">conditions</a> et l'utilisation de vos coordonnées pour traiter votre rendez-vous (<a href="mentions-legales.html#donnees" target="_blank">données personnelles</a>).</p>
+        </div>
+
+        <!-- 5. Confirmation -->
+        <div class="cache" id="e-ok"></div>
+
+        <div class="barre" id="barre">
+          <div class="info"><div class="lib" id="barre-lib">Choisissez une prestation</div><div class="prix" id="barre-prix">—</div></div>
+          <button type="button" id="barre-btn" disabled>Continuer</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="apres-parcours">
+    <section class="section blanc" id="fonctionnement">
+      <div class="int">
+        <div class="surtitre">Comment ça marche</div>
+        <h2>Trois étapes, zéro garage.</h2>
+        <div class="grille-3">
+          <div class="carte-info"><div class="n">1</div><h3>Vous réservez en ligne</h3><p>Prestation, voiture, créneau libre : le prix final s'affiche avant de valider.</p></div>
+          <div class="carte-info"><div class="n">2</div><h3>Le mécanicien vient à vous</h3><p>À la maison ou au travail, avec les pièces et l'outillage. Vous n'avez rien à déplacer.</p></div>
+          <div class="carte-info"><div class="n">3</div><h3>Vous payez après</h3><p>Par carte bancaire, une fois le travail fait. Facture par email, pièces changées montrées.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="tarifs">
+      <div class="int">
+        <div class="surtitre">Tarifs</div>
+        <h2>Des prix clairs, tout compris.</h2>
+        <p class="intro">Prix de départ pour les plus petits véhicules, pièces et main-d'œuvre incluses. Le prix exact de votre véhicule s'affiche pendant la réservation, déplacement compris.</p>
+        <div class="tarifs" id="grille-tarifs"><div class="petit">Chargement des tarifs…</div></div>
+      </div>
+    </section>
+
+    <section class="section blanc" id="offre">
+      <div class="int deux-col">
+        <div><div class="surtitre">Ce que nous faisons</div><div class="liste-oui" id="liste-oui-2" style="margin-top:10px"></div></div>
+        <div style="margin-top:20px"><div class="surtitre" style="color:var(--rouge)">Ce que nous ne faisons pas</div>
+          <div class="liste-non" style="margin-top:10px"><div>Carrosserie, peinture</div><div>Embrayage, boîte de vitesses</div><div>Courroie de distribution</div><div>Ouverture moteur</div><div>Hors de Tahiti (Nui et Iti)</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="nous">
+      <div class="int">
+        <div class="surtitre">Qui sommes-nous</div>
+        <h2>Des mécaniciens de Tahiti, qui viennent à vous.</h2>
+        <p class="intro">SOS Auto Tahiti, c'est la mécanique qui se déplace : on vient chez vous ou au travail avec les pièces et l'outillage. Notre parti pris : un prix annoncé avant de réserver, l'heure d'arrivée respectée, et rien n'est fait sans votre accord.</p>
+        <div class="chiffres">
+          <div><b>Tahiti</b><span>Nui et Iti, toutes communes</span></div>
+          <div><b>CB</b><span>paiement après l'intervention</span></div>
+          <div><b>Prix fixe</b><span>affiché avant de réserver</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section blanc faq" id="faq">
+      <div class="int">
+        <div class="surtitre">Questions fréquentes</div>
+        <h2>Vous vous demandez peut-être…</h2>
+        <details><summary>Le prix affiché est-il le prix final&nbsp;?</summary><p>Oui : pièces, main-d'œuvre et déplacement compris. Si le mécanicien découvre autre chose sur place, il vous l'explique et rien n'est fait sans votre accord.</p></details>
+        <details><summary>Ma voiture n'est pas dans la liste, je fais comment&nbsp;?</summary><p>Réservez quand même, avec la photo de la carte grise : votre créneau est bloqué et le prix exact est confirmé sous 24&nbsp;h. Si le prix change, vous restez libre d'annuler.</p></details>
+        <details><summary>La recherche de panne est-elle payante&nbsp;?</summary><p>Oui, c'est un forfait. Il est déduit si vous faites la réparation avec nous.</p></details>
+        <details><summary>Où intervenez-vous&nbsp;?</summary><p>Partout sur Tahiti, Nui et Iti, à domicile ou au travail. Pas dans les autres îles. Il faut simplement un endroit où la voiture peut être garée en sécurité, sur un sol plat.</p></details>
+        <details><summary>Comment je paie&nbsp;?</summary><p>Par carte bancaire uniquement, après l'intervention. Pour des raisons de sécurité, nos techniciens ne transportent pas d'espèces. La facture vous est envoyée par email.</p></details>
+        <details><summary>Je dois annuler ou décaler mon rendez-vous&nbsp;?</summary><p>Prévenez-nous dès que possible sur WhatsApp au +689 87 04 61 72 ou par email : on vous propose un autre créneau.</p></details>
+      </div>
+    </section>
+
+    <footer>
+      <div class="int">
+        <span>© <span id="annee-pied"></span> SOS Auto Tahiti · Mécanique automobile à domicile</span>
+        <a href="mentions-legales.html">Mentions légales</a>
+        <a href="mentions-legales.html#donnees">Données personnelles</a>
+        <a href="mentions-legales.html#conditions">Conditions de service</a>
+        <a href="https://wa.me/68987046172" target="_blank" rel="noopener">WhatsApp +689 87 04 61 72</a>
+        <a href="mailto:sos.auto.tahiti@gmail.com">sos.auto.tahiti@gmail.com</a>
+      </div>
+    </footer>
+  </div>
+
+<script>
+(function() {
+  'use strict';
+  // Adresse du serveur (Google Apps Script) : la meme que le site actuel
+  var APP_URL = 'https://script.google.com/macros/s/AKfycbwsIClAvm5xMrrp3f3IhmhDx3fPElaGno1qSso9LJNWzlxQ-rvX_WdjBwJqgLAEVw03zg/exec';
+  var TZ = 'Pacific/Tahiti';
+  var WA = '68987046172';
+  var CLE_MEMOIRE = 'sos_auto_init_v6';
+  var ORDRE_TUILES = ['Vidange', 'Freins', 'Batterie', 'Suspension', 'Recherche de panne', 'Diagnostic'];
+  var SYMPTOMES = ['Ne démarre pas', 'Voyant allumé', 'Bruit au freinage', 'Perte de puissance', 'Fumée', 'Chauffe', 'Vibrations', 'Fuite', 'Bruit bizarre', 'Autre'];
+  var CARBURANTS = ['Essence', 'Diesel', 'Hybride', 'Électrique'];
+  var ETAPE_DE = { besoin: 1, filtre: 1, vehicule: 2, hors: 2, photo: 2, creneau: 3, coord: 4 };
+  var ICONES = {
+    'Vidange': '<path d="M12 3c3 4.5 6 7.6 6 11a6 6 0 0 1-12 0c0-3.4 3-6.5 6-11z"/>',
+    'Freins': '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="2.5"/><path d="M12 3.5v3M20.5 12h-3M12 20.5v-3M3.5 12h3"/>',
+    'Batterie': '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M7 7V4.5h3V7M14 7V4.5h3V7M7 13.5h3M15.5 12v3M14 13.5h3"/>',
+    'Suspension': '<path d="M12 2v3M12 19v3M8 5h8M8 19h8M9 8l6 2.2L9 12.4l6 2.2L9 16.8"/>',
+    'Recherche de panne': '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/>',
+    'Diagnostic': '<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M7 21h10M12 17v4M6.5 11.5h2.5l1.5-3 2.5 6 1.5-3h3"/>',
+    '_': '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/>'
+  };
+  var COCHE = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+
+  var D = null;
+  var S = {
+    ids: [], sympt: [], ouvert: '',
+    marque: '', modele: '', cat: '', annee: '', carb: '', version: '', versionLibre: false, boite: '', autreMarque: false, autreModele: false,
+    hors: false, hlTexte: '', hlAnnee: '', hlCat: '', photoCG: '',
+    vin: '', cyl: '', puis: '', immat: '',
+    photos: [], commune: '', jour: '', creneau: null
+  };
+  var ecran = 'besoin';
+  var pile = [];
+  var creneauxCle = null, creneauxListe = null, numeroRequete = 0;
+  var memoireCreneaux = {};
+
+  function $(id) { return document.getElementById(id); }
+  function esc(t) { return String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function xpf(n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' XPF'; }
+  function norm(v) { return String(v == null ? '' : v).trim().toUpperCase(); }
+  function sansAccent(t) { return String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
+  function somme(l, f) { return l.reduce(function(s, x) { return s + f(x); }, 0); }
+  function afficher(el, oui) { (typeof el === 'string' ? $(el) : el).classList.toggle('cache', !oui); }
+  var estMobile = function() { return window.matchMedia('(max-width: 979px)').matches; };
+  $('annee-pied').textContent = new Date().getFullYear();
+
+  // ---------- Suivi anonyme du parcours (entonnoir dans la gerance) ----------
+  var session = '';
+  try { session = sessionStorage.getItem('sos_visite') || ''; } catch (e) {}
+  if (!session) { session = Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4); try { sessionStorage.setItem('sos_visite', session); } catch (e) {} }
+  var etapesNotees = {};
+  function noter(etape, detail) {
+    if (etapesNotees[etape]) return;
+    etapesNotees[etape] = 1;
+    try {
+      fetch(APP_URL, { method: 'POST', keepalive: true, body: JSON.stringify({ action: 'etape', data: { session: session, etape: etape, appareil: estMobile() ? 'mobile' : 'ordinateur', detail: detail || '' } }) }).catch(function() {});
+    } catch (e) {}
+  }
+
+  // ---------- Signalement des erreurs rencontrees par les visiteurs ----------
+  var nbSignalements = 0;
+  function signalerErreur(ou, message) {
+    if (++nbSignalements > 5) return;
+    try {
+      fetch(APP_URL, { method: 'POST', keepalive: true, body: JSON.stringify({ action: 'signalerErreur', data: {
+        ou: 'v3 ' + String(ou || ''), message: String(message || '').slice(0, 300), navigateur: navigator.userAgent, largeur: window.innerWidth } }) }).catch(function() {});
+    } catch (e) {}
+  }
+  window.addEventListener('error', function(e) { signalerErreur('script', (e.message || '') + (e.lineno ? ' (ligne ' + e.lineno + ')' : '')); });
+  window.addEventListener('unhandledrejection', function(e) { signalerErreur('promesse', e.reason && (e.reason.message || String(e.reason))); });
+
+  // ---------- Donnees : memoire du telephone d'abord, puis version a jour ----------
+  var dejaAffiche = false;
+  try {
+    var memo = JSON.parse(localStorage.getItem(CLE_MEMOIRE) || 'null');
+    if (memo && memo.donnees && (Date.now() - memo.date) < 7 * 24 * 3600 * 1000) { recevoir(memo.donnees); dejaAffiche = true; }
+  } catch (e) {}
+  fetch(APP_URL + '?action=getInitialData')
+    .then(function(r) { return r.json(); })
+    .then(function(frais) {
+      if (!frais || !frais.prestations) throw new Error(frais && frais.error ? frais.error : 'réponse vide');
+      try { localStorage.setItem(CLE_MEMOIRE, JSON.stringify({ date: Date.now(), donnees: frais })); } catch (e) {}
+      recevoir(frais);
+    })
+    .catch(function(err) {
+      if (dejaAffiche) return;
+      $('tuiles').innerHTML = '';
+      var m = $('msg-init');
+      m.innerHTML = 'Chargement impossible (' + esc(err.message) + '). Rechargez la page, ou réservez sur <a href="https://wa.me/' + WA + '" target="_blank" rel="noopener">WhatsApp</a>.';
+      afficher(m, true);
+      signalerErreur('chargement', err && err.message);
+    });
+  noter('arrivee');
+
+  function recevoir(donnees) {
+    D = donnees;
+    D.modeles = D.modeles || [];
+    D.vehicules = D.vehicules || [];
+    D.prixPieces = D.prixPieces || [];
+    // Une selection qui n'existe plus (tarifs modifies) est retiree
+    S.ids = S.ids.filter(function(id) { return D.prestations.some(function(p) { return p.id === id; }); });
+    var sel = $('commune');
+    var avant = sel.value;
+    sel.innerHTML = '<option value="">Choisir votre commune</option>' + D.communes.map(function(c) {
+      return '<option value="' + esc(c.id) + '">' + esc(c.nom) + '</option>';
+    }).join('');
+    sel.value = avant;
+    construireListesFixes();
+    rendre();
+  }
+
+  // ---------- Prestations et tuiles ----------
+  function tuileAuto(nom) {
+    var n = sansAccent(nom);
+    if (/recherche.*panne/.test(n)) return 'Recherche de panne';
+    if (/diagnos|valise/.test(n)) return 'Diagnostic';
+    if (/vidange|filtre/.test(n)) return 'Vidange';
+    if (/frein|plaquette|disque|machoire|tambour/.test(n)) return 'Freins';
+    if (/batter/.test(n)) return 'Batterie';
+    if (/amortiss|suspension|rotule|silent|biellette|triangle/.test(n)) return 'Suspension';
+    return '';
+  }
+  function tuileDe(p) { return p.tuile !== undefined ? String(p.tuile || '').trim() : tuileAuto(p.nom); }
+  function infosMoteur(p) { return p.infosMoteur !== undefined ? !!p.infosMoteur : /vidange/i.test(p.nom); }
+  function estRdp(p) { return /recherche.*panne/.test(sansAccent(p.nom)) || tuileDe(p) === 'Recherche de panne'; }
+  function prestaParId(id) { return D.prestations.filter(function(p) { return p.id === id; })[0]; }
+  function choisies() { return D ? D.prestations.filter(function(p) { return S.ids.indexOf(p.id) !== -1; }) : []; }
+  function tuiles() {
+    var g = {};
+    D.prestations.forEach(function(p) { var t = tuileDe(p); if (t) (g[t] = g[t] || []).push(p); });
+    return Object.keys(g).sort(function(a, b) {
+      var ia = ORDRE_TUILES.indexOf(a), ib = ORDRE_TUILES.indexOf(b);
+      if (ia === -1) ia = 99; if (ib === -1) ib = 99;
+      return ia - ib || a.localeCompare(b, 'fr');
+    }).map(function(t) { return { nom: t, prest: g[t] }; });
+  }
+  function rdpPrestation() { return D ? D.prestations.filter(function(p) { return tuileDe(p) && estRdp(p); })[0] : null; }
+  function basculer(id) {
+    var i = S.ids.indexOf(id);
+    if (i === -1) S.ids.push(id); else S.ids.splice(i, 1);
+    if (!choisies().some(estRdp)) S.sympt = [];
+  }
+
+  // ---------- Vehicule ----------
+  function vehParId(id) { var n = norm(id); return n ? D.vehicules.filter(function(v) { return norm(v.id) === n; })[0] : null; }
+  function vehCourant() { return D ? vehParId(S.hors ? S.hlCat : S.cat) : null; }
+  function coefs() { return D.vehicules.map(function(v) { return Number(v.coefficientPrix) || 1; }); }
+  function coefMin() { var c = coefs(); return c.length ? Math.min.apply(null, c) : 1; }
+  function coefUnique() { var c = coefs(); return !c.length || Math.min.apply(null, c) === Math.max.apply(null, c); }
+  function modeleCourant() { return D.modeles.filter(function(m) { return m.marque === S.marque && m.modele === S.modele; })[0]; }
+  function versionChoisie() { return S.hors ? '' : String(S.version || '').trim(); }
+  function prixPieceExact(pid) {
+    if (S.hors || !S.marque || !S.modele) return null;
+    var n = function(s) { return String(s || '').trim().toLowerCase(); };
+    var v = versionChoisie();
+    var c = D.prixPieces.filter(function(x) { return x.prestationId === pid && n(x.marque) === n(S.marque) && n(x.modele) === n(S.modele); });
+    var exact = v ? c.filter(function(x) { return x.version && n(x.version) === n(v); })[0] : null;
+    var gen = c.filter(function(x) { return !x.version; })[0];
+    var choix = exact || gen;
+    return choix ? Math.round(choix.prix) : null;
+  }
+  function prixPrestation(p, coef) {
+    var e = prixPieceExact(p.id);
+    return e !== null ? Math.round(p.prixForfait * coef) + e : Math.round((p.prixForfait + p.prixPieces) * coef);
+  }
+  function photoRequise() { return choisies().some(function(p) { return p.photoRequise; }); }
+  function besoinMoteur() { return choisies().some(infosMoteur); }
+
+  // ---------- Calcul du prix : MEME calcul que le serveur (calculerDevis dans Code.gs) ----------
+  function communeCourante() { return D ? D.communes.filter(function(c) { return c.id === S.commune; })[0] : null; }
+  function estWeekend(iso) { var j = new Date(iso).toLocaleDateString('en-US', { weekday: 'short', timeZone: TZ }); return j === 'Sat' || j === 'Sun'; }
+  function forfaitWeekend() { return D.majorationWeekendXPF != null ? Number(D.majorationWeekendXPF) : 2500; }
+  function calcul() {
+    var prest = choisies();
+    var veh = vehCourant();
+    var coef = veh ? Number(veh.coefficientPrix) : coefMin();
+    var exactes = {};
+    prest.forEach(function(p) { exactes[p.id] = prixPieceExact(p.id); });
+    var forfaits = Math.round(somme(prest, function(p) { return p.prixForfait; }) * coef);
+    var pieces = Math.round(somme(prest.filter(function(p) { return exactes[p.id] === null; }), function(p) { return p.prixPieces; }) * coef)
+      + somme(prest.filter(function(p) { return exactes[p.id] !== null; }), function(p) { return exactes[p.id]; });
+    var lignes = prest.map(function(p) { return { nom: p.nom, montant: prixPrestation(p, coef) }; });
+    if (lignes.length) lignes[lignes.length - 1].montant += (forfaits + pieces) - somme(lignes, function(l) { return l.montant; });
+    var commune = communeCourante();
+    var frais = commune ? Number(commune.fraisDeplacement) || 0 : 0;
+    var majZone = commune && commune.zoneDifficile ? Math.round(D.majorationZoneXPF != null ? Number(D.majorationZoneXPF) : 2000) : 0;
+    var majWE = S.creneau && estWeekend(S.creneau.debut) ? Math.round(forfaitWeekend()) : 0;
+    var dureeInt = veh ? somme(prest, function(p) { return p.dureeMinutes; }) * Number(veh.coefficientTemps || 1) : 0;
+    return {
+      prest: prest, veh: veh, lignes: lignes, prestations: forfaits + pieces, commune: commune,
+      frais: frais, majZone: majZone, majWE: majWE, total: forfaits + pieces + frais + majZone + majWE,
+      dureeInt: dureeInt, appro: prest.some(function(p) { return !p.enStock; }) ? (Number(D.forfaitApproMin) || 0) : 0
+    };
+  }
+
+  // ---------- Navigation entre les ecrans (le bouton retour du telephone fonctionne) ----------
+  function aller(e) {
+    if (e === ecran) return;
+    pile.push(ecran);
+    try { history.pushState({ e: e }, ''); } catch (x) {}
+    montrer(e);
+  }
+  function retour() {
+    if (!pile.length) return;
+    try { history.back(); } catch (x) { montrer(pile.pop()); }
+  }
+  window.addEventListener('popstate', function() {
+    if (ecran === 'ok') { reinitialiser(); return; }
+    if (pile.length) montrer(pile.pop());
+  });
+  function montrer(e) {
+    ecran = e;
+    if (e === 'vehicule') S.hors = false;
+    if (e === 'hors') { S.hors = true; noter('hors_liste'); }
+    ['besoin', 'filtre', 'vehicule', 'hors', 'photo', 'creneau', 'coord', 'ok'].forEach(function(x) { afficher('e-' + x, x === e); });
+    afficher('app-tete', e !== 'besoin' && e !== 'ok');
+    afficher('barre', e !== 'ok');
+    document.body.classList.toggle('parcours', e !== 'besoin');
+    rendre();
+    if (estMobile()) window.scrollTo(0, 0);
+    else { var r = $('app').getBoundingClientRect(); if (r.top < 0 || r.top > window.innerHeight * 0.6) $('app').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  }
+
+  // ---------- Rendu ----------
+  function rendre() {
+    if (!D) return;
+    if (ecran === 'besoin') rendreBesoin();
+    if (ecran === 'filtre') rendreFiltre();
+    if (ecran === 'vehicule') rendreVehicule();
+    if (ecran === 'hors') rendreHors();
+    if (ecran === 'photo') rendrePhoto();
+    if (ecran === 'creneau') rendreCreneau();
+    if (ecran === 'coord') rendreCoord();
+    rendreTete();
+    rendreBarre();
+    rendreVitrine();
+  }
+
+  function icone(nom) {
+    return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICONES[nom] || ICONES._) + '</svg>';
+  }
+  function prixTuile(t) {
+    var cm = coefMin();
+    var min = Math.min.apply(null, t.prest.map(function(p) { return prixPrestation(p, cm); }));
+    var des = !coefUnique() || t.prest.length > 1;
+    var txt = (des ? 'dès ' : '') + xpf(min);
+    if (t.nom === 'Recherche de panne') txt += ', déduit si réparation';
+    return txt;
+  }
+  function rendreBesoin() {
+    var liste = tuiles();
+    var h = '';
+    liste.forEach(function(t) {
+      var sel = t.prest.some(function(p) { return S.ids.indexOf(p.id) !== -1; });
+      h += '<button type="button" class="tuile' + (sel ? ' sel' : '') + (S.ouvert === t.nom ? ' ouvert' : '') + '" data-tuile="' + esc(t.nom) + '">'
+        + '<span class="coche">' + COCHE + '</span><span class="ico">' + icone(t.nom) + '</span>'
+        + '<b>' + esc(t.nom === 'Diagnostic' ? 'Diagnostic valise' : t.nom) + '</b><span class="px">' + esc(prixTuile(t)) + '</span></button>';
+      if (S.ouvert === t.nom && t.prest.length > 1) {
+        var veh = vehCourant(), coef = veh ? veh.coefficientPrix : coefMin();
+        h += '<div class="panneau"><div class="tit">' + esc(t.nom) + ' : cochez ce qu\'il faut faire</div>'
+          + t.prest.map(function(p) {
+            var s = S.ids.indexOf(p.id) !== -1;
+            return '<div class="ligne-presta' + (s ? ' sel' : '') + '" data-presta="' + esc(p.id) + '" role="checkbox" aria-checked="' + s + '" tabindex="0"><span class="cb">' + (s ? COCHE : '') + '</span><span class="n">' + esc(p.nom) + '</span><span class="p">' + (veh ? '' : 'dès ') + esc(xpf(prixPrestation(p, coef))) + '</span></div>';
+          }).join('') + '</div>';
+      }
+    });
+    $('tuiles').innerHTML = h || '<div class="chargement">Aucune prestation en ligne pour le moment. Contactez-nous sur WhatsApp.</div>';
+  }
+
+  function rendreFiltre() {
+    var rdp = rdpPrestation();
+    var modeRdp = choisies().some(estRdp);
+    $('filtre-titre').innerHTML = modeRdp ? 'Que se passe-t-il&nbsp;?' : 'Autre chose&nbsp;?';
+    $('filtre-sous').textContent = modeRdp
+      ? 'Touchez ce qui ressemble (facultatif) : le mécanicien arrive avec le bon matériel.'
+      : 'Un souci sans savoir d\'où il vient ? Touchez ce qui ressemble : le mécanicien arrive avec le bon matériel.';
+    afficher('symptomes', !!rdp);
+    $('symptomes').innerHTML = SYMPTOMES.map(function(s) {
+      return '<button type="button" class="puce' + (S.sympt.indexOf(s) !== -1 ? ' sel' : '') + '" data-sympt="' + esc(s) + '">' + esc(s) + '</button>';
+    }).join('');
+    afficher('filtre-forfait', !!rdp);
+    if (rdp) {
+      var veh = vehCourant();
+      $('filtre-forfait').innerHTML = '<b>Forfait recherche de panne : ' + (veh || coefUnique() ? '' : 'dès ') + esc(xpf(prixPrestation(rdp, veh ? veh.coefficientPrix : coefMin()))) + '.</b> Déduit si vous faites la réparation avec nous.';
+    }
+  }
+
+  function construireListesFixes() {
+    var noms = tuiles().map(function(t) { return t.nom === 'Diagnostic' ? 'Diagnostic valise' : t.nom; });
+    var h = noms.map(function(n) { return '<div>' + esc(n) + '</div>'; }).join('');
+    $('liste-oui').innerHTML = h; $('liste-oui-2').innerHTML = h;
+    // Carburant (vehicule et hors liste) et boite
+    document.querySelectorAll('[data-groupe="carb"]').forEach(function(z) {
+      z.innerHTML = CARBURANTS.map(function(c) { return '<button type="button" class="puce" data-carb="' + esc(c) + '">' + esc(c) + '</button>'; }).join('');
+    });
+    document.querySelectorAll('[data-groupe="boite"]').forEach(function(z) {
+      z.innerHTML = ['Manuelle', 'Automatique'].map(function(c) { return '<button type="button" class="puce" data-boite="' + c + '">' + c + '</button>'; }).join('');
+    });
+    // Marques : toutes, dans la liste deroulante
+    var marques = toutesMarques();
+    $('marque-liste').innerHTML = '<option value="">Choisir la marque…</option>' + marques.map(function(m) { return '<option>' + esc(m) + '</option>'; }).join('')
+      + '<option value="__HORS">Ma marque n\'est pas dans la liste</option>';
+  }
+  function toutesMarques() {
+    var vu = {};
+    D.modeles.forEach(function(m) { if (m.marque) vu[m.marque] = 1; });
+    return Object.keys(vu).sort(function(a, b) { return a.localeCompare(b, 'fr', { sensitivity: 'base' }); });
+  }
+  function marquesRapides() {
+    var pop = {}, nb = {};
+    D.modeles.forEach(function(m) { if (!m.marque) return; nb[m.marque] = (nb[m.marque] || 0) + 1; if (m.populaire) pop[m.marque] = 1; });
+    var liste = Object.keys(pop);
+    if (!liste.length) liste = Object.keys(nb).sort(function(a, b) { return nb[b] - nb[a]; }).slice(0, 8);
+    liste = liste.slice(0, 10);
+    if (S.marque && liste.indexOf(S.marque) === -1) liste.unshift(S.marque);
+    return liste;
+  }
+
+  function rendreVehicule() {
+    // Marques
+    $('marques').innerHTML = marquesRapides().map(function(m) {
+      return '<button type="button" class="puce' + (S.marque === m ? ' sel' : '') + '" data-marque="' + esc(m) + '">' + esc(m) + '</button>';
+    }).join('') + '<button type="button" class="puce discret" data-autre="marque">Autre marque…</button>';
+    afficher('marque-liste', S.autreMarque);
+    // Modeles
+    afficher('bloc-modele', !!S.marque);
+    var msg = '';
+    if (S.marque) {
+      var mods = D.modeles.filter(function(m) { return m.marque === S.marque; })
+        .sort(function(a, b) { return String(a.modele).localeCompare(String(b.modele), 'fr', { numeric: true, sensitivity: 'base' }); });
+      var pops = mods.filter(function(m) { return m.populaire; });
+      var rapides = pops.length ? pops : (mods.length <= 10 ? mods : []);
+      var noms = rapides.map(function(m) { return m.modele; });
+      if (S.modele && noms.indexOf(S.modele) === -1) noms.unshift(S.modele);
+      var reste = mods.length > rapides.length;
+      $('modeles').innerHTML = noms.map(function(n) {
+        return '<button type="button" class="puce' + (S.modele === n ? ' sel' : '') + '" data-modele="' + esc(n) + '">' + esc(n) + '</button>';
+      }).join('') + (reste && rapides.length ? '<button type="button" class="puce discret" data-autre="modele">Autre modèle…</button>' : '')
+        + '<button type="button" class="puce discret" data-aller="hors">Pas dans la liste…</button>';
+      var sel = $('modele-liste');
+      var voirListe = reste && (!rapides.length || S.autreModele);
+      afficher(sel, voirListe);
+      if (voirListe && sel.dataset.marque !== S.marque) {
+        sel.dataset.marque = S.marque;
+        sel.innerHTML = '<option value="">Choisir le modèle…</option>' + mods.map(function(m) { return '<option>' + esc(m.modele) + '</option>'; }).join('');
+      }
+      if (voirListe) sel.value = S.modele;
+      if (S.modele && !S.cat) msg = 'Ce modèle ne peut pas encore être chiffré en ligne. <button type="button" class="puce discret" data-aller="hors" style="margin-top:8px">Continuer avec la carte grise →</button>';
+    }
+    $('msg-modele').innerHTML = msg; afficher('msg-modele', !!msg);
+    // Annee, carburant
+    if (document.activeElement !== $('annee')) $('annee').value = S.annee;
+    marquerPuces('#e-vehicule [data-carb]', 'carb', S.carb);
+    // Version et boite : seulement si la prestation en a besoin
+    var moteur = besoinMoteur() && !!S.modele;
+    afficher('bloc-moteur', moteur);
+    if (moteur) {
+      var m = modeleCourant();
+      var versions = (m && m.versions) || [];
+      $('versions').innerHTML = versions.map(function(v) {
+        return '<button type="button" class="puce' + (!S.versionLibre && S.version === v ? ' sel' : '') + '" data-version="' + esc(v) + '">' + esc(v) + '</button>';
+      }).join('') + '<button type="button" class="puce discret' + (S.versionLibre ? ' sel' : '') + '" data-version="__LIBRE">' + (versions.length ? 'Autre / je ne sais pas' : 'Préciser') + '</button>';
+      afficher('version-libre', S.versionLibre);
+      marquerPuces('#e-vehicule [data-boite]', 'boite', S.boite);
+    }
+  }
+  function marquerPuces(selecteur, attr, valeur) {
+    document.querySelectorAll(selecteur).forEach(function(b) { b.classList.toggle('sel', b.getAttribute('data-' + attr) === valeur); });
+  }
+  function anneeValide(a) { var n = parseInt(a, 10); return /^\d{4}$/.test(String(a)) && n >= 1950 && n <= new Date().getFullYear() + 1; }
+  function vehiculeOk() {
+    return !!(S.cat && S.marque && S.modele && anneeValide(S.annee) && S.carb && (!besoinMoteur() || S.boite));
+  }
+
+  function rendreHors() {
+    $('hl-cats').innerHTML = D.vehicules.map(function(v) {
+      return '<button type="button" class="puce' + (norm(S.hlCat) === norm(v.id) ? ' sel' : '') + '" data-cat="' + esc(v.id) + '">' + esc(v.nom) + '</button>';
+    }).join('');
+    marquerPuces('#e-hors [data-carb]', 'carb', S.carb);
+    $('hl-depot').classList.toggle('fait', !!S.photoCG);
+    $('hl-depot-titre').textContent = S.photoCG ? 'Carte grise ajoutée' : 'Photo de la carte grise';
+    $('hl-depot-etat').textContent = S.photoCG ? '✓ Touchez pour la reprendre' : 'Obligatoire pour les véhicules hors liste';
+    if (document.activeElement !== $('hl-texte')) $('hl-texte').value = S.hlTexte;
+    if (document.activeElement !== $('hl-annee')) $('hl-annee').value = S.hlAnnee;
+  }
+  function horsOk() { return !!(S.photoCG && S.hlTexte.trim().length >= 3 && anneeValide(S.hlAnnee) && S.hlCat); }
+
+  function rendrePhoto() {
+    var noms = choisies().filter(function(p) { return p.photoRequise; }).map(function(p) { return p.nom; });
+    var batt = noms.some(function(n) { return /batter/i.test(n); });
+    $('photo-titre').textContent = batt ? 'Une photo de votre batterie' : 'Une photo, s\'il vous plaît';
+    $('photo-sous').textContent = batt
+      ? 'Le mécanicien arrive directement avec la bonne batterie : pas d\'aller-retour chez le marchand de pièces, intervention plus rapide.'
+      : 'Elle aide le mécanicien à préparer l\'intervention (' + noms.join(', ') + ').';
+    afficher('photo-conseils', batt);
+    $('photo-depot').classList.toggle('fait', S.photos.length > 0);
+    $('photo-depot-titre').textContent = S.photos.length ? 'Ajouter une autre photo' : 'Prendre la photo';
+    $('photo-depot-etat').textContent = S.photos.length ? '✓ ' + S.photos.length + ' photo(s) ajoutée(s)' : 'Obligatoire' + (batt ? ' pour une batterie' : '');
+    $('photo-apercus').innerHTML = S.photos.map(function(p, i) {
+      return '<div><img src="' + p.data + '" alt="Photo ' + (i + 1) + '"><button type="button" data-retirer="' + i + '" aria-label="Retirer">×</button></div>';
+    }).join('');
+  }
+
+  function rendreCreneau() {
+    var c = calcul();
+    var commune = c.commune;
+    $('commune').value = S.commune;
+    afficher('commune-info', !!commune);
+    if (commune) {
+      $('commune-info').innerHTML = '✓ Desservi. ' + (c.frais ? 'Déplacement ' + esc(commune.nom) + ' : ' + esc(xpf(c.frais)) + ', déjà compté dans le prix en bas.' : 'Déplacement offert à ' + esc(commune.nom) + '.')
+        + (c.majZone ? '<br>Zone d\'accès difficile : + ' + esc(xpf(c.majZone)) + '.' : '');
+    }
+    if (!commune || !c.veh) {
+      creneauxCle = null; S.creneau = null;
+      $('jours').innerHTML = ''; afficher('heures-zone', false);
+      $('jours-etat').textContent = 'Choisissez d\'abord votre commune.'; afficher('jours-etat', true);
+      return;
+    }
+    // L'heure proposee est l'heure d'ARRIVEE ; le serveur ajoute l'aller (et l'achat des pieces) avant et le retour apres
+    var cle = 'duree=' + Math.round(c.dureeInt) + '&trajet=' + Math.round(commune.dureeTrajetMinutes) + '&appro=' + Math.round(c.appro);
+    if (cle !== creneauxCle) { creneauxCle = cle; creneauxListe = null; S.creneau = null; S.jour = ''; chargerCreneaux(cle); }
+    if (!creneauxListe) return;
+    dessinerJours();
+  }
+  function chargerCreneaux(cle) {
+    $('jours').innerHTML = ''; afficher('heures-zone', false);
+    $('jours-etat').textContent = 'Recherche des disponibilités…'; afficher('jours-etat', true);
+    var memo = memoireCreneaux[cle];
+    if (memo && Date.now() - memo.date < 120000) { creneauxListe = memo.creneaux; dessinerJours(); return; }
+    var n = ++numeroRequete;
+    fetch(APP_URL + '?action=getCreneaux&' + cle)
+      .then(function(r) { return r.json(); })
+      .then(function(r) {
+        if (n !== numeroRequete || cle !== creneauxCle) return;
+        if (!r.success) throw new Error(r.error || 'erreur');
+        memoireCreneaux[cle] = { date: Date.now(), creneaux: r.creneaux };
+        creneauxListe = r.creneaux;
+        if (ecran === 'creneau') { dessinerJours(); rendreBarre(); }
+      })
+      .catch(function(err) {
+        if (n !== numeroRequete) return;
+        creneauxCle = null;
+        $('jours-etat').innerHTML = 'Impossible de charger les créneaux (' + esc(err.message) + '). <a href="#" id="reessayer">Réessayer</a> ou réservez sur <a href="https://wa.me/' + WA + '" target="_blank" rel="noopener">WhatsApp</a>.';
+        signalerErreur('créneaux', err && err.message);
+      });
+  }
+  function jourTahiti(iso) { return new Date(iso).toLocaleDateString('fr-CA', { timeZone: TZ }); }
+  function heureTahiti(iso) { return new Date(iso).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', timeZone: TZ }); }
+  function dessinerJours() {
+    var liste = creneauxListe || [];
+    if (!liste.length) {
+      $('jours').innerHTML = ''; afficher('heures-zone', false);
+      $('jours-etat').innerHTML = 'Aucun créneau libre dans les prochains jours. Écrivez-nous sur <a href="https://wa.me/' + WA + '" target="_blank" rel="noopener">WhatsApp</a> : on trouve une solution.';
+      afficher('jours-etat', true);
+      return;
+    }
+    afficher('jours-etat', false);
+    var parJour = {};
+    liste.forEach(function(c) { var k = jourTahiti(c.debut); (parJour[k] = parJour[k] || []).push(c); });
+    var jours = Object.keys(parJour).sort();
+    if (!S.jour || !parJour[S.jour]) S.jour = jours[0];
+    var we = forfaitWeekend();
+    $('jours').innerHTML = jours.map(function(k) {
+      var d = new Date(parJour[k][0].debut);
+      var opt = function(o) { o.timeZone = TZ; return d.toLocaleDateString('fr-FR', o); };
+      return '<button type="button" class="jour' + (k === S.jour ? ' sel' : '') + '" data-jour="' + k + '"><div class="js">' + esc(opt({ weekday: 'short' })) + '</div><div class="jn">' + esc(opt({ day: 'numeric' })) + '</div><div class="jm">' + esc(opt({ month: 'short' })) + '</div>'
+        + (we > 0 && estWeekend(parJour[k][0].debut) ? '<div class="we">+' + esc(xpf(we).replace(' XPF', '')) + '</div>' : '') + '</button>';
+    }).join('');
+    var duJour = parJour[S.jour];
+    var matin = duJour.filter(function(c) { return Number(heureTahiti(c.debut).slice(0, 2)) < 12; });
+    var aprem = duJour.filter(function(c) { return Number(heureTahiti(c.debut).slice(0, 2)) >= 12; });
+    var bloc = function(titre, l) {
+      if (!l.length) return '';
+      return '<div class="periode">' + titre + '</div><div class="heures">' + l.map(function(c) {
+        var sel = S.creneau && S.creneau.debut === c.debut;
+        return '<button type="button" class="puce' + (sel ? ' sel' : '') + '" data-creneau="' + esc(c.debut) + '">' + esc(heureTahiti(c.debut)) + '</button>';
+      }).join('') + '</div>';
+    };
+    $('heures').innerHTML = bloc('Matin', matin) + bloc('Après-midi', aprem);
+    afficher('heures-zone', true);
+  }
+
+  function libelleVehicule() {
+    if (S.hors) return S.hlTexte.trim() + (S.hlAnnee ? ' ' + S.hlAnnee : '');
+    return [S.marque, S.modele, versionChoisie(), S.carb ? S.carb.toLowerCase() : '', S.annee].filter(Boolean).join(' ');
+  }
+  function libelleCreneau() {
+    if (!S.creneau) return '';
+    var d = new Date(S.creneau.debut);
+    var c = communeCourante();
+    return d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', timeZone: TZ }) + ' · arrivée ' + heureTahiti(S.creneau.debut) + (c ? ' · ' + c.nom : '');
+  }
+  function rendreCoord() {
+    var c = calcul();
+    var h = '<div class="recap-haut"><div><b>' + esc(c.prest.map(function(p) { return p.nom; }).join(', ')) + '</b><br>' + esc(libelleVehicule()) + '<br>' + esc(libelleCreneau()) + '</div><button type="button" data-aller-debut="1">Modifier</button></div>';
+    h += '<div class="recap-lignes">' + c.lignes.map(function(l) { return '<div><span>' + esc(l.nom) + '</span><span>' + esc(xpf(l.montant)) + '</span></div>'; }).join('');
+    if (c.frais) h += '<div><span>Déplacement (' + esc(c.commune.nom) + ')</span><span>' + esc(xpf(c.frais)) + '</span></div>';
+    if (c.majZone) h += '<div><span>Zone d\'accès difficile</span><span>+ ' + esc(xpf(c.majZone)) + '</span></div>';
+    if (c.majWE) h += '<div><span>Week-end</span><span>+ ' + esc(xpf(c.majWE)) + '</span></div>';
+    h += '<div class="tot"><span>' + (S.hors ? 'Total indicatif' : 'Total tout compris') + '</span><span>' + (S.hors ? '≈ ' : '') + esc(xpf(c.total)) + '</span></div></div>';
+    if (S.hors) h += '<div class="petit" style="margin-top:8px">Prix exact confirmé sous 24 h, après vérification de la carte grise.</div>';
+    if (S.sympt.length) h += '<div class="petit" style="margin-top:8px">Symptômes : ' + esc(S.sympt.join(', ')) + '</div>';
+    $('recap').innerHTML = h;
+    if (!$('immat').value && S.immat) $('immat').value = S.immat;
+  }
+  function telPropre(t) { return String(t || '').replace(/[^\d+]/g, ''); }
+  function coordOk(verbeux) {
+    var champs = { prenom: $('prenom').value.trim().length >= 1, nom: $('nom').value.trim().length >= 1,
+      telephone: telPropre($('telephone').value).replace(/^\+?689/, '').length >= 6,
+      email: /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test($('email').value.trim()),
+      adresse: $('adresse').value.trim().length >= 3, immat: $('immat').value.trim().length >= 4 };
+    var ok = true;
+    Object.keys(champs).forEach(function(k) { if (!champs[k]) ok = false; if (verbeux) $(k).classList.toggle('erreur', !champs[k]); });
+    return ok;
+  }
+
+  function rendreTete() {
+    var n = ETAPE_DE[ecran] || 1;
+    $('num-etape').textContent = ecran === 'coord' ? 'Dernière étape' : 'Étape ' + n + ' sur 4';
+    var spans = $('progres').querySelectorAll('span');
+    for (var i = 0; i < spans.length; i++) spans[i].classList.toggle('fait', i < n);
+    var resume = [];
+    var veh = S.hors ? S.hlTexte.trim().split(/\s+/).slice(-1)[0] : S.modele;
+    if (veh && n > 2) resume.push(veh);
+    var t = choisies().map(tuileDe).filter(function(x, i, a) { return x && a.indexOf(x) === i; });
+    if (t.length) resume.push(t.length > 1 ? t[0] + ' +' + (t.length - 1) : t[0]);
+    $('puce-resume').textContent = resume.join(' · ');
+    afficher('puce-resume', resume.length > 0);
+  }
+
+  function rendreBarre() {
+    var btn = $('barre-btn'), lib = $('barre-lib'), prix = $('barre-prix');
+    if (!D) return;
+    var c = calcul();
+    var noms = c.prest.map(function(p) { return p.nom; }).join(', ');
+    var vehLib = c.veh ? (S.hors ? S.hlTexte.trim() : S.modele + (S.carb ? ' ' + S.carb.toLowerCase() : '')) : '';
+    lib.textContent = noms ? noms + (vehLib ? ' · ' + vehLib : '') : 'Choisissez une prestation';
+    if (!c.prest.length) prix.innerHTML = '—';
+    else if (!c.veh) prix.innerHTML = (coefUnique() ? '' : 'dès ') + esc(xpf(c.prestations));
+    else if (S.hors) prix.innerHTML = '≈ ' + esc(xpf(c.total)) + ' <small class="indic">indicatif</small>';
+    else prix.innerHTML = esc(xpf(c.total)) + ' <small>' + (c.commune ? 'tout compris' : 'hors déplacement') + '</small>';
+    var ok = false, texte = 'Continuer';
+    if (ecran === 'besoin') ok = c.prest.length > 0;
+    if (ecran === 'filtre') { ok = true; if (!c.prest.length) texte = 'Choisir une prestation'; }
+    if (ecran === 'vehicule') { ok = vehiculeOk(); }
+    if (ecran === 'hors') { ok = horsOk(); if (!S.photoCG) texte = 'Ajoutez la carte grise'; }
+    if (ecran === 'photo') { ok = S.photos.length > 0; if (!ok) texte = 'Ajoutez la photo'; }
+    if (ecran === 'creneau') { ok = !!S.creneau; if (!ok) texte = 'Choisissez un créneau'; }
+    if (ecran === 'coord') { ok = !envoiEnCours; texte = envoiEnCours ? 'Envoi…' : 'Réserver · ' + (S.hors ? '≈ ' : '') + xpf(c.total); }
+    btn.disabled = !ok;
+    btn.textContent = texte;
+  }
+
+  function rendreVitrine() {
+    var cm = coefMin();
+    var lignes = [];
+    tuiles().forEach(function(t) { t.prest.forEach(function(p) { lignes.push({ p: p, t: t.nom }); }); });
+    var h = lignes.slice(0, 12).map(function(x) {
+      return '<button type="button" class="tarif" data-tarif="' + esc(x.p.id) + '"><b>' + esc(x.p.nom) + '</b><span>' + (coefUnique() ? '' : 'dès ') + esc(xpf(prixPrestation(x.p, cm))) + (estRdp(x.p) ? ' · déduit si réparation' : '') + '</span></button>';
+    }).join('');
+    if ($('grille-tarifs').getAttribute('data-h') !== h) { $('grille-tarifs').innerHTML = h; $('grille-tarifs').setAttribute('data-h', h); }
+  }
+
+  // ---------- Actions ----------
+  function suivant() {
+    var c = calcul();
+    if (ecran === 'besoin') {
+      if (!c.prest.length) return;
+      noter('besoin', c.prest.map(function(p) { return p.nom; }).join(', ').slice(0, 80));
+      aller(c.prest.some(estRdp) ? 'filtre' : 'vehicule');
+    } else if (ecran === 'filtre') {
+      if (!c.prest.length) { retourDebut(); return; }
+      noter('besoin', c.prest.map(function(p) { return p.nom; }).join(', ').slice(0, 80));
+      aller('vehicule');
+    } else if (ecran === 'vehicule' || ecran === 'hors') {
+      noter('vehicule', S.hors ? 'hors liste' : S.marque + ' ' + S.modele);
+      aller(photoRequise() ? 'photo' : 'creneau');
+    } else if (ecran === 'photo') {
+      aller('creneau');
+    } else if (ecran === 'creneau') {
+      noter('creneau');
+      aller('coord');
+    } else if (ecran === 'coord') {
+      envoyer();
+    }
+  }
+  function retourDebut() {
+    pile = [];
+    montrer('besoin');
+  }
+
+  document.addEventListener('click', function(e) {
+    var el = e.target.closest ? e.target.closest('button, [data-presta], a#reessayer') : null;
+    if (!el) return;
+    var a = function(n) { return el.getAttribute(n); };
+    if (el.id === 'reessayer') { e.preventDefault(); rendreCreneau(); return; }
+    if (a('data-tuile') !== null) {
+      var t = tuiles().filter(function(x) { return x.nom === a('data-tuile'); })[0];
+      if (!t) return;
+      if (t.prest.length === 1) { basculer(t.prest[0].id); S.ouvert = ''; }
+      else S.ouvert = S.ouvert === t.nom ? '' : t.nom;
+      rendre(); return;
+    }
+    if (a('data-presta') !== null) { basculer(a('data-presta')); rendre(); return; }
+    if (a('data-aller') !== null) { aller(a('data-aller')); return; }
+    if (a('data-aller-debut') !== null) { retourDebut(); return; }
+    if (a('data-sympt') !== null) {
+      var s = a('data-sympt'), i = S.sympt.indexOf(s);
+      if (i === -1) S.sympt.push(s); else S.sympt.splice(i, 1);
+      var rdp = rdpPrestation();
+      if (rdp && S.sympt.length && S.ids.indexOf(rdp.id) === -1) S.ids.push(rdp.id);
+      rendre(); return;
+    }
+    if (a('data-marque') !== null) {
+      if (S.marque !== a('data-marque')) { S.marque = a('data-marque'); S.modele = ''; S.cat = ''; S.version = ''; S.versionLibre = false; S.autreModele = false; }
+      S.autreMarque = false; rendre(); return;
+    }
+    if (a('data-autre') === 'marque') { S.autreMarque = true; rendre(); $('marque-liste').focus(); return; }
+    if (a('data-autre') === 'modele') { S.autreModele = true; rendre(); $('modele-liste').focus(); return; }
+    if (a('data-modele') !== null) { choisirModele(a('data-modele')); return; }
+    if (a('data-version') !== null) {
+      if (a('data-version') === '__LIBRE') { S.versionLibre = true; S.version = $('version-libre').value.trim(); }
+      else { S.versionLibre = false; S.version = a('data-version'); }
+      rendre(); return;
+    }
+    if (a('data-carb') !== null) { S.carb = a('data-carb'); rendre(); return; }
+    if (a('data-boite') !== null) { S.boite = a('data-boite'); rendre(); return; }
+    if (a('data-cat') !== null) { S.hlCat = a('data-cat'); rendre(); return; }
+    if (a('data-retirer') !== null) { S.photos.splice(Number(a('data-retirer')), 1); rendre(); return; }
+    if (a('data-jour') !== null) { S.jour = a('data-jour'); dessinerJours(); return; }
+    if (a('data-creneau') !== null) {
+      var deb = a('data-creneau');
+      S.creneau = (creneauxListe || []).filter(function(c) { return c.debut === deb; })[0] || null;
+      dessinerJours(); rendreBarre(); return;
+    }
+    if (a('data-tarif') !== null) {
+      if (S.ids.indexOf(a('data-tarif')) === -1) S.ids.push(a('data-tarif'));
+      retourDebut();
+      $('haut').scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+  });
+  document.addEventListener('keydown', function(e) {
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.getAttribute && e.target.getAttribute('data-presta') !== null) { e.preventDefault(); e.target.click(); }
+  });
+
+  function choisirModele(nom) {
+    S.modele = nom;
+    var m = modeleCourant();
+    var veh = m ? vehParId(m.categorieId) : null;
+    S.cat = veh ? veh.id : '';
+    S.version = ''; S.versionLibre = false;
+    rendre();
+  }
+
+  $('btn-retour').addEventListener('click', retour);
+  $('barre-btn').addEventListener('click', suivant);
+  $('marque-liste').addEventListener('change', function() {
+    if (this.value === '__HORS') { this.value = ''; aller('hors'); return; }
+    if (!this.value) return;
+    S.marque = this.value; S.modele = ''; S.cat = ''; S.autreMarque = false; S.autreModele = false;
+    rendre();
+  });
+  $('modele-liste').addEventListener('change', function() { if (this.value) choisirModele(this.value); });
+  $('annee').addEventListener('input', function() {
+    var propre = this.value.replace(/\D/g, '').slice(0, 4);
+    if (this.value !== propre) this.value = propre;   // ne reecrit que si necessaire (claviers Android)
+    S.annee = propre; rendreBarre();
+  });
+  function pasAnnee(d) {
+    var a = parseInt(S.annee, 10);
+    if (!a) a = new Date().getFullYear() - 8; else a += d;
+    a = Math.max(1950, Math.min(new Date().getFullYear() + 1, a));
+    S.annee = String(a); $('annee').value = S.annee; rendreBarre();
+  }
+  $('annee-moins').addEventListener('click', function() { pasAnnee(-1); });
+  $('annee-plus').addEventListener('click', function() { pasAnnee(1); });
+  $('version-libre').addEventListener('input', function() { S.version = this.value.trim(); rendreBarre(); });
+  $('hl-texte').addEventListener('input', function() { S.hlTexte = this.value; rendreBarre(); });
+  $('hl-annee').addEventListener('input', function() {
+    var propre = this.value.replace(/\D/g, '').slice(0, 4);
+    if (this.value !== propre) this.value = propre;
+    S.hlAnnee = propre; rendreBarre();
+  });
+  $('commune').addEventListener('change', function() { S.commune = this.value; rendre(); });
+  $('btn-commentaire').addEventListener('click', function() { afficher('commentaire', true); afficher(this, false); $('commentaire').focus(); });
+  ['prenom', 'nom', 'telephone', 'email', 'adresse', 'immat'].forEach(function(id) {
+    $(id).addEventListener('input', function() { this.classList.remove('erreur'); });
+  });
+  $('immat').addEventListener('input', function() {
+    var propre = this.value.toUpperCase();
+    if (this.value !== propre) { var p = this.selectionStart; this.value = propre; try { this.setSelectionRange(p, p); } catch (e) {} }
+  });
+
+  // ---------- Photos ----------
+  function compresserPhoto(fichier, tailleMax, qualite) {
+    return new Promise(function(ok, ko) {
+      var lecteur = new FileReader();
+      lecteur.onerror = function() { ko(new Error('lecture impossible')); };
+      lecteur.onload = function() {
+        var img = new Image();
+        img.onerror = function() { ko(new Error('format non reconnu')); };
+        img.onload = function() {
+          var max = tailleMax || 1600, r = Math.min(1, max / Math.max(img.width, img.height));
+          var cv = document.createElement('canvas');
+          cv.width = Math.round(img.width * r); cv.height = Math.round(img.height * r);
+          cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+          ok(cv.toDataURL('image/jpeg', qualite || 0.78));
+        };
+        img.src = lecteur.result;
+      };
+      lecteur.readAsDataURL(fichier);
+    });
+  }
+  function message(id, classe, html) { var m = $(id); m.className = 'msg ' + classe; m.innerHTML = html; afficher(m, !!html); }
+  $('photo-fichier').addEventListener('change', function() {
+    var fichiers = Array.prototype.slice.call(this.files || [], 0, 4 - S.photos.length);
+    this.value = '';
+    if (!fichiers.length) return;
+    message('photo-msg', 'info', 'Préparation de la photo…');
+    Promise.all(fichiers.map(function(f) { return compresserPhoto(f); })).then(function(liste) {
+      var type = choisies().some(function(p) { return p.photoRequise && /batter/i.test(p.nom); }) ? 'batterie' : 'photo';
+      liste.forEach(function(d) { S.photos.push({ type: type, data: d }); });
+      message('photo-msg', 'ok', 'Photo ajoutée ✓');
+      rendre();
+    }).catch(function(e) { message('photo-msg', 'err', 'Impossible d\'utiliser cette photo (' + esc(e.message) + '). Essayez une autre.'); });
+  });
+
+  // ---------- Carte grise : lecture automatique (la photo n'est pas gardee) ----------
+  function lireCG(fichier, pourHorsListe) {
+    return compresserPhoto(fichier, 2000, 0.85).then(function(image) {
+      if (pourHorsListe) S.photoCG = image;
+      return fetch(APP_URL, { method: 'POST', body: JSON.stringify({ action: 'lireCarteGrise', data: { image: image } }) })
+        .then(function(r) { return r.json(); });
+    });
+  }
+  function appliquerCG(r) {
+    if (r.vin) S.vin = r.vin;
+    S.cyl = r.cylindree || S.cyl; S.puis = r.puissance || S.puis;
+    if (r.immat && r.immat.chiffres) S.immat = (r.immat.chiffres + ' ' + (r.immat.lettre || '')).trim();
+    if (r.annee && anneeValide(r.annee)) { S.annee = String(r.annee); S.hlAnnee = S.hlAnnee || String(r.annee); }
+    if (r.carburant && CARBURANTS.indexOf(r.carburant) !== -1) S.carb = r.carburant;
+  }
+  $('cg-fichier').addEventListener('change', function() {
+    var f = this.files && this.files[0];
+    this.value = '';
+    if (!f) return;
+    var bouton = $('cg-bouton');
+    bouton.classList.add('occupe');
+    message('cg-msg', 'info', 'Lecture de la carte grise… (quelques secondes)');
+    lireCG(f, false).then(function(r) {
+      if (!r.success) throw new Error(r.error || 'lecture impossible');
+      appliquerCG(r);
+      var marque = r.marque ? toutesMarques().filter(function(m) { return m.toUpperCase() === String(r.marque).toUpperCase(); })[0] : null;
+      if (marque && S.marque !== marque) { S.marque = marque; S.modele = ''; S.cat = ''; }
+      var lus = [marque ? 'marque' : '', r.annee ? 'année' : '', r.carburant ? 'carburant' : '', r.immat ? 'immatriculation' : ''].filter(Boolean);
+      if (r.marque && !marque) {
+        S.hlTexte = S.hlTexte || String(r.marque);
+        message('cg-msg', 'attention', 'Carte grise lue, mais la marque ' + esc(r.marque) + ' n\'est pas dans notre liste. <button type="button" class="puce discret" data-aller="hors" style="margin-top:8px">Continuer en hors liste →</button>');
+      } else {
+        message('cg-msg', lus.length ? 'ok' : 'err', lus.length ? '✓ Lu : ' + esc(lus.join(', ')) + '. Choisissez maintenant le modèle.' : 'Lecture incomplète : reprenez la photo bien à plat, sans reflet, ou choisissez à la main.');
+      }
+      rendre();
+    }).catch(function(e) {
+      message('cg-msg', 'err', 'Lecture impossible (' + esc(e.message) + '). Reprenez la photo ou choisissez à la main.');
+    }).then(function() { bouton.classList.remove('occupe'); });
+  });
+  $('hl-fichier').addEventListener('change', function() {
+    var f = this.files && this.files[0];
+    this.value = '';
+    if (!f) return;
+    message('hl-msg', 'info', 'Préparation de la photo…');
+    lireCG(f, true).then(function(r) {
+      rendre();
+      if (!r.success) { message('hl-msg', 'ok', '✓ Photo ajoutée. Complétez les champs ci-dessous.'); return; }
+      appliquerCG(r);
+      if (r.marque && !S.hlTexte) S.hlTexte = String(r.marque) + ' ';
+      message('hl-msg', 'ok', '✓ Photo ajoutée' + (r.annee || r.marque ? ', informations pré-remplies : vérifiez-les.' : '.'));
+      rendre();
+    }).catch(function(e) {
+      if (S.photoCG) { message('hl-msg', 'ok', '✓ Photo ajoutée. Complétez les champs ci-dessous.'); rendre(); }
+      else message('hl-msg', 'err', 'Impossible d\'utiliser cette photo (' + esc(e.message) + '). Essayez une autre.');
+    });
+  });
+
+  // ---------- Envoi de la reservation ----------
+  var envoiEnCours = false;
+  function envoyer() {
+    if (envoiEnCours) return;
+    afficher('msg-envoi', false);
+    if (!coordOk(true)) {
+      message('msg-envoi', 'err', 'Merci de compléter les champs en rouge.');
+      var premier = document.querySelector('#e-coord .champ.erreur');
+      if (premier) premier.focus();
+      return;
+    }
+    noter('coordonnees');
+    var c = calcul();
+    var commentaire = [S.sympt.length ? 'Symptômes : ' + S.sympt.join(', ') : '', $('commentaire').value.trim()].filter(Boolean).join(' | ');
+    var base = {
+      honeypot: $('honeypot').value,
+      prestationIds: c.prest.map(function(p) { return p.id; }),
+      prestationsNoms: c.prest.map(function(p) { return p.nom; }),
+      communeId: S.commune,
+      creneauDebut: S.creneau.debut,
+      nom: $('nom').value.trim(), prenom: $('prenom').value.trim(),
+      telephone: $('telephone').value.trim(), email: $('email').value.trim(),
+      adresse: $('adresse').value.trim(), adresseFacturation: $('adresse').value.trim(),
+      immatriculation: $('immat').value.trim().toUpperCase(),
+      vin: S.vin, cylindree: S.cyl, puissance: S.puis,
+      carburant: S.carb, annee: S.hors ? S.hlAnnee : S.annee,
+      commentaire: commentaire
+    };
+    var action, data;
+    if (S.hors) {
+      action = 'soumettreDemandeSpeciale';
+      data = Object.assign(base, {
+        vehiculeId: S.hlCat, vehiculeLibre: (S.hlTexte.trim() + ' ' + S.hlAnnee).trim(),
+        marque: S.hlTexte.trim(), modele: '',
+        photos: [{ type: 'carte_grise', data: S.photoCG }].concat(S.photos)
+      });
+    } else {
+      action = 'soumettreDemande';
+      data = Object.assign(base, {
+        vehiculeId: S.cat, marque: S.marque, modele: S.modele, version: versionChoisie(), boite: S.boite,
+        photos: S.photos
+      });
+    }
+    envoiEnCours = true; rendreBarre();
+    fetch(APP_URL, { method: 'POST', body: JSON.stringify({ action: action, data: data }) })
+      .then(function(r) { return r.json(); })
+      .then(function(r) {
+        envoiEnCours = false;
+        if (!r.success) {
+          rendreBarre();
+          var err = String(r.error || 'erreur inconnue');
+          if (/creneau vient d.etre reserve/i.test(err)) {
+            memoireCreneaux = {}; creneauxCle = null; S.creneau = null;
+            message('msg-envoi', 'err', 'Ce créneau vient d\'être pris par quelqu\'un d\'autre. Choisissez-en un autre : vos informations sont gardées.');
+            setTimeout(function() { pile.pop(); montrer('creneau'); }, 1800);
+            return;
+          }
+          if (/tarifs viennent d.etre mis a jour/i.test(err)) { try { localStorage.removeItem(CLE_MEMOIRE); } catch (e) {} }
+          message('msg-envoi', 'err', esc(err));
+          return;
+        }
+        noter('reserve', S.hors ? 'hors liste' : '');
+        confirmer(r, c);
+      })
+      .catch(function(err) {
+        envoiEnCours = false; rendreBarre();
+        message('msg-envoi', 'err', 'La demande n\'a pas pu partir (' + esc(err.message) + '). Réessayez dans un instant, ou réservez sur <a href="https://wa.me/' + WA + '" target="_blank" rel="noopener">WhatsApp</a>.');
+        signalerErreur('envoi demande', err && err.message);
+      });
+  }
+
+  // ---------- Confirmation + ajout a l'agenda du client ----------
+  function confirmer(r, c) {
+    var debut = new Date(S.creneau.debut);
+    var fin = new Date(debut.getTime() + Math.max(30, Math.round(c.dureeInt)) * 60000);
+    var titre = 'SOS Auto Tahiti : ' + c.prest.map(function(p) { return p.nom; }).join(', ');
+    var lieu = $('adresse').value.trim() + ', ' + (c.commune ? c.commune.nom : '') + ', Tahiti';
+    var z = function(d) { return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''); };
+    var google = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(titre)
+      + '&dates=' + z(debut) + '/' + z(fin) + '&location=' + encodeURIComponent(lieu)
+      + '&details=' + encodeURIComponent('Heure d\'arrivée du mécanicien. WhatsApp : +689 87 04 61 72');
+    var ics = APP_URL + '?action=ics&debut=' + encodeURIComponent(debut.toISOString()) + '&fin=' + encodeURIComponent(fin.toISOString())
+      + '&titre=' + encodeURIComponent(titre) + '&lieu=' + encodeURIComponent(lieu);
+    var ua = navigator.userAgent;
+    var ios = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var android = /Android/i.test(ua);
+    var agenda = ios
+      ? '<a class="btn-contour" href="' + esc(ics) + '">' + icAgenda() + 'Ajouter à l\'agenda</a>'
+      : android
+        ? '<a class="btn-contour" href="' + esc(google) + '" target="_blank" rel="noopener">' + icAgenda() + 'Ajouter à l\'agenda</a>'
+        : '<a class="btn-contour" href="' + esc(google) + '" target="_blank" rel="noopener">' + icAgenda() + 'Google Agenda</a>';
+    var autres = (!ios && !android) ? '<a class="btn-contour" href="' + esc(ics) + '">' + icAgenda() + 'Outlook / Apple</a>' : '';
+    var quand = debut.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', timeZone: TZ });
+    var h = '<div class="ok-tete"><div class="rond"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>'
+      + '<h1>' + (S.hors ? 'C\'est noté&nbsp;!' : 'C\'est réservé&nbsp;!') + '</h1>'
+      + '<p>' + esc(quand.charAt(0).toUpperCase() + quand.slice(1)) + ', arrivée vers ' + esc(heureTahiti(S.creneau.debut)) + '<br>à ' + esc(c.commune ? c.commune.nom : '') + ' · ' + esc(libelleVehicule()) + '</p></div>'
+      + '<div class="ok-corps">'
+      + '<div class="recap" style="display:flex;justify-content:space-between;align-items:center;gap:10px"><div style="font-size:13px;color:var(--gris)">'
+      + (S.hors ? 'Demande <b style="color:var(--texte)">' + esc(r.numeroDemande) + '</b> : prix exact confirmé par email sous 24 h'
+        : 'Devis <b style="color:var(--texte)">' + esc(r.numeroDevis) + '</b> envoyé par email')
+      + '<br>' + esc(c.prest.map(function(p) { return p.nom; }).join(', ')) + '</div><b style="font-size:17px;white-space:nowrap">' + (S.hors ? '≈ ' : '') + esc(xpf(S.hors ? (r.prixIndicatif || c.total) : (r.totalTTC || c.total))) + '</b></div>'
+      + '<div class="deux-btn">' + agenda + (autres || '<a class="btn-vert" href="https://wa.me/' + WA + '" target="_blank" rel="noopener">WhatsApp</a>') + '</div>'
+      + (autres ? '<a class="btn-vert" href="https://wa.me/' + WA + '" target="_blank" rel="noopener">Une question ? WhatsApp</a>' : '')
+      + '<div class="recap etapes-suite"><b style="font-size:15px">Et maintenant&nbsp;?</b>'
+      + (S.hors ? '<div><i>1</i><span><b>Sous 24 h</b>, on vérifie votre véhicule avec la carte grise et on vous envoie le devis au prix exact. Vous restez libre d\'annuler.</span></div>' : '')
+      + '<div><i>' + (S.hors ? 2 : 1) + '</i><span><b>La veille à 17 h</b>, un rappel par email avec l\'heure d\'arrivée.</span></div>'
+      + '<div><i>' + (S.hors ? 3 : 2) + '</i><span><b>Le jour J</b>, le mécanicien arrive avec les pièces. Laissez la voiture accessible, sur un sol plat.</span></div>'
+      + '<div><i>' + (S.hors ? 4 : 3) + '</i><span><b>Après l\'intervention</b>, paiement par carte et facture par email. Les pièces changées vous sont montrées.</span></div></div>'
+      + '<button type="button" class="lien-autre" id="btn-nouveau" style="justify-content:center;color:var(--bleu)">Réserver pour une autre voiture</button>'
+      + '</div>';
+    $('e-ok').innerHTML = h;
+    pile = [];
+    montrer('ok');
+    $('btn-nouveau').addEventListener('click', reinitialiser);
+  }
+  function icAgenda() {
+    return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>';
+  }
+  function reinitialiser() {
+    // On garde les coordonnees (meme client, autre voiture), on remet le reste a zero
+    S.ids = []; S.sympt = []; S.ouvert = ''; S.marque = ''; S.modele = ''; S.cat = ''; S.annee = ''; S.carb = ''; S.version = '';
+    S.versionLibre = false; S.boite = ''; S.hors = false; S.hlTexte = ''; S.hlAnnee = ''; S.hlCat = ''; S.photoCG = '';
+    S.vin = ''; S.cyl = ''; S.puis = ''; S.immat = ''; S.photos = []; S.creneau = null; S.jour = '';
+    $('immat').value = ''; $('commentaire').value = ''; afficher('cg-msg', false); afficher('hl-msg', false); afficher('photo-msg', false);
+    creneauxCle = null; memoireCreneaux = {}; etapesNotees = { arrivee: 1 };
+    pile = [];
+    montrer('besoin');
+  }
+})();
+</script>
+</body>
+</html>
