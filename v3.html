@@ -67,11 +67,12 @@
     /* Tuiles des prestations */
     .tuiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
     .tuile { position: relative; text-align: left; background: #fff; border: 2px solid var(--bord); border-radius: 16px; padding: 14px 12px 12px; cursor: pointer; min-height: 118px; display: flex; flex-direction: column; gap: 6px; -webkit-tap-highlight-color: transparent; }
-    .tuile .ico { width: 40px; height: 40px; border-radius: 12px; background: var(--bleu-clair); color: var(--bleu); display: flex; align-items: center; justify-content: center; }
+    .tuile .ico { width: 48px; height: 48px; border-radius: 14px; background: radial-gradient(circle at 30% 25%, #1E3470 0%, #0B1838 70%); display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 0 1px rgba(255,255,255,.06); }
+    .tuile .ico svg { filter: drop-shadow(0 0 3px rgba(90, 160, 255, .55)); }
     .tuile b { font-size: 15.5px; line-height: 1.2; }
     .tuile .px { font-size: 12.5px; color: var(--gris); font-weight: 600; line-height: 1.3; }
     .tuile.sel { border-color: var(--bleu); background: #F7F9FF; }
-    .tuile.sel .ico { background: var(--bleu); color: #fff; }
+    .tuile.sel .ico { box-shadow: 0 0 0 2px var(--bleu), 0 4px 14px rgba(0, 60, 203, .35); }
     .tuile .coche { position: absolute; top: 10px; right: 10px; width: 22px; height: 22px; border-radius: 50%; background: var(--bleu); color: #fff; display: none; align-items: center; justify-content: center; }
     .tuile.sel .coche { display: flex; }
     .tuile.ouvert { border-color: var(--bleu); }
@@ -100,9 +101,9 @@
     .sel-natif { width: 100%; height: 50px; border-radius: 12px; border: 1.5px solid var(--bord); background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%234B5565' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center; padding: 0 40px 0 14px; -webkit-appearance: none; appearance: none; margin-top: 8px; }
     .champ.erreur { border-color: var(--rouge); }
     .deux { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-    .annee { display: flex; align-items: center; gap: 8px; }
+    .annee { display: flex; align-items: center; gap: 8px; max-width: 300px; }
     .annee button { width: 50px; height: 50px; flex: 0 0 50px; border-radius: 12px; border: 1.5px solid var(--bord); background: #fff; font-size: 22px; font-weight: 700; cursor: pointer; }
-    .annee input { text-align: center; font-weight: 800; font-size: 18px; }
+    .annee input { flex: 1; min-width: 90px; text-align: center; font-weight: 800; font-size: 19px; letter-spacing: 1px; padding: 0 6px; }
 
     /* Carte grise / photos */
     .cg { display: flex; align-items: center; gap: 14px; width: 100%; background: var(--bleu); color: #fff; border: 0; border-radius: 16px; padding: 14px 16px; cursor: pointer; text-align: left; }
@@ -217,7 +218,23 @@
     footer a { color: #fff; }
 
     /* Sur telephone, une fois le parcours commence : plein ecran, sans la presentation */
+    .bandeau { display: none; }
+    .a-remplir { animation: clignote 1.6s ease; border-radius: 14px; }
+    @keyframes clignote { 0%, 60% { box-shadow: 0 0 0 3px rgba(179, 38, 30, .55); } 100% { box-shadow: 0 0 0 3px rgba(179, 38, 30, 0); } }
+    .barre button.inactif { background: #9FB0D8; }
     @media (max-width: 979px) {
+      .site-tete { background: var(--bleu-fonce); border-bottom-color: rgba(255, 255, 255, .08); }
+      .site-tete .logo { color: #fff; }
+      .site-tete .btn-wa { background: rgba(255, 255, 255, .12); color: #fff; }
+      #e-besoin { padding-top: 0; }
+      #e-besoin > h1, #e-besoin > .sous-titre { display: none; }
+      .bandeau { display: block; position: relative; margin: 0 -20px; padding: 26px 20px 58px; color: #fff;
+        background: linear-gradient(180deg, rgba(0, 26, 92, .55) 0%, rgba(0, 30, 110, .78) 60%, rgba(0, 40, 140, .92) 100%), url('banniere.jpg') 72% center / cover no-repeat, var(--bleu-fonce); }
+      .bandeau .surtitre { font-size: 11.5px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: #9DB8FF; }
+      .bandeau h1 { color: #fff; margin-top: 6px; font-size: 27px; }
+      .bandeau p { margin: 8px 0 0; font-size: 14px; opacity: .92; }
+      #e-besoin .tuiles { margin-top: -38px; position: relative; }
+      #e-besoin .tuile { box-shadow: 0 6px 18px rgba(0, 20, 70, .12); }
       body.parcours .site-tete, body.parcours .apres-parcours { display: none; }
       body.parcours .app { min-height: 100vh; }
     }
@@ -292,6 +309,11 @@
 
         <!-- 1. Le besoin -->
         <div class="ecran" id="e-besoin">
+          <div class="bandeau">
+            <div class="surtitre">Mécanique automobile à domicile</div>
+            <h1>De quoi votre voiture a besoin&nbsp;?</h1>
+            <p>Le mécanicien vient chez vous. Prix tout compris affiché tout de suite.</p>
+          </div>
           <h1>De quoi votre voiture a besoin&nbsp;?</h1>
           <p class="sous-titre">Le mécanicien vient chez vous. Prix tout compris affiché tout de suite.</p>
           <div class="tuiles" id="tuiles"><div class="chargement">Chargement des tarifs…</div></div>
@@ -344,16 +366,11 @@
           </div>
           <div id="msg-modele" class="msg attention cache"></div>
 
-          <div class="deux">
-            <div>
-              <span class="lab">Année</span>
-              <div class="annee">
-                <button type="button" id="annee-moins" aria-label="Année précédente">−</button>
-                <input class="champ" id="annee" inputmode="numeric" maxlength="4" placeholder="AAAA" autocomplete="off">
-                <button type="button" id="annee-plus" aria-label="Année suivante">+</button>
-              </div>
-            </div>
-            <div></div>
+          <span class="lab">Année</span>
+          <div class="annee">
+            <button type="button" id="annee-moins" aria-label="Année précédente">−</button>
+            <input class="champ" id="annee" inputmode="numeric" maxlength="4" placeholder="AAAA" autocomplete="off">
+            <button type="button" id="annee-plus" aria-label="Année suivante">+</button>
           </div>
           <span class="lab">Carburant</span>
           <div class="puces" data-groupe="carb"></div>
@@ -543,14 +560,15 @@
   var SYMPTOMES = ['Ne démarre pas', 'Voyant allumé', 'Bruit au freinage', 'Perte de puissance', 'Fumée', 'Chauffe', 'Vibrations', 'Fuite', 'Bruit bizarre', 'Autre'];
   var CARBURANTS = ['Essence', 'Diesel', 'Hybride', 'Électrique'];
   var ETAPE_DE = { besoin: 1, filtre: 1, vehicule: 2, hors: 2, photo: 2, creneau: 3, coord: 4 };
+  // Icones des prestations : pictos lumineux sur fond bleu nuit (dans l'esprit de la banniere)
   var ICONES = {
-    'Vidange': '<path d="M12 3c3 4.5 6 7.6 6 11a6 6 0 0 1-12 0c0-3.4 3-6.5 6-11z"/>',
-    'Freins': '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="2.5"/><path d="M12 3.5v3M20.5 12h-3M12 20.5v-3M3.5 12h3"/>',
-    'Batterie': '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M7 7V4.5h3V7M14 7V4.5h3V7M7 13.5h3M15.5 12v3M14 13.5h3"/>',
-    'Suspension': '<path d="M12 2v3M12 19v3M8 5h8M8 19h8M9 8l6 2.2L9 12.4l6 2.2L9 16.8"/>',
-    'Recherche de panne': '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/>',
-    'Diagnostic': '<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M7 21h10M12 17v4M6.5 11.5h2.5l1.5-3 2.5 6 1.5-3h3"/>',
-    '_': '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/>'
+    'Vidange': '<path d="M3 11.5h10.5l3.2-3 4.3 1.2-6.2 7.3H5.2A2.2 2.2 0 0 1 3 14.8z" stroke="#8FB4FF" stroke-width="1.7" stroke-linejoin="round"/><path d="M6.5 11.5V9h4v2.5" stroke="#8FB4FF" stroke-width="1.7" stroke-linejoin="round"/><path d="M20.3 13.2c.9 1.3 1.6 2.3 1.6 3.1a1.6 1.6 0 0 1-3.2 0c0-.8.7-1.8 1.6-3.1z" fill="#FF9F1C"/>',
+    'Freins': '<circle cx="11" cy="12" r="7.2" stroke="#8FB4FF" stroke-width="1.7"/><circle cx="11" cy="12" r="2.4" stroke="#8FB4FF" stroke-width="1.7"/><circle cx="11" cy="7.4" r=".9" fill="#8FB4FF"/><circle cx="6.6" cy="12" r=".9" fill="#8FB4FF"/><circle cx="11" cy="16.6" r=".9" fill="#8FB4FF"/><path d="M16.2 5.2a9.4 9.4 0 0 1 0 13.6" stroke="#FF3B3B" stroke-width="3.6" stroke-linecap="round"/>',
+    'Batterie': '<rect x="2.8" y="7.5" width="18.4" height="12.5" rx="2.2" stroke="#8FB4FF" stroke-width="1.7"/><rect x="5.5" y="4.6" width="3.4" height="2.4" rx=".6" fill="#3D8BFF"/><rect x="15.1" y="4.6" width="3.4" height="2.4" rx=".6" fill="#FF3B3B"/><path d="M12.8 9.8l-3 4.4h2.6l-1 3.8 3.4-4.8h-2.7z" fill="#FFD43B"/><path d="M5.3 11h2.2M17.2 10v2.2M16.1 11.1h2.2" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/>',
+    'Suspension': '<path d="M12 2.5v2.6M12 18.9v2.6" stroke="#8FB4FF" stroke-width="1.8" stroke-linecap="round"/><path d="M8 5.1h8M8 18.9h8" stroke="#8FB4FF" stroke-width="1.8" stroke-linecap="round"/><path d="M8.5 7.6l7 1.7-7 1.7 7 1.7-7 1.7 7 1.7" stroke="#3D8BFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>',
+    'Recherche de panne': '<circle cx="10.2" cy="10.2" r="6.4" stroke="#8FB4FF" stroke-width="1.8"/><path d="M15 15l5.6 5.6" stroke="#8FB4FF" stroke-width="2.6" stroke-linecap="round"/><path d="M10.2 6.9v4" stroke="#FFB020" stroke-width="2" stroke-linecap="round"/><circle cx="10.2" cy="13.4" r="1.1" fill="#FFB020"/>',
+    'Diagnostic': '<rect x="2.8" y="4.5" width="18.4" height="12.5" rx="2" stroke="#8FB4FF" stroke-width="1.7"/><path d="M8.5 20.5h7M12 17v3.5" stroke="#8FB4FF" stroke-width="1.7" stroke-linecap="round"/><path d="M5.5 11h3l1.4-3 2.4 6 1.5-3h4.7" stroke="#34D399" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>',
+    '_': '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z" stroke="#8FB4FF" stroke-width="1.7" stroke-linejoin="round"/>'
   };
   var COCHE = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 
@@ -770,7 +788,7 @@
   }
 
   function icone(nom) {
-    return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICONES[nom] || ICONES._) + '</svg>';
+    return '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">' + (ICONES[nom] || ICONES._) + '</svg>';
   }
   function prixTuile(t) {
     var cm = coefMin();
@@ -1075,12 +1093,12 @@
     var ok = false, texte = 'Continuer';
     if (ecran === 'besoin') ok = c.prest.length > 0;
     if (ecran === 'filtre') { ok = true; if (!c.prest.length) texte = 'Choisir une prestation'; }
-    if (ecran === 'vehicule') { ok = vehiculeOk(); }
-    if (ecran === 'hors') { ok = horsOk(); if (!S.photoCG) texte = 'Ajoutez la carte grise'; }
-    if (ecran === 'photo') { ok = S.photos.length > 0; if (!ok) texte = 'Ajoutez la photo'; }
-    if (ecran === 'creneau') { ok = !!S.creneau; if (!ok) texte = 'Choisissez un créneau'; }
+    var m = manque();
+    if (m) { ok = true; texte = m.texte; }
+    if (ecran === 'vehicule' || ecran === 'hors' || ecran === 'photo' || ecran === 'creneau') ok = true;
     if (ecran === 'coord') { ok = !envoiEnCours; texte = envoiEnCours ? 'Envoi…' : 'Réserver · ' + (S.hors ? '≈ ' : '') + xpf(c.total); }
     btn.disabled = !ok;
+    btn.classList.toggle('inactif', !!m);
     btn.textContent = texte;
   }
 
@@ -1094,9 +1112,42 @@
     if ($('grille-tarifs').getAttribute('data-h') !== h) { $('grille-tarifs').innerHTML = h; $('grille-tarifs').setAttribute('data-h', h); }
   }
 
+  /** Ce qui manque sur l'ecran en cours (texte du bouton + endroit ou aller). Null = tout est rempli. */
+  function manque() {
+    if (ecran === 'vehicule') {
+      if (!S.marque) return { texte: 'Choisissez la marque', cible: 'marques' };
+      if (!S.modele) return { texte: 'Choisissez le modèle', cible: 'bloc-modele' };
+      if (!S.cat) return { texte: 'Modèle à chiffrer', cible: 'msg-modele' };
+      if (!anneeValide(S.annee)) return { texte: 'Indiquez l\'année', cible: 'annee' };
+      if (!S.carb) return { texte: 'Choisissez le carburant', cible: document.querySelector('#e-vehicule [data-groupe="carb"]') };
+      if (besoinMoteur() && !S.boite) return { texte: 'Choisissez la boîte', cible: document.querySelector('#e-vehicule [data-groupe="boite"]') };
+    }
+    if (ecran === 'hors') {
+      if (!S.photoCG) return { texte: 'Ajoutez la carte grise', cible: 'hl-depot' };
+      if (S.hlTexte.trim().length < 3) return { texte: 'Marque et modèle', cible: 'hl-texte' };
+      if (!anneeValide(S.hlAnnee)) return { texte: 'Indiquez l\'année', cible: 'hl-annee' };
+      if (!S.hlCat) return { texte: 'Choisissez la catégorie', cible: 'hl-cats' };
+    }
+    if (ecran === 'photo' && !S.photos.length) return { texte: 'Ajoutez la photo', cible: 'photo-depot' };
+    if (ecran === 'creneau') {
+      if (!S.commune) return { texte: 'Choisissez la commune', cible: 'commune' };
+      if (!S.creneau) return { texte: 'Choisissez un créneau', cible: 'jours' };
+    }
+    return null;
+  }
+  function montrerManque(m) {
+    var el = typeof m.cible === 'string' ? $(m.cible) : m.cible;
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.classList.remove('a-remplir'); void el.offsetWidth; el.classList.add('a-remplir');
+    if (el.tagName === 'INPUT' || el.tagName === 'SELECT') setTimeout(function() { el.focus(); }, 350);
+  }
+
   // ---------- Actions ----------
   function suivant() {
     var c = calcul();
+    var m = manque();
+    if (m) { montrerManque(m); return; }
     if (ecran === 'besoin') {
       if (!c.prest.length) return;
       noter('besoin', c.prest.map(function(p) { return p.nom; }).join(', ').slice(0, 80));
