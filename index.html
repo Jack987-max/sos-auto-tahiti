@@ -13,6 +13,8 @@
   <meta property="og:description" content="Prix tout compris affiché tout de suite, créneau en direct. Paiement par carte après l'intervention.">
   <meta property="og:image" content="https://sosautotahiti.com/banniere.jpg">
   <meta name="theme-color" content="#003CCB">
+  <link rel="preconnect" href="https://script.google.com">
+  <link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -216,6 +218,20 @@
     footer a { color: #fff; }
 
     /* Sur telephone, une fois le parcours commence : plein ecran, sans la presentation */
+    .tuile.fantome { pointer-events: none; }
+    .tuile.fantome .ico, .tuile.fantome b, .tuile.fantome .px { background: linear-gradient(90deg, #E8ECF5 25%, #F4F6FB 50%, #E8ECF5 75%); background-size: 200% 100%; animation: lueur 1.2s linear infinite; border-radius: 8px; box-shadow: none; }
+    .tuile.fantome b { height: 16px; width: 70%; } .tuile.fantome .px { height: 12px; width: 50%; }
+    @keyframes lueur { from { background-position: 200% 0; } to { background-position: 0 0; } }
+    .roue { display: inline-block; width: 16px; height: 16px; border: 2.5px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: tourne .7s linear infinite; vertical-align: -3px; margin-right: 6px; }
+    @keyframes tourne { to { transform: rotate(360deg); } }
+    .voile { position: fixed; inset: 0; z-index: 100; background: rgba(0, 26, 92, .82); display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .voile-boite { background: #fff; border-radius: 20px; padding: 26px 22px; max-width: 360px; width: 100%; text-align: center; }
+    .voile-boite .grande-roue { width: 46px; height: 46px; margin: 0 auto 14px; border: 4px solid var(--bleu-clair); border-top-color: var(--bleu); border-radius: 50%; animation: tourne .9s linear infinite; }
+    .voile-boite b { display: block; font-size: 17px; }
+    .voile-boite .etapes-envoi { margin-top: 14px; text-align: left; font-size: 13.5px; display: flex; flex-direction: column; gap: 7px; }
+    .etapes-envoi div { color: #9AA3B5; } .etapes-envoi div.fait { color: var(--vert-fonce); } .etapes-envoi div.encours { color: var(--texte); font-weight: 700; }
+    .barre-temps { height: 5px; border-radius: 5px; background: var(--bleu-clair); margin-top: 14px; overflow: hidden; }
+    .barre-temps span { display: block; height: 100%; width: 0; background: var(--bleu); transition: width .5s linear; }
     .bandeau { display: none; }
     .a-remplir { animation: clignote 1.6s ease; border-radius: 14px; }
     @keyframes clignote { 0%, 60% { box-shadow: 0 0 0 3px rgba(179, 38, 30, .55); } 100% { box-shadow: 0 0 0 3px rgba(179, 38, 30, 0); } }
@@ -314,7 +330,7 @@
           </div>
           <h1>De quoi votre voiture a besoin&nbsp;?</h1>
           <p class="sous-titre">Le mécanicien vient chez vous. Prix tout compris affiché tout de suite.</p>
-          <div class="tuiles" id="tuiles"><div class="chargement">Chargement des tarifs…</div></div>
+          <div class="tuiles" id="tuiles"><div class="tuile fantome"><span class="ico"></span><b></b><span class="px"></span></div><div class="tuile fantome"><span class="ico"></span><b></b><span class="px"></span></div><div class="tuile fantome"><span class="ico"></span><b></b><span class="px"></span></div><div class="tuile fantome"><span class="ico"></span><b></b><span class="px"></span></div><div class="tuile fantome"><span class="ico"></span><b></b><span class="px"></span></div><div class="tuile fantome"><span class="ico"></span><b></b><span class="px"></span></div></div>
           <div id="msg-init" class="msg err cache"></div>
           <button type="button" class="lien-autre" data-aller="filtre">Autre chose&nbsp;? Voir ce que nous faisons (et ne faisons pas) <span>→</span></button>
           <div class="confiance"><span>Paiement CB après</span><span>Pièces fournies</span><span>Tout Tahiti</span></div>
@@ -621,8 +637,55 @@
         ou: 'v3 ' + String(ou || ''), message: String(message || '').slice(0, 300), navigateur: navigator.userAgent, largeur: window.innerWidth } }) }).catch(function() {});
     } catch (e) {}
   }
-  window.addEventListener('error', function(e) { signalerErreur('script', (e.message || '') + (e.lineno ? ' (ligne ' + e.lineno + ')' : '')); });
+  window.addEventListener('error', function(e) {
+    var msg = String(e.message || '');
+    // Erreurs du navigateur integre Facebook/Instagram (son propre script), sans lien avec le site : ignorees
+    if (/Java object is gone|postMessage|webkit\.messageHandlers|Script error\.?$/i.test(msg)) return;
+    if (e.filename && location.protocol !== 'file:' && e.filename.indexOf(location.host) === -1) return;
+    signalerErreur('script', msg + (e.lineno ? ' (ligne ' + e.lineno + ')' : ''));
+  });
   window.addEventListener('unhandledrejection', function(e) { signalerErreur('promesse', e.reason && (e.reason.message || String(e.reason))); });
+
+  // ---------- Lecture du serveur, robuste (navigateur Facebook/Instagram, 4G faible) ----------
+  // 1) fetch avec delai maximum, 2) un nouvel essai, 3) secours par balise <script> (JSONP), qui passe la ou fetch echoue.
+  var navigateurIntegre = /FBAN|FBAV|FB_IAB|Instagram|Messenger|Line\/|; wv\)/i.test(navigator.userAgent);
+  var estAndroid = /Android/i.test(navigator.userAgent);
+  function fetchDelai(url, ms) {
+    return new Promise(function(ok, ko) {
+      var fini = false;
+      var t = setTimeout(function() { if (!fini) { fini = true; ko(new Error('délai dépassé')); } }, ms);
+      fetch(url).then(function(r) { return r.json(); }).then(function(j) { if (!fini) { fini = true; clearTimeout(t); ok(j); } },
+        function(e) { if (!fini) { fini = true; clearTimeout(t); ko(e); } });
+    });
+  }
+  var numJsonp = 0;
+  function jsonp(url, ms) {
+    return new Promise(function(ok, ko) {
+      var nom = 'sosRetour' + (++numJsonp) + Date.now();
+      var sc = document.createElement('script');
+      var nettoyer = function() { try { delete window[nom]; } catch (e) { window[nom] = undefined; } if (sc.parentNode) sc.parentNode.removeChild(sc); };
+      var t = setTimeout(function() { nettoyer(); ko(new Error('délai dépassé')); }, ms);
+      window[nom] = function(j) { clearTimeout(t); nettoyer(); ok(j); };
+      sc.onerror = function() { clearTimeout(t); nettoyer(); ko(new Error('Failed to fetch')); };
+      sc.src = url + '&callback=' + nom;
+      document.head.appendChild(sc);
+    });
+  }
+  function lireServeur(requete) {
+    var url = APP_URL + '?' + requete;
+    return fetchDelai(url, 15000)
+      .catch(function() { return new Promise(function(ok) { setTimeout(ok, 1200); }).then(function() { return fetchDelai(url, 15000); }); })
+      .catch(function(e1) { return jsonp(url, 20000).then(function(j) { signalerErreur('secours jsonp ok', requete.slice(0, 30) + ' : ' + (e1 && e1.message)); return j; }); });
+  }
+  /** Dans le navigateur integre de Facebook/Instagram : proposer d'ouvrir le vrai navigateur. */
+  function conseilNavigateur() {
+    if (!navigateurIntegre) return '';
+    if (estAndroid) {
+      var lien = 'intent://' + location.host + location.pathname + '#Intent;scheme=https;end';
+      return '<br><a class="puce discret" style="margin-top:8px" href="' + esc(lien) + '">Ouvrir dans Chrome</a>';
+    }
+    return '<br>Astuce : touchez ••• en haut à droite, puis « Ouvrir dans le navigateur ».';
+  }
 
   // ---------- Donnees : memoire du telephone d'abord, puis version a jour ----------
   var dejaAffiche = false;
@@ -630,8 +693,7 @@
     var memo = JSON.parse(localStorage.getItem(CLE_MEMOIRE) || 'null');
     if (memo && memo.donnees && (Date.now() - memo.date) < 7 * 24 * 3600 * 1000) { recevoir(memo.donnees); dejaAffiche = true; }
   } catch (e) {}
-  fetch(APP_URL + '?action=getInitialData')
-    .then(function(r) { return r.json(); })
+  lireServeur('action=getInitialData')
     .then(function(frais) {
       if (!frais || !frais.prestations) throw new Error(frais && frais.error ? frais.error : 'réponse vide');
       try { localStorage.setItem(CLE_MEMOIRE, JSON.stringify({ date: Date.now(), donnees: frais })); } catch (e) {}
@@ -641,7 +703,7 @@
       if (dejaAffiche) return;
       $('tuiles').innerHTML = '';
       var m = $('msg-init');
-      m.innerHTML = 'Chargement impossible (' + esc(err.message) + '). Rechargez la page, ou réservez sur <a href="https://wa.me/' + WA + '" target="_blank" rel="noopener">WhatsApp</a>.';
+      m.innerHTML = 'Chargement impossible (' + esc(err.message) + '). Rechargez la page, ou réservez sur <a href="https://wa.me/' + WA + '" target="_blank" rel="noopener">WhatsApp</a>.' + conseilNavigateur();
       afficher(m, true);
       signalerErreur('chargement', err && err.message);
     });
@@ -996,12 +1058,12 @@
   }
   function chargerCreneaux(cle) {
     $('jours').innerHTML = ''; afficher('heures-zone', false);
-    $('jours-etat').textContent = 'Recherche des disponibilités…'; afficher('jours-etat', true);
+    $('jours-etat').innerHTML = '<span class="roue"></span>Recherche des créneaux libres…'; afficher('jours-etat', true);
+    setTimeout(function() { if (creneauxCle === cle && !creneauxListe) $('jours-etat').innerHTML = '<span class="roue"></span>On consulte l\'agenda du mécanicien, encore quelques secondes…'; }, 4000);
     var memo = memoireCreneaux[cle];
     if (memo && Date.now() - memo.date < 120000) { creneauxListe = memo.creneaux; dessinerJours(); return; }
     var n = ++numeroRequete;
-    fetch(APP_URL + '?action=getCreneaux&' + cle)
-      .then(function(r) { return r.json(); })
+    lireServeur('action=getCreneaux&' + cle)
       .then(function(r) {
         if (n !== numeroRequete || cle !== creneauxCle) return;
         if (!r.success) throw new Error(r.error || 'erreur');
@@ -1012,7 +1074,7 @@
       .catch(function(err) {
         if (n !== numeroRequete) return;
         creneauxCle = null;
-        $('jours-etat').innerHTML = 'Impossible de charger les créneaux (' + esc(err.message) + '). <a href="#" id="reessayer">Réessayer</a> ou réservez sur <a href="https://wa.me/' + WA + '" target="_blank" rel="noopener">WhatsApp</a>.';
+        $('jours-etat').innerHTML = 'Impossible de charger les créneaux (' + esc(err.message) + '). <a href="#" id="reessayer">Réessayer</a> ou réservez sur <a href="https://wa.me/' + WA + '" target="_blank" rel="noopener">WhatsApp</a>.' + conseilNavigateur();
         signalerErreur('créneaux', err && err.message);
       });
   }
@@ -1165,6 +1227,15 @@
     if (el.tagName === 'INPUT' || el.tagName === 'SELECT') setTimeout(function() { el.focus(); }, 350);
   }
 
+  /** Pendant que le client choisit sa commune, le serveur lit deja l'agenda (gardee 90 s) : les creneaux arrivent plus vite. */
+  var dejaPrechauffe = false;
+  function prechauffer() {
+    if (dejaPrechauffe) return; dejaPrechauffe = true;
+    try { fetch(APP_URL + '?action=getCreneaux&duree=60&trajet=0&appro=0').catch(function() {}); } catch (e) {}
+    var c = calcul();
+    if (c.commune && c.veh) rendreCreneau();
+  }
+
   // ---------- Actions ----------
   function suivant() {
     var c = calcul();
@@ -1180,6 +1251,7 @@
       aller('vehicule');
     } else if (ecran === 'vehicule' || ecran === 'hors') {
       noter('vehicule', S.hors ? 'hors liste' : S.marque + ' ' + S.modele);
+      prechauffer();
       aller(photoRequise() ? 'photo' : 'creneau');
     } else if (ecran === 'photo') {
       aller('creneau');
@@ -1392,6 +1464,32 @@
 
   // ---------- Envoi de la reservation ----------
   var envoiEnCours = false;
+  /** Ecran d'attente pendant la reservation (devis PDF, agenda, emails : 10 a 20 s) : le client voit que ca avance. */
+  var minuterieVoile = null;
+  function voileEnvoi(oui) {
+    var v = $('voile-envoi');
+    if (!oui) { if (v) v.parentNode.removeChild(v); clearInterval(minuterieVoile); return; }
+    var etapes = ['Vérification du créneau', 'Création de votre devis', 'Réservation dans l\'agenda du mécanicien', 'Envoi de la confirmation par email'];
+    v = document.createElement('div');
+    v.className = 'voile'; v.id = 'voile-envoi';
+    v.innerHTML = '<div class="voile-boite"><div class="grande-roue"></div><b>Réservation en cours…</b><div class="petit" style="margin-top:4px">Environ 15 secondes. Ne fermez pas la page.</div>'
+      + '<div class="etapes-envoi">' + etapes.map(function(e, i) { return '<div data-i="' + i + '">○ ' + e + '</div>'; }).join('') + '</div>'
+      + '<div class="barre-temps"><span></span></div></div>';
+    document.body.appendChild(v);
+    var debut = Date.now();
+    var maj = function() {
+      var t = (Date.now() - debut) / 1000;
+      var i = Math.min(etapes.length - 1, Math.floor(t / 4));
+      v.querySelectorAll('.etapes-envoi div').forEach(function(d, k) {
+        d.className = k < i ? 'fait' : k === i ? 'encours' : '';
+        d.textContent = (k < i ? '✓ ' : k === i ? '• ' : '○ ') + etapes[k];
+      });
+      // Progression qui ralentit sans jamais atteindre 100 % avant la reponse
+      v.querySelector('.barre-temps span').style.width = Math.round(95 * (1 - Math.exp(-t / 9))) + '%';
+      if (t > 25) v.querySelector('.petit').textContent = 'Connexion lente : on termine, merci de patienter…';
+    };
+    maj(); minuterieVoile = setInterval(maj, 500);
+  }
   function envoyer() {
     if (envoiEnCours) return;
     afficher('msg-envoi', false);
@@ -1434,10 +1532,11 @@
       });
     }
     envoiEnCours = true; rendreBarre();
+    voileEnvoi(true);
     fetch(APP_URL, { method: 'POST', body: JSON.stringify({ action: action, data: data }) })
       .then(function(r) { return r.json(); })
       .then(function(r) {
-        envoiEnCours = false;
+        envoiEnCours = false; voileEnvoi(false);
         if (!r.success) {
           rendreBarre();
           var err = String(r.error || 'erreur inconnue');
@@ -1455,8 +1554,8 @@
         confirmer(r, c);
       })
       .catch(function(err) {
-        envoiEnCours = false; rendreBarre();
-        message('msg-envoi', 'err', 'La demande n\'a pas pu partir (' + esc(err.message) + '). Réessayez dans un instant, ou réservez sur <a href="https://wa.me/' + WA + '" target="_blank" rel="noopener">WhatsApp</a>.');
+        envoiEnCours = false; voileEnvoi(false); rendreBarre();
+        message('msg-envoi', 'err', 'La connexion a coupé pendant l\'envoi (' + esc(err.message) + '). Si vous recevez un email de confirmation dans les minutes qui viennent, c\'est bien réservé : ne recommencez pas. Sinon, réessayez ou réservez sur <a href="https://wa.me/' + WA + '" target="_blank" rel="noopener">WhatsApp</a>.' + conseilNavigateur());
         signalerErreur('envoi demande', err && err.message);
       });
   }
