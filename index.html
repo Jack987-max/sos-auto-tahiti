@@ -667,15 +667,45 @@
       var t = setTimeout(function() { nettoyer(); ko(new Error('délai dépassé')); }, ms);
       window[nom] = function(j) { clearTimeout(t); nettoyer(); ok(j); };
       sc.onerror = function() { clearTimeout(t); nettoyer(); ko(new Error('Failed to fetch')); };
+      // Script charge mais sans appel du retour : le serveur n'a pas la version JSONP (Code.gs pas redeploye)
+      sc.onload = function() { setTimeout(function() { if (window[nom]) { clearTimeout(t); nettoyer(); ko(new Error('serveur sans secours (Code.gs à redéployer)')); } }, 100); };
       sc.src = url + '&callback=' + nom;
       document.head.appendChild(sc);
     });
   }
+  // Les deux voies en parallele : la voie normale part tout de suite ; si rien n'est revenu en 3,5 s (ou si elle echoue),
+  // la voie de secours part aussi. La premiere reponse gagne. Echec seulement si les deux echouent.
   function lireServeur(requete) {
     var url = APP_URL + '?' + requete;
-    return fetchDelai(url, 15000)
-      .catch(function() { return new Promise(function(ok) { setTimeout(ok, 1200); }).then(function() { return fetchDelai(url, 15000); }); })
-      .catch(function(e1) { return jsonp(url, 20000).then(function(j) { signalerErreur('secours jsonp ok', requete.slice(0, 30) + ' : ' + (e1 && e1.message)); return j; }); });
+    var t0 = Date.now();
+    return new Promise(function(ok, ko) {
+      var fini = false, enCours = 0, secoursLance = false, erreurs = [];
+      var sec = function() { return Math.round((Date.now() - t0) / 100) / 10 + ' s'; };
+      var reussi = function(voie) {
+        return function(j) {
+          if (fini) return;
+          fini = true;
+          if (voie === 'secours') signalerErreur('info secours ok', requete.slice(0, 30) + ' en ' + sec() + (erreurs.length ? ' | ' + erreurs.join(' ; ') : ''));
+          ok(j);
+        };
+      };
+      var echec = function(voie) {
+        return function(e) {
+          enCours--;
+          erreurs.push(voie + ' : ' + (e && e.message) + ' (' + sec() + ')');
+          if (voie === 'direct') lancerSecours();
+          if (!fini && enCours <= 0 && secoursLance) { fini = true; ko(new Error(erreurs.join(' ; '))); }
+        };
+      };
+      var lancerSecours = function() {
+        if (secoursLance || fini) return;
+        secoursLance = true; enCours++;
+        jsonp(url, 25000).then(reussi('secours'), echec('secours'));
+      };
+      enCours++;
+      fetchDelai(url, 25000).then(reussi('direct'), echec('direct'));
+      setTimeout(lancerSecours, 3500);
+    });
   }
   /** Dans le navigateur integre de Facebook/Instagram : proposer d'ouvrir le vrai navigateur. */
   function conseilNavigateur() {
@@ -693,6 +723,14 @@
     var memo = JSON.parse(localStorage.getItem(CLE_MEMOIRE) || 'null');
     if (memo && memo.donnees && (Date.now() - memo.date) < 7 * 24 * 3600 * 1000) { recevoir(memo.donnees); dejaAffiche = true; }
   } catch (e) {}
+  var chargementEchoue = false;
+  setTimeout(function() {
+    if (D || chargementEchoue) return;
+    var m = $('msg-init');
+    m.className = 'msg info';
+    m.innerHTML = '<span class="roue"></span>Connexion lente, chargement des tarifs en cours…' + conseilNavigateur();
+    afficher(m, true);
+  }, 6000);
   lireServeur('action=getInitialData')
     .then(function(frais) {
       if (!frais || !frais.prestations) throw new Error(frais && frais.error ? frais.error : 'réponse vide');
@@ -700,10 +738,12 @@
       recevoir(frais);
     })
     .catch(function(err) {
+      chargementEchoue = true;
       if (dejaAffiche) return;
       $('tuiles').innerHTML = '';
       var m = $('msg-init');
-      m.innerHTML = 'Chargement impossible (' + esc(err.message) + '). Rechargez la page, ou réservez sur <a href="https://wa.me/' + WA + '" target="_blank" rel="noopener">WhatsApp</a>.' + conseilNavigateur();
+      m.className = 'msg err';
+      m.innerHTML = 'Chargement impossible (connexion). Rechargez la page, ou réservez sur <a href="https://wa.me/' + WA + '" target="_blank" rel="noopener">WhatsApp</a>.' + conseilNavigateur();
       afficher(m, true);
       signalerErreur('chargement', err && err.message);
     });
@@ -711,6 +751,7 @@
 
   function recevoir(donnees) {
     D = donnees;
+    if ($('msg-init').className.indexOf('info') !== -1) afficher('msg-init', false);
     D.modeles = D.modeles || [];
     D.vehicules = D.vehicules || [];
     D.prixPieces = D.prixPieces || [];
@@ -1074,7 +1115,7 @@
       .catch(function(err) {
         if (n !== numeroRequete) return;
         creneauxCle = null;
-        $('jours-etat').innerHTML = 'Impossible de charger les créneaux (' + esc(err.message) + '). <a href="#" id="reessayer">Réessayer</a> ou réservez sur <a href="https://wa.me/' + WA + '" target="_blank" rel="noopener">WhatsApp</a>.' + conseilNavigateur();
+        $('jours-etat').innerHTML = 'Impossible de charger les créneaux (connexion). <a href="#" id="reessayer">Réessayer</a> ou réservez sur <a href="https://wa.me/' + WA + '" target="_blank" rel="noopener">WhatsApp</a>.' + conseilNavigateur();
         signalerErreur('créneaux', err && err.message);
       });
   }
