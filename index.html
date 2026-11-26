@@ -920,7 +920,7 @@
   function prixTuile(t) {
     var cm = coefMin();
     var min = Math.min.apply(null, t.prest.map(function(p) { return prixPrestation(p, cm); }));
-    var des = t.prest.length > 1 || (!coefUnique() && !t.prest.every(prixFixe));
+    var des = true;   // le deplacement s'ajoute toujours : prix de depart
     var txt = (des ? 'dès ' : '') + xpf(min);
     if (t.prest.some(estRdp)) txt += ', déduit si réparation';
     return txt;
@@ -938,7 +938,7 @@
         h += '<div class="panneau"><div class="tit">' + esc(t.nom) + ' : cochez ce qu\'il faut faire</div>'
           + t.prest.map(function(p) {
             var s = S.ids.indexOf(p.id) !== -1;
-            return '<div class="ligne-presta' + (s ? ' sel' : '') + '" data-presta="' + esc(p.id) + '" role="checkbox" aria-checked="' + s + '" tabindex="0"><span class="cb">' + (s ? COCHE : '') + '</span><span class="n">' + esc(p.nom) + '</span><span class="p">' + (veh || prixFixe(p) ? '' : 'dès ') + esc(xpf(prixPrestation(p, coef))) + '</span></div>';
+            return '<div class="ligne-presta' + (s ? ' sel' : '') + '" data-presta="' + esc(p.id) + '" role="checkbox" aria-checked="' + s + '" tabindex="0"><span class="cb">' + (s ? COCHE : '') + '</span><span class="n">' + esc(p.nom) + '</span><span class="p">' + (veh ? '' : 'dès ') + esc(xpf(prixPrestation(p, coef))) + '</span></div>';
           }).join('') + '</div>';
       }
     });
@@ -959,7 +959,7 @@
     afficher('filtre-forfait', !!rdp);
     if (rdp) {
       var veh = vehCourant();
-      $('filtre-forfait').innerHTML = '<b>Forfait recherche de panne : ' + (veh || coefUnique() || prixFixe(rdp) ? '' : 'dès ') + esc(xpf(prixPrestation(rdp, veh ? veh.coefficientPrix : coefMin()))) + '.</b> Déduit si vous faites la réparation avec nous.';
+      $('filtre-forfait').innerHTML = '<b>Forfait recherche de panne : ' + 'dès ' + esc(xpf(prixPrestation(rdp, veh ? veh.coefficientPrix : coefMin()))) + '.</b> Déduit si vous faites la réparation avec nous.';
     }
   }
 
@@ -1142,8 +1142,13 @@
       var d = new Date(parJour[k][0].debut);
       var opt = function(o) { o.timeZone = TZ; return d.toLocaleDateString('fr-FR', o); };
       return '<button type="button" class="jour' + (k === S.jour ? ' sel' : '') + '" data-jour="' + k + '"><div class="js">' + esc(opt({ weekday: 'short' })) + '</div><div class="jn">' + esc(opt({ day: 'numeric' })) + '</div><div class="jm">' + esc(opt({ month: 'short' })) + '</div>'
-        + (we > 0 && estWeekend(parJour[k][0].debut) ? '<div class="we">+' + esc(xpf(we).replace(' XPF', '')) + '</div>' : '') + '</button>';
+        + (we > 0 && estWeekend(parJour[k][0].debut) ? '<div class="we">+' + esc(xpf(we).replace(' XPF', '')) + ' F</div>' : '') + '</button>';
     }).join('');
+    // Legende du supplement week-end sous les jours
+    var aWeekend = we > 0 && jours.some(function(k) { return estWeekend(parJour[k][0].debut); });
+    var leg = $('legende-we');
+    if (!leg) { leg = document.createElement('div'); leg.id = 'legende-we'; leg.className = 'petit'; leg.style.margin = '2px 0 4px'; $('jours').parentNode.insertBefore(leg, $('jours').nextSibling); }
+    leg.textContent = aWeekend ? 'Samedi et dimanche : supplément week-end de ' + xpf(we) + ', compté dans le prix en bas.' : '';
     var duJour = parJour[S.jour];
     var matin = duJour.filter(function(c) { return Number(heureTahiti(c.debut).slice(0, 2)) < 12; });
     var aprem = duJour.filter(function(c) { return Number(heureTahiti(c.debut).slice(0, 2)) >= 12; });
@@ -1214,7 +1219,7 @@
     var vehLib = c.veh ? (S.hors ? S.hlTexte.trim() : S.modele + (S.carb ? ' ' + S.carb.toLowerCase() : '')) : '';
     lib.textContent = noms ? noms + (vehLib ? ' · ' + vehLib : '') : 'Choisissez une prestation';
     if (!c.prest.length) prix.innerHTML = '—';
-    else if (!c.veh) prix.innerHTML = (coefUnique() || c.prest.every(prixFixe) ? '' : 'dès ') + esc(xpf(c.prestations));
+    else if (!c.veh) prix.innerHTML = 'dès ' + esc(xpf(c.prestations));
     else if (S.hors) prix.innerHTML = '≈ ' + esc(xpf(c.total)) + ' <small class="indic">indicatif</small>';
     else prix.innerHTML = esc(xpf(c.total)) + ' <small>' + (c.commune ? 'tout compris' : 'hors déplacement') + '</small>';
     var ok = false, texte = 'Continuer';
@@ -1234,7 +1239,7 @@
     var lignes = [];
     tuiles().forEach(function(t) { t.prest.forEach(function(p) { lignes.push({ p: p, t: t.nom }); }); });
     var h = lignes.slice(0, 12).map(function(x) {
-      return '<button type="button" class="tarif" data-tarif="' + esc(x.p.id) + '"><b>' + esc(x.p.nom) + '</b><span>' + (coefUnique() || prixFixe(x.p) ? '' : 'dès ') + esc(xpf(prixPrestation(x.p, cm))) + (estRdp(x.p) ? ' · déduit si réparation' : '') + '</span></button>';
+      return '<button type="button" class="tarif" data-tarif="' + esc(x.p.id) + '"><b>' + esc(x.p.nom) + '</b><span>' + 'dès ' + esc(xpf(prixPrestation(x.p, cm))) + (estRdp(x.p) ? ' · déduit si réparation' : '') + '</span></button>';
     }).join('');
     if ($('grille-tarifs').getAttribute('data-h') !== h) { $('grille-tarifs').innerHTML = h; $('grille-tarifs').setAttribute('data-h', h); }
   }
