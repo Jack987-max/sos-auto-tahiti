@@ -779,6 +779,7 @@
     return '';
   }
   function tuileDe(p) { return p.tuile !== undefined ? String(p.tuile || '').trim() : tuileAuto(p.nom); }
+  function prixFixe(p) { return p.prixFixe !== undefined ? !!p.prixFixe : /recherche.*panne|diagnos/.test(sansAccent(p.nom)); }
   function infosMoteur(p) { return p.infosMoteur !== undefined ? !!p.infosMoteur : /vidange/i.test(p.nom); }
   function estRdp(p) { return /recherche.*panne/.test(sansAccent(p.nom)) || tuileDe(p) === 'Recherche de panne'; }
   function prestaParId(id) { return D.prestations.filter(function(p) { return p.id === id; })[0]; }
@@ -818,6 +819,7 @@
     return choix ? Math.round(choix.prix) : null;
   }
   function prixPrestation(p, coef) {
+    if (prixFixe(p)) coef = 1;   // meme prix quelle que soit la voiture
     var e = prixPieceExact(p.id);
     return e !== null ? Math.round(p.prixForfait * coef) + e : Math.round((p.prixForfait + p.prixPieces) * coef);
   }
@@ -834,8 +836,9 @@
     var coef = veh ? Number(veh.coefficientPrix) : coefMin();
     var exactes = {};
     prest.forEach(function(p) { exactes[p.id] = prixPieceExact(p.id); });
-    var forfaits = Math.round(somme(prest, function(p) { return p.prixForfait; }) * coef);
-    var pieces = Math.round(somme(prest.filter(function(p) { return exactes[p.id] === null; }), function(p) { return p.prixPieces; }) * coef)
+    var cDe = function(p) { return prixFixe(p) ? 1 : coef; };
+    var forfaits = Math.round(somme(prest, function(p) { return p.prixForfait * cDe(p); }));
+    var pieces = Math.round(somme(prest.filter(function(p) { return exactes[p.id] === null; }), function(p) { return p.prixPieces * cDe(p); }))
       + somme(prest.filter(function(p) { return exactes[p.id] !== null; }), function(p) { return exactes[p.id]; });
     var lignes = prest.map(function(p) { return { nom: p.nom, montant: prixPrestation(p, coef) }; });
     if (lignes.length) lignes[lignes.length - 1].montant += (forfaits + pieces) - somme(lignes, function(l) { return l.montant; });
@@ -917,7 +920,7 @@
   function prixTuile(t) {
     var cm = coefMin();
     var min = Math.min.apply(null, t.prest.map(function(p) { return prixPrestation(p, cm); }));
-    var des = !coefUnique() || t.prest.length > 1;
+    var des = t.prest.length > 1 || (!coefUnique() && !t.prest.every(prixFixe));
     var txt = (des ? 'dès ' : '') + xpf(min);
     if (t.prest.some(estRdp)) txt += ', déduit si réparation';
     return txt;
@@ -935,7 +938,7 @@
         h += '<div class="panneau"><div class="tit">' + esc(t.nom) + ' : cochez ce qu\'il faut faire</div>'
           + t.prest.map(function(p) {
             var s = S.ids.indexOf(p.id) !== -1;
-            return '<div class="ligne-presta' + (s ? ' sel' : '') + '" data-presta="' + esc(p.id) + '" role="checkbox" aria-checked="' + s + '" tabindex="0"><span class="cb">' + (s ? COCHE : '') + '</span><span class="n">' + esc(p.nom) + '</span><span class="p">' + (veh ? '' : 'dès ') + esc(xpf(prixPrestation(p, coef))) + '</span></div>';
+            return '<div class="ligne-presta' + (s ? ' sel' : '') + '" data-presta="' + esc(p.id) + '" role="checkbox" aria-checked="' + s + '" tabindex="0"><span class="cb">' + (s ? COCHE : '') + '</span><span class="n">' + esc(p.nom) + '</span><span class="p">' + (veh || prixFixe(p) ? '' : 'dès ') + esc(xpf(prixPrestation(p, coef))) + '</span></div>';
           }).join('') + '</div>';
       }
     });
@@ -956,7 +959,7 @@
     afficher('filtre-forfait', !!rdp);
     if (rdp) {
       var veh = vehCourant();
-      $('filtre-forfait').innerHTML = '<b>Forfait recherche de panne : ' + (veh || coefUnique() ? '' : 'dès ') + esc(xpf(prixPrestation(rdp, veh ? veh.coefficientPrix : coefMin()))) + '.</b> Déduit si vous faites la réparation avec nous.';
+      $('filtre-forfait').innerHTML = '<b>Forfait recherche de panne : ' + (veh || coefUnique() || prixFixe(rdp) ? '' : 'dès ') + esc(xpf(prixPrestation(rdp, veh ? veh.coefficientPrix : coefMin()))) + '.</b> Déduit si vous faites la réparation avec nous.';
     }
   }
 
@@ -1211,7 +1214,7 @@
     var vehLib = c.veh ? (S.hors ? S.hlTexte.trim() : S.modele + (S.carb ? ' ' + S.carb.toLowerCase() : '')) : '';
     lib.textContent = noms ? noms + (vehLib ? ' · ' + vehLib : '') : 'Choisissez une prestation';
     if (!c.prest.length) prix.innerHTML = '—';
-    else if (!c.veh) prix.innerHTML = (coefUnique() ? '' : 'dès ') + esc(xpf(c.prestations));
+    else if (!c.veh) prix.innerHTML = (coefUnique() || c.prest.every(prixFixe) ? '' : 'dès ') + esc(xpf(c.prestations));
     else if (S.hors) prix.innerHTML = '≈ ' + esc(xpf(c.total)) + ' <small class="indic">indicatif</small>';
     else prix.innerHTML = esc(xpf(c.total)) + ' <small>' + (c.commune ? 'tout compris' : 'hors déplacement') + '</small>';
     var ok = false, texte = 'Continuer';
@@ -1231,7 +1234,7 @@
     var lignes = [];
     tuiles().forEach(function(t) { t.prest.forEach(function(p) { lignes.push({ p: p, t: t.nom }); }); });
     var h = lignes.slice(0, 12).map(function(x) {
-      return '<button type="button" class="tarif" data-tarif="' + esc(x.p.id) + '"><b>' + esc(x.p.nom) + '</b><span>' + (coefUnique() ? '' : 'dès ') + esc(xpf(prixPrestation(x.p, cm))) + (estRdp(x.p) ? ' · déduit si réparation' : '') + '</span></button>';
+      return '<button type="button" class="tarif" data-tarif="' + esc(x.p.id) + '"><b>' + esc(x.p.nom) + '</b><span>' + (coefUnique() || prixFixe(x.p) ? '' : 'dès ') + esc(xpf(prixPrestation(x.p, cm))) + (estRdp(x.p) ? ' · déduit si réparation' : '') + '</span></button>';
     }).join('');
     if ($('grille-tarifs').getAttribute('data-h') !== h) { $('grille-tarifs').innerHTML = h; $('grille-tarifs').setAttribute('data-h', h); }
   }
